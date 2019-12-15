@@ -978,7 +978,7 @@
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-8.5.0.tgz#2f9ce301c8898e1c3248b0a8564696b24d1a9a5a"
   integrity sha512-7XYT10CZfPsH7j9F1Jmg1+d0ezOux2oM2GfArAzLwWe4mE2Dr3hVjsAL6+TFY49RRJlCdJDMw3nJsLFroTc8Kw==
 
-"@hapi/joi@^15.0.0":
+"@hapi/joi@^15.0.0", "@hapi/joi@^15.1.0":
   version "15.1.1"
   resolved "https://registry.yarnpkg.com/@hapi/joi/-/joi-15.1.1.tgz#c675b8a71296f02833f8d6d243b34c57b8ce19d7"
   integrity sha512-entf8ZMOK8sc+8YfeOlM8pCfg3b5+WZIKBfUaaJT8UsjAAPjartzxIYm3TIbjvA4u+u++KbcXD38k682nVHDAQ==
@@ -3070,6 +3070,13 @@ cosmiconfig@^6.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.7.2"
+
+cpf-cnpj-validator@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/cpf-cnpj-validator/-/cpf-cnpj-validator-0.1.0.tgz#834aebac2b4afd8b6f4081adb01a4cc28444890b"
+  integrity sha512-tq2UOQIb39v+0G8geTZG1cPNiySD/as8ZQGWCoTUpS8K8gxXFku5DQAz+UZLGs1Kj3RktSSt/1+SvN3PCG8Wbw==
+  dependencies:
+    "@hapi/joi" "^15.1.0"
 
 create-ecdh@^4.0.0:
   version "4.0.3"
