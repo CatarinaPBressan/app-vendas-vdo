@@ -1,5 +1,9 @@
 .App {
   text-align: center;
+
+  .test-class {
+    background-color: red;
+  }
 }
 
 .App-logo {
