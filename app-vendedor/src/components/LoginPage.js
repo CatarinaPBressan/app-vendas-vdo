@@ -4,6 +4,7 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { Form, Button } from "react-bootstrap";
 import InputMask from "react-input-mask";
+import { Redirect } from "react-router-dom";
 
 import { fetchUser } from "../actions/account";
 
@@ -25,7 +26,8 @@ export class LoginPage extends Component {
     const loginWith = "cpf";
     this.state = {
       usernameMask: MASKS[loginWith],
-      username: null,
+      username: "",
+      password: "",
       loginWith: loginWith
     };
   }
@@ -38,11 +40,28 @@ export class LoginPage extends Component {
     });
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+
+    this.props.fetchUser(this.state.username, this.state.password);
+  };
+
+  onPasswordChange = e => {
+    this.setState({ password: e.target.value });
+  };
+
+  onUsernameChange = e => {
+    this.setState({ username: e.target.value });
+  };
+
   render() {
+    if (this.props.user) {
+      return <Redirect to={{ pathname: "/" }} />;
+    }
     return (
       <div className="login-page">
         <div className="login-box">
-          <Form>
+          <Form onSubmit={this.onSubmit}>
             <Form.Group>
               <Form.Label htmlFor="usuario">
                 <b>Usuário:</b>
@@ -66,12 +85,16 @@ export class LoginPage extends Component {
                 id="username-type-cnpj"
               />
             </Form.Group>
-            <Form.Group controlId="usuario">
-              <InputMask mask={this.state.usernameMask}>
+            <Form.Group controlId="username">
+              <InputMask
+                mask={this.state.usernameMask}
+                onChange={this.onUsernameChange}
+                value={this.state.username}
+              >
                 {() => (
                   <Form.Control
                     type="text"
-                    inputmode="numeric"
+                    inputMode="numeric"
                     required
                     size="lg"
                   />
@@ -79,11 +102,17 @@ export class LoginPage extends Component {
               </InputMask>
             </Form.Group>
 
-            <Form.Group controlId="senha">
+            <Form.Group controlId="password">
               <Form.Label>
                 <b>Senha:</b>
               </Form.Label>
-              <Form.Control type="password" required size="lg" />
+              <Form.Control
+                type="password"
+                required
+                size="lg"
+                onChange={this.onPasswordChange}
+                value={this.state.password}
+              />
             </Form.Group>
             <Button variant="primary" type="submit" size="lg" block>
               Entrar
