@@ -1,21 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import * as serviceWorker from "./serviceWorker";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import * as serviceWorker from './serviceWorker';
 
-import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
 
-import "./styles/main.scss";
-import App from "./App";
+import './styles/main.scss';
+import App from './App';
 
-import account from "./reducers/account";
-import { loadState, saveState } from "./utils/localStorage";
+import account from './reducers/account';
+import { loadState, saveState } from './utils/localStorage';
 
 const reduxStore = configureStore({
   reducer: {
-    account
+    account,
   },
-  preloadedState: loadState()
+  preloadedState: loadState(),
 });
 
 reduxStore.subscribe(() => {
@@ -27,7 +27,7 @@ ReactDOM.render(
   <Provider store={reduxStore}>
     <App />
   </Provider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
