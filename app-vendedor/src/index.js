@@ -9,11 +9,18 @@ import "./styles/main.scss";
 import App from "./App";
 
 import account from "./reducers/account";
+import { loadState, saveState } from "./utils/localStorage";
 
 const reduxStore = configureStore({
   reducer: {
     account
-  }
+  },
+  preloadedState: loadState()
+});
+
+reduxStore.subscribe(() => {
+  // We might want to debounce/throttle the saveState function
+  saveState({ account: reduxStore.getState().account });
 });
 
 ReactDOM.render(

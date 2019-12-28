@@ -1,1 +1,9 @@
-@import "./LoginPage.scss";
+@import "bootstrap-overrides";
+@import '~bootstrap/scss/bootstrap.scss';
+
+// App styles
+@import "../components/LoginPage";
+
+body {
+  background-color: lightgray;
+}
