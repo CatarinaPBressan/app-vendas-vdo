@@ -1,55 +1,55 @@
-import React, { Component } from "react";
-import { PropTypes } from "prop-types";
+import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 
-import { connect } from "react-redux";
-import { Form, Button } from "react-bootstrap";
-import InputMask from "react-input-mask";
+import { connect } from 'react-redux';
+import { Form, Button } from 'react-bootstrap';
+import InputMask from 'react-input-mask';
 
-import { fetchUser } from "../actions/account";
+import { fetchUser } from '../actions/account';
 
-const CPF_MASK = "999.999.999-99";
-const CNPJ_MASK = "99.999.999/9999-99";
+const CPF_MASK = '999.999.999-99';
+const CNPJ_MASK = '99.999.999/9999-99';
 
 const MASKS = {
   cpf: CPF_MASK,
-  cnpj: CNPJ_MASK
+  cnpj: CNPJ_MASK,
 };
 
 export class LoginPage extends Component {
   static propTypes = {
-    fetchUser: PropTypes.func.isRequired
+    fetchUser: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    const loginWith = "cpf";
+    const loginWith = 'cpf';
     this.state = {
       usernameMask: MASKS[loginWith],
-      username: "",
-      password: "",
-      loginWith: loginWith
+      username: '',
+      password: '',
+      loginWith: loginWith,
     };
   }
 
-  onLoginChoiceChanged = event => {
+  onLoginChoiceChanged = (event) => {
     const loginWith = event.target.value;
     this.setState({
       loginWith,
-      usernameMask: MASKS[loginWith]
+      usernameMask: MASKS[loginWith],
     });
   };
 
-  onSubmit = e => {
+  onSubmit = (e) => {
     e.preventDefault();
 
     this.props.fetchUser(this.state.username, this.state.password);
   };
 
-  onPasswordChange = e => {
+  onPasswordChange = (e) => {
     this.setState({ password: e.target.value });
   };
 
-  onUsernameChange = e => {
+  onUsernameChange = (e) => {
     this.setState({ username: e.target.value });
   };
 
@@ -67,7 +67,7 @@ export class LoginPage extends Component {
                 type="radio"
                 value="cpf"
                 name="username-type"
-                checked={this.state.loginWith === "cpf"}
+                checked={this.state.loginWith === 'cpf'}
                 onChange={this.onLoginChoiceChanged}
                 id="username-type-cpf"
               />
@@ -76,7 +76,7 @@ export class LoginPage extends Component {
                 type="radio"
                 value="cnpj"
                 name="username-type"
-                checked={this.state.loginWith === "cnpj"}
+                checked={this.state.loginWith === 'cnpj'}
                 onChange={this.onLoginChoiceChanged}
                 id="username-type-cnpj"
               />
@@ -120,9 +120,9 @@ export class LoginPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = (state) => ({});
 const mapDispatchToProps = {
-  fetchUser
+  fetchUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
