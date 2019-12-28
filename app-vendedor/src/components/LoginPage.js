@@ -67,20 +67,23 @@ export class LoginPage extends Component {
               />
             </Form.Group>
             <Form.Group controlId="usuario">
-              <InputMask
-                mask={this.state.usernameMask}
-                className="form-control"
-                type="text"
-                placeholder="(Somente números)"
-                required
-              />
+              <InputMask mask={this.state.usernameMask}>
+                {() => (
+                  <Form.Control
+                    type="text"
+                    inputmode="numeric"
+                    required
+                    size="lg"
+                  />
+                )}
+              </InputMask>
             </Form.Group>
 
             <Form.Group controlId="senha">
               <Form.Label>
                 <b>Senha:</b>
               </Form.Label>
-              <Form.Control type="password" required />
+              <Form.Control type="password" required size="lg" />
             </Form.Group>
             <Button variant="primary" type="submit" size="lg" block>
               Entrar
