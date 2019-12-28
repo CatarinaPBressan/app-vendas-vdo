@@ -4,7 +4,6 @@ import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import { Form, Button } from "react-bootstrap";
 import InputMask from "react-input-mask";
-import { Redirect } from "react-router-dom";
 
 import { fetchUser } from "../actions/account";
 
@@ -55,9 +54,6 @@ export class LoginPage extends Component {
   };
 
   render() {
-    if (this.props.user) {
-      return <Redirect to={{ pathname: "/" }} />;
-    }
     return (
       <div className="login-page">
         <div className="login-box">
@@ -124,9 +120,7 @@ export class LoginPage extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  user: state.account.user
-});
+const mapStateToProps = state => ({});
 const mapDispatchToProps = {
   fetchUser
 };
