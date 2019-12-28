@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { PropTypes } from "prop-types";
 
 import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
 import { connect } from "react-redux";
@@ -10,6 +11,12 @@ import UserAPI from "./api/userAPI";
 import { clearUser } from "./actions/account";
 
 export class App extends Component {
+  static propTypes = {
+    user: PropTypes.object.isRequired,
+
+    clearUser: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
 
