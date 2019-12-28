@@ -6,15 +6,35 @@ import { connect } from "react-redux";
 import LoginPage from "./components/LoginPage";
 
 import "./styles/main.scss";
+import UserAPI from "./api/userAPI";
+import { clearUser } from "./actions/account";
 
 export class App extends Component {
-  componentDidUpdate(prevProps) {
-    if (!prevProps.user && this.props.user) {
-      this.props.history.replace({ pathname: "/" });
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    if (this.props.user) {
+      UserAPI.checkTokenExpired(this.props.user).then(isExpired => {
+        if (isExpired) {
+          this.props.clearUser();
+        }
+        this.setState({ loading: false });
+      });
+    } else {
+      this.setState({ loading: false });
     }
   }
 
   render() {
+    if (this.state.loading) {
+      return <div>Loading...</div>;
+    }
     return (
       <BrowserRouter>
         {!this.props.user ? (
@@ -26,8 +46,11 @@ export class App extends Component {
           </Switch>
         ) : (
           <Switch>
-            <Route path="/">
+            <Route path="/home">
               Logged in Route {JSON.stringify(this.props.user)}
+            </Route>
+            <Route path="/*">
+              <Redirect to="/home" />
             </Route>
           </Switch>
         )}
@@ -40,6 +63,8 @@ const mapStateToProps = state => ({
   user: state.account.user
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  clearUser
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
