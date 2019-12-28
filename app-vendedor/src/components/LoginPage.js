@@ -43,10 +43,11 @@ export class LoginPage extends Component {
       <div className="login-page">
         <div className="login-box">
           <Form>
-            <Form.Group controlId="username">
-              <Form.Label> Login utilizando: </Form.Label>
+            <Form.Group>
+              <Form.Label htmlFor="usuario">
+                <b>Usuário:</b>
+              </Form.Label>
               <Form.Check
-                inline
                 label="CPF"
                 type="radio"
                 value="cpf"
@@ -56,7 +57,6 @@ export class LoginPage extends Component {
                 id="username-type-cpf"
               />
               <Form.Check
-                inline
                 label="CNPJ"
                 type="radio"
                 value="cnpj"
@@ -65,6 +65,8 @@ export class LoginPage extends Component {
                 onChange={this.onLoginChoiceChanged}
                 id="username-type-cnpj"
               />
+            </Form.Group>
+            <Form.Group controlId="usuario">
               <InputMask
                 mask={this.state.usernameMask}
                 className="form-control"
@@ -74,11 +76,13 @@ export class LoginPage extends Component {
               />
             </Form.Group>
 
-            <Form.Group controlId="password">
-              <Form.Label>Senha</Form.Label>
+            <Form.Group controlId="senha">
+              <Form.Label>
+                <b>Senha:</b>
+              </Form.Label>
               <Form.Control type="password" required />
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" size="lg" block>
               Entrar
             </Button>
           </Form>
