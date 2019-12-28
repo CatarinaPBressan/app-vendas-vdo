@@ -10,7 +10,6 @@ import "./styles/main.scss";
 export class App extends Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.user && this.props.user) {
-      console.log("history should replaced");
       this.props.history.replace({ pathname: "/" });
     }
   }
