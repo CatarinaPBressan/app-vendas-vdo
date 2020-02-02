@@ -1,0 +1,28 @@
+.product-card {
+  flex: 0 0 150px;
+  height: 150px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 5px;
+
+  .icon-container {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    width: fit-content;
+
+    .product-icon {
+      font-size: 40px;
+    }
+  }
+
+  .card-label {
+    font-weight: bold;
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+}

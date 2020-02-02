@@ -10,6 +10,9 @@ import App from './App';
 
 import account from './reducers/account';
 import { loadState, saveState } from './utils/localStorage';
+import { initIconLibrary } from './utils/faLibrary';
+
+initIconLibrary();
 
 const reduxStore = configureStore({
   reducer: {

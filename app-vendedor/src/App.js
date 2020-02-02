@@ -4,15 +4,16 @@ import { PropTypes } from 'prop-types';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import LoginPage from './components/LoginPage';
+import LoginPage from './components/LoginPage/LoginPage';
 
 import './styles/main.scss';
 import UserAPI from './api/userAPI';
 import { clearUser } from './actions/account';
+import HomePage from './components/HomePage/HomePage';
 
 export class App extends Component {
   static propTypes = {
-    user: PropTypes.object.isRequired,
+    user: PropTypes.object,
 
     clearUser: PropTypes.func.isRequired,
   };
@@ -53,9 +54,7 @@ export class App extends Component {
           </Switch>
         ) : (
           <Switch>
-            <Route path="/home">
-              Logged in Route {JSON.stringify(this.props.user)}
-            </Route>
+            <Route path="/home" component={HomePage} />
             <Route path="/*">
               <Redirect to="/home" />
             </Route>
