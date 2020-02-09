@@ -6,12 +6,12 @@ import { Form, Button } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
 import { fetchUser } from '../../actions/account';
+import { FIELDS } from '../../constants/fields';
 
-const CPF_MASK = '999.999.999-99';
 const CNPJ_MASK = '99.999.999/9999-99';
 
 const MASKS = {
-  cpf: CPF_MASK,
+  cpf: FIELDS.cpf.mask,
   cnpj: CNPJ_MASK,
 };
 
