@@ -15,6 +15,7 @@ import {
   faCreditCard,
   faMobileAlt,
   faHeartbeat,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const initIconLibrary = () => {
@@ -32,6 +33,7 @@ export const initIconLibrary = () => {
     faCar,
     faMotorcycle,
     faMobileAlt,
-    faCreditCard
+    faCreditCard,
+    faPlus
   );
 };

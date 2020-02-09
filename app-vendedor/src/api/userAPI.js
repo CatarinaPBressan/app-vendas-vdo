@@ -6,6 +6,7 @@ const UserAPI = {
         cpf: '38830880809',
         cnpj: null,
         token: 'userToken',
+        eid: 'ABCDEF',
       })
     );
   },

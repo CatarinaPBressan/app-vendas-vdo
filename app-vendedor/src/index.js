@@ -9,6 +9,7 @@ import './styles/main.scss';
 import App from './App';
 
 import account from './reducers/account';
+import pedido from './reducers/pedido';
 import { loadState, saveState } from './utils/localStorage';
 import { initIconLibrary } from './utils/faLibrary';
 
@@ -17,6 +18,7 @@ initIconLibrary();
 const reduxStore = configureStore({
   reducer: {
     account,
+    pedido,
   },
   preloadedState: loadState(),
 });

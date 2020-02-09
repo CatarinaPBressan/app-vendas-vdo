@@ -1,0 +1,164 @@
+Form field structure:
+groupName: slug nome do grupo: {
+    name: Nome no HTML
+    label: Identificador Legível
+    type: Tipo do input [text/textarea/number (text com inputType="numeric")/boolean/currency (estrutura diferente)/email/select]
+    htmlAttrs: {
+        ... Passa os valores direto pro elemento HTML
+    }
+    subLabel: texto explicativo do campo (opcional)
+    mask: Máscara (Gera um masked field) (opcional)
+    options: Array<{
+        value: valor
+        label: texto mostrado
+    }> (requerido se tipo=select, opções do select)
+
+    validation: função de validação (opcional)
+    onValidate: função quando passa a validação (opcional)
+}
+
+Grupos:
+- requerente (Dados do requerente)
+- observações (Obs.)
+- imovel (Dados do Imóvel)
+- veiculo (Dados do veículo)
+- financeiro (Dados Financeiros)
+
+Compartilhado Todos:
+- Dados do requerente:
+    - Nome Completo
+    - CPF [mask]
+    - Fone/Whatsapp [mask]
+    - Email [email]
+- Obs.:
+    - Obs [textarea]
+
+Seguro Residencial:
+- Dados do imóvel:
+    - CEP
+        * Fazer busca estado/cidade por CEP
+    - Estado [text disable]
+    - Cidade [text disable]
+    - É renovação [boolean]
+    - Valor em risco [currency]
+
+Previdência Privada:
+- Dados do requerente:
+    - Data Nascimento [mask/validation]
+    - Valor da Renda Mensal [currency]
+
+Seguro de Vida Individual:
+- Dados do requerente:
+    - Quantidade de dependentes [number]
+
+Plano Odonto:
+- Dados do requerente:
+    - Quantidade de dependentes [number]
+
+Seguro Automoveis:
+- Dados do requerente:
+    - Data Nascimento [mask/validation]
+    - Sexo [select (M/F/Outros/Não Especificar)]
+    - Estado Civil [select (Solteiro(a)/Casado(a) ou União Estável/Viúvo(a)/"Separado(a)/Divorciado(a)")]
+    - Profissão
+    - Quantidade de dependentes [number]
+    - Idade 1a habilitação [number]
+    - Dependentes > 17 anos? [boolean]
+- Dados do veículo:
+    - Motorista Principal [boolean]
+    - Já Possui seguro [boolean]
+    - Marca do Carro
+    - Fabricação do Carro
+    - Modelo do Carro
+    - Versão do Carro
+    - Carro é Alienado? [select (S/N/Não sei)]
+    - Possui Alarme/Anti-furto? [boolean]
+    - Possui Kit Gás? [boolean]
+    - Usado para trabalho? [select (N/Táxi/Uber ou semelhante/Transporte Profissional/Entrega de Mercadoria/Outros)]
+    - Como é a Garagem? [select (Portão automático ou porteiro/Portão manual/Estacionamento privado pago ou fechado/Não Possui (carro fica na rua))]
+
+
+Consórcio Imóvel:
+- Dados Financeiros:
+    - Valor da carta de crédito [currency]
+    - Valor da parcela ideal [currency]
+
+Consórcio Automóvel:
+- Dados Financeiros:
+    - Valor da carta de crédito [currency]
+    - Valor da parcela ideal [currency]
+
+Consórcio Motocicleta:
+- Dados Financeiros:
+    - Valor da carta de crédito [currency]
+    - Valor da parcela ideal [currency]
+
+Seguro Smartphone:
+- Dados do Requerente:
+    - CEP
+        * Fazer busca estado/cidade por CEP
+    - Estado [text disable]
+    - Cidade [text disable]
+    - Logradouro [text disable]
+    - Numero [text]
+    - Complemento [text]
+
+Cartão de Crédito
+- Dados do Requerente:
+    - CEP
+        * Fazer busca estado/cidade por CEP
+    - Estado [text disable]
+    - Cidade [text disable]
+    - Logradouro [text disable]
+    - Numero [text]
+    - Complemento [text]
+    - Estado Civil [select (Solteiro(a)/Casado(a) ou União Estável/Viúvo(a)/"Separado(a)/Divorciado(a)")]
+    - Ocupação [select (Assalariado/Empresário/Aposentado ou Pensionista/Autônomo/Outros)]
+    - Nome da mãe
+    - Data de vencimento [select (5/10/15/20/25)]
+
+
+<Form.Group controlId="formBasicCheckbox">
+  <Form.Check type="checkbox" label="Check me out" />
+</Form.Group>
+<Form.Group controlId="exampleForm.ControlSelect1">
+  <Form.Label>Example select</Form.Label>
+  <Form.Control as="select">
+    <option> </option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </Form.Control>
+</Form.Group>
+<Form.Group controlId="username">
+  <Form.Label> Label outside the input mask render</Form.Label>
+  <InputMask mask="999.999.999-99">
+    {() => (
+      <Form.Control
+        type="text"
+        inputMode="numeric"
+        required={true}
+      />
+    )}
+  </InputMask>
+</Form.Group>
+<Form.Group controlId="valor-em-risco">
+  <Form.Label>Valor em Risco</Form.Label>
+  <InputGroup className="mb-3">
+    <InputGroup.Prepend>
+      <InputGroup.Text>R$</InputGroup.Text>
+    </InputGroup.Prepend>
+    <Form.Control
+      type="text"
+      inputMode="numeric"
+      required={true}
+      pattern="\d+"
+    />
+    <InputGroup.Append>
+      <InputGroup.Text>.00</InputGroup.Text>
+    </InputGroup.Append>
+  </InputGroup>
+  <Form.Text className="text-muted">Somente números</Form.Text>
+</Form.Group>
