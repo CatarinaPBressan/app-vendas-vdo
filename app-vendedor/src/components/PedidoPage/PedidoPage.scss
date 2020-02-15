@@ -1,5 +1,10 @@
 .pedido-page {
   .back-button {
+    margin-top: 10px;
+    &:last-child {
+      margin-bottom: 50px;
+    }
+
     .label {
       margin-left: 10px;
     }
