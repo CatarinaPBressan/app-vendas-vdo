@@ -3,16 +3,13 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import './PedidoCard.scss';
+import { getProduct } from '../../utils/getProduct';
 
 const STATUS_MAP = {
   NEW: 'Novo',
   CREDIT_CHECK: 'Análise de Crédito',
   CANCELED: 'Cancelado',
   APPROVED: 'Aprovado',
-};
-
-const PRODUCT_MAP = {
-  'cartao-de-credito': 'Cartão de Crédito',
 };
 
 export const PedidoCard = (props) => {
@@ -29,7 +26,7 @@ export const PedidoCard = (props) => {
           <b>Status:</b> {STATUS_MAP[props.pedido.status]}
         </div>
         <div>
-          <b>Produto: {PRODUCT_MAP[props.pedido.product]}</b>
+          <b>Produto: {getProduct(props.pedido.product).name}</b>
         </div>
       </span>
       <span className="icon-container">
