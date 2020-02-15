@@ -4,6 +4,11 @@ import { PropTypes } from 'prop-types';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+const LINKS = [
+  { href: '/home', icon: 'plus', label: 'Novo Pedido' },
+  { href: '/pedidos', icon: 'clipboard', label: 'Pedidos' },
+];
+
 class AppNavbar extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
@@ -17,12 +22,15 @@ class AppNavbar extends Component {
         <Navbar.Toggle />
         <Navbar.Collapse id="main-collapse">
           <Nav className="mr-auto">
-            <Nav.Link href="/home" active={true}>
-              <FontAwesomeIcon icon="plus" /> Novo Pedido
-            </Nav.Link>
-            <Nav.Link href="/pedidos">
-              <FontAwesomeIcon icon="clipboard" /> Pedidos
-            </Nav.Link>
+            {LINKS.map((link) => (
+              <Nav.Link
+                href={link.href}
+                active={this.props.location.pathname === link.href}
+                key={link.href}
+              >
+                <FontAwesomeIcon icon={link.icon} /> {link.label}
+              </Nav.Link>
+            ))}
           </Nav>
 
           <Nav>
