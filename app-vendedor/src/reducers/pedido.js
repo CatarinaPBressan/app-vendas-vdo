@@ -49,7 +49,7 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'NEW',
+      status: 'CREDIT_CHECK',
       created_date: '2020-02-15T18:07:17.898Z',
     },
     {
@@ -73,7 +73,7 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'NEW',
+      status: 'APPROVED',
       created_date: '2020-02-15T18:07:19.429Z',
     },
     {
@@ -97,7 +97,7 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'NEW',
+      status: 'CANCELED',
       created_date: '2020-02-15T18:07:27.027Z',
     },
   ],

@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { Page } from '../common/Page';
+import PedidoCard from './PedidoCard';
+
+import './PedidosPage.scss';
 
 export class PedidosPage extends Component {
   static propTypes = {
@@ -21,17 +27,14 @@ export class PedidosPage extends Component {
         {this.props.pedidos.length ? (
           <div>
             {this.props.pedidos.map((pedido) => (
-              <div key={pedido.eid}>
-                EID: {pedido.eid}
-                <br />
-                Status: {pedido.status}
-                <br />
-                Nome: {pedido.data.nome} <br />
-              </div>
+              <PedidoCard key={pedido.eid} pedido={pedido} />
             ))}
           </div>
         ) : (
-          <div>Sem pedidos para mostrar</div>
+          <div className="no-pedidos">
+            <div>Sem pedidos para mostrar</div>
+            <FontAwesomeIcon icon="frown" />
+          </div>
         )}
       </Page>
     );
