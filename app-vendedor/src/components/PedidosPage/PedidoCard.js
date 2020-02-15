@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 
 import './PedidoCard.scss';
 import { getProduct } from '../../utils/getProduct';
@@ -12,9 +13,9 @@ const STATUS_MAP = {
   APPROVED: 'Aprovado',
 };
 
-export const PedidoCard = (props) => {
+const PedidoCard = (props) => {
   return (
-    <div className="pedido-card">
+    <Link to={`/pedidos/${props.pedido.eid}`} className="pedido-card">
       <span className="data-container">
         <div>
           <b>Nome:</b> {props.pedido.data.nome}
@@ -32,7 +33,7 @@ export const PedidoCard = (props) => {
       <span className="icon-container">
         <FontAwesomeIcon icon="chevron-right" />
       </span>
-    </div>
+    </Link>
   );
 };
 
