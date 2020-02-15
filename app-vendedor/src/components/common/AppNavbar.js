@@ -4,7 +4,7 @@ import { PropTypes } from 'prop-types';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-class NavBar extends Component {
+class AppNavbar extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
@@ -46,4 +46,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+export default AppNavbar;

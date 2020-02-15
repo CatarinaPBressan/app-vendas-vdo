@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
 
+import { PropTypes } from 'prop-types';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -12,6 +12,7 @@ import { clearUser } from './actions/account';
 
 import HomePage from './components/HomePage/HomePage';
 import ProductPage from './components/ProductPage/ProductPage';
+import PedidosPage from './components/PedidosPage/PedidosPage';
 
 export class App extends Component {
   static propTypes = {
@@ -58,6 +59,7 @@ export class App extends Component {
           <Switch>
             <Route path="/home" component={HomePage} />
             <Route path="/novo-pedido/:productId" component={ProductPage} />
+            <Route path="/pedidos" component={PedidosPage} />
             <Route path="/*">
               <Redirect to="/home" />
             </Route>
