@@ -14,7 +14,7 @@ const STATUS_MAP = {
 
 export const PedidoCard = (props) => {
   return (
-    <div key={props.pedido.eid} className="pedido-card">
+    <div className="pedido-card">
       <span className="data-container">
         <div>
           <b>Nome:</b> {props.pedido.data.nome}
