@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { LinkContainer } from 'react-router-bootstrap';
 
 const LINKS = [
   { href: '/home', icon: 'plus', label: 'Novo Pedido' },
@@ -23,13 +24,11 @@ class AppNavbar extends Component {
         <Navbar.Collapse id="main-collapse">
           <Nav className="mr-auto">
             {LINKS.map((link) => (
-              <Nav.Link
-                href={link.href}
-                active={this.props.location.pathname === link.href}
-                key={link.href}
-              >
-                <FontAwesomeIcon icon={link.icon} /> {link.label}
-              </Nav.Link>
+              <LinkContainer to={link.href} key={link.href}>
+                <Nav.Link>
+                  <FontAwesomeIcon icon={link.icon} /> {link.label}
+                </Nav.Link>
+              </LinkContainer>
             ))}
           </Nav>
 

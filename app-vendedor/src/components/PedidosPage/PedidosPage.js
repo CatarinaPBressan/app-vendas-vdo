@@ -5,32 +5,10 @@ import { connect } from 'react-redux';
 import { Page } from '../common/Page';
 
 export class PedidosPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pedidos: this.flattenAndOrderPedidos(props.pedidos),
-    };
-  }
-
-  flattenAndOrderPedidos = (pedidosMap) => {
-    const entries = pedidosMap.entries;
-    if (!entries) {
-      return [];
-    }
-    const pedidos = pedidosMap.entries.map(([eid, pedido]) => pedido);
-    return pedidos.sort((a, b) => {
-      if (a.created_date < b.created_date) {
-        return -1;
-      }
-      return 1;
-    });
-  };
-
   static propTypes = {
     user: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    pedidos: PropTypes.object.isRequired,
+    pedidos: PropTypes.array.isRequired,
   };
 
   render() {
@@ -40,8 +18,18 @@ export class PedidosPage extends Component {
         user={this.props.user}
         location={this.props.location}
       >
-        {this.state.pedidos.length ? (
-          <div></div>
+        {this.props.pedidos.length ? (
+          <div>
+            {this.props.pedidos.map((pedido) => (
+              <div key={pedido.eid}>
+                EID: {pedido.eid}
+                <br />
+                Status: {pedido.status}
+                <br />
+                Nome: {pedido.data.nome} <br />
+              </div>
+            ))}
+          </div>
         ) : (
           <div>Sem pedidos para mostrar</div>
         )}
