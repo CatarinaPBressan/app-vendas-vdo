@@ -18,6 +18,7 @@ import {
   faPlus,
   faChevronRight,
   faFrown,
+  faChevronLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const initIconLibrary = () => {
@@ -38,6 +39,7 @@ export const initIconLibrary = () => {
     faCreditCard,
     faPlus,
     faChevronRight,
-    faFrown
+    faFrown,
+    faChevronLeft
   );
 };
