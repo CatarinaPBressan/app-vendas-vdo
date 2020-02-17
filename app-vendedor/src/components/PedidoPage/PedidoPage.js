@@ -5,10 +5,10 @@ import { Button, Form, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-import { getPedido } from '../../utils/getPedido';
-
-import { Page } from '../common/Page';
+import Page from '../common/Page';
 import CartaoDeCredito from './produtos/CartaoDeCredito';
+
+import { getPedido } from '../../utils/getPedido';
 
 import './PedidoPage.scss';
 // TODO: Carregar Dinamicamente o produto

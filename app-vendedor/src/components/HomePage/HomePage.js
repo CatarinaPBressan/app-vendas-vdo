@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import ProductCard from './ProductCard';
-import { Page } from '../common/Page';
+import Page from '../common/Page';
 
 import { PRODUCTS } from '../../definitions/products';
 

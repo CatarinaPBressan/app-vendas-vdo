@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Page } from '../common/Page';
+import Page from '../common/Page';
 import PedidosNav from './PedidosNav';
 
 import './PedidosPage.scss';
