@@ -3,8 +3,14 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { LinkContainer } from 'react-router-bootstrap';
 
-class NavBar extends Component {
+const LINKS = [
+  { href: '/home', icon: 'plus', label: 'Novo Pedido' },
+  { href: '/pedidos', icon: 'clipboard', label: 'Pedidos' },
+];
+
+class AppNavbar extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
@@ -17,12 +23,13 @@ class NavBar extends Component {
         <Navbar.Toggle />
         <Navbar.Collapse id="main-collapse">
           <Nav className="mr-auto">
-            <Nav.Link href="/home" active={true}>
-              <FontAwesomeIcon icon="plus" /> Novo Pedido
-            </Nav.Link>
-            <Nav.Link href="/pedidos">
-              <FontAwesomeIcon icon="clipboard" /> Pedidos
-            </Nav.Link>
+            {LINKS.map((link) => (
+              <LinkContainer to={link.href} key={link.href}>
+                <Nav.Link>
+                  <FontAwesomeIcon icon={link.icon} /> {link.label}
+                </Nav.Link>
+              </LinkContainer>
+            ))}
           </Nav>
 
           <Nav>
@@ -46,4 +53,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+export default AppNavbar;
