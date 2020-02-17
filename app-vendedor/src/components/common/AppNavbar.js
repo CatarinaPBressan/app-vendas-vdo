@@ -13,7 +13,7 @@ const LINKS = [
 class AppNavbar extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
-    user: PropTypes.object.isRequired,
+    usuario: PropTypes.object.isRequired,
   };
 
   render() {
@@ -43,7 +43,7 @@ class AppNavbar extends Component {
             >
               <NavDropdown.Item>
                 <FontAwesomeIcon icon="user-cog" /> Perfil:
-                <b>{this.props.user.name}</b>
+                <b>{this.props.usuario.name}</b>
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>

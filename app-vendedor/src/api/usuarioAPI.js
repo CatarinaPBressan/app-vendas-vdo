@@ -1,5 +1,5 @@
-const UserAPI = {
-  fetchUser: (username, password) => {
+const UsuarioAPI = {
+  fetchUsuario: (username, password) => {
     return new Promise((resolve, reject) =>
       resolve({
         name: 'Arthur de Paula Bressan',
@@ -11,7 +11,7 @@ const UserAPI = {
     );
   },
 
-  checkTokenExpired: (user) => {
+  checkTokenExpired: (usuario) => {
     return new Promise((resolve, reject) => {
       const isExpired = false;
       resolve(isExpired);
@@ -19,4 +19,4 @@ const UserAPI = {
   },
 };
 
-export default UserAPI;
+export default UsuarioAPI;

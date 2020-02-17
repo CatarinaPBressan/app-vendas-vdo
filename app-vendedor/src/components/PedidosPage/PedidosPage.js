@@ -10,7 +10,7 @@ import './PedidosPage.scss';
 
 export class PedidosPage extends Component {
   static propTypes = {
-    user: PropTypes.object.isRequired,
+    usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     pedidos: PropTypes.array.isRequired,
   };
@@ -19,7 +19,7 @@ export class PedidosPage extends Component {
     return (
       <Page
         pageClassNames="pedidos-page"
-        user={this.props.user}
+        usuario={this.props.usuario}
         location={this.props.location}
       >
         <PedidosNav pedidos={this.props.pedidos} />
@@ -29,7 +29,7 @@ export class PedidosPage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  user: state.account.user,
+  usuario: state.usuario.usuario,
   pedidos: state.pedido.pedidos,
 });
 

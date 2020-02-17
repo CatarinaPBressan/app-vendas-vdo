@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Form, Button } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
-import { fetchUser } from '../../actions/account';
+import { fetchUsuario } from '../../actions/usuario';
 import { FIELDS } from '../../constants/fields';
 
 const CNPJ_MASK = '99.999.999/9999-99';
@@ -122,7 +122,7 @@ export class LoginPage extends Component {
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = {
-  fetchUser,
+  fetchUser: fetchUsuario,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

@@ -6,8 +6,8 @@ const initialState = {
   pedidos: [
     {
       eid: '30210487-28a5-41c2-9ab2-821320c2e849',
-      product: 'cartao-de-credito',
-      user: 'ABCDEF',
+      produto: 'cartao-de-credito',
+      usuario: 'ABCDEF',
       data: {
         nome: '111',
         cpf: '111.111.111-11',
@@ -25,13 +25,13 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'NEW',
+      status: 'NOVO',
       created_date: '2020-02-15T18:07:17.124Z',
     },
     {
       eid: 'af17418a-5218-40bb-ae16-546e2f8d2b42',
-      product: 'cartao-de-credito',
-      user: 'ABCDEF',
+      produto: 'cartao-de-credito',
+      usuario: 'ABCDEF',
       data: {
         nome: '111',
         cpf: '111.111.111-11',
@@ -49,13 +49,13 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'CREDIT_CHECK',
+      status: 'ANALISE_DE_CREDITO',
       created_date: '2020-02-15T18:07:17.898Z',
     },
     {
       eid: 'd9a9d2ec-1395-4369-98fc-fe1408ccf5ab',
-      product: 'cartao-de-credito',
-      user: 'ABCDEF',
+      produto: 'cartao-de-credito',
+      usuario: 'ABCDEF',
       data: {
         nome: '111',
         cpf: '111.111.111-11',
@@ -73,13 +73,13 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'APPROVED',
+      status: 'APROVADO',
       created_date: '2020-02-15T18:07:19.429Z',
     },
     {
       eid: '3fb867cf-2541-44e8-83c1-b33ecb6aecf9',
-      product: 'cartao-de-credito',
-      user: 'ABCDEF',
+      produto: 'cartao-de-credito',
+      usuario: 'ABCDEF',
       data: {
         nome: '111',
         cpf: '111.111.111-11',
@@ -97,7 +97,7 @@ const initialState = {
         data_vencimento: '5',
         observacoes: '11',
       },
-      status: 'CANCELED',
+      status: 'CANCELADO',
       created_date: '2020-02-15T18:07:27.027Z',
     },
   ],

@@ -5,18 +5,18 @@ import { connect } from 'react-redux';
 import { Form, Button, Card } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
-import CreditCardForm from './products/CreditCardForm';
+import CartaoDeCredito from './produtos/CartaoDeCredito';
 import Page from '../common/Page';
 
-import { getProduct } from '../../utils/getProduct';
+import { getProduto } from '../../utils/getProduto';
 import { FIELDS } from '../../constants/fields';
 import { createPedido } from '../../actions/pedido';
 
-import './ProductPage.scss';
+import './ProdutoPage.scss';
 
-class ProductPage extends Component {
+class ProdutoPage extends Component {
   static propTypes = {
-    user: PropTypes.object.isRequired,
+    usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
   };
@@ -25,15 +25,9 @@ class ProductPage extends Component {
     super(props);
 
     this.state = {
-      product: getProduct(props.match.params.productId),
+      produto: getProduto(props.match.params.produtoId),
     };
   }
-
-  getProductForm = () => {
-    return {
-      'cartao-de-credito': CreditCardForm,
-    }[this.state.product.id];
-  };
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -45,21 +39,24 @@ class ProductPage extends Component {
     });
     console.log(data);
     this.props
-      .createPedido(this.state.product, this.props.user, data)
+      .createPedido(this.state.produto, this.props.usuario, data)
       .then((pedido) => {
         console.log(pedido);
       });
   };
 
   render() {
-    const ProductForm = this.getProductForm();
+    const ProductForm = {
+      'cartao-de-credito': CartaoDeCredito,
+    }[this.state.produto.id];
+
     return (
       <Page
-        pageClassNames="product-page"
-        user={this.props.user}
+        pageClassNames="produto-page"
+        usuario={this.props.usuario}
         location={this.props.location}
       >
-        <h1>Novo pedido - {this.state.product.name}</h1>
+        <h1>Novo pedido - {this.state.produto.nome}</h1>
         <Form onSubmit={this.onSubmit}>
           <Card>
             <Card.Header>Dados básicos</Card.Header>
@@ -125,10 +122,10 @@ class ProductPage extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  user: state.account.user,
+  usuario: state.usuario.usuario,
 });
 const mapDispatchToProps = {
   createPedido,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ProdutoPage);

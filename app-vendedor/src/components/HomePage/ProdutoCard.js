@@ -4,28 +4,28 @@ import { PropTypes } from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-import './ProductCard.scss';
+import './ProdutoCard.scss';
 
-class ProductCard extends Component {
+class ProdutoCard extends Component {
   static propTypes = {
-    product: PropTypes.shape({
-      name: PropTypes.string.isRequired,
+    produto: PropTypes.shape({
+      nome: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired,
-      icon: PropTypes.string.isRequired,
+      icone: PropTypes.string.isRequired,
     }).isRequired,
   };
 
   render() {
-    const { icon, name, id } = this.props.product;
+    const { icone, nome, id } = this.props.produto;
     return (
       <Link to={`/novo-pedido/${id}`} className="product-card">
         <div className="icon-container">
-          <FontAwesomeIcon icon={icon} className="product-icon" />
+          <FontAwesomeIcon icon={icone} className="product-icon" />
         </div>
-        <div className="card-label">{name}</div>
+        <div className="card-label">{nome}</div>
       </Link>
     );
   }
 }
 
-export default ProductCard;
+export default ProdutoCard;
