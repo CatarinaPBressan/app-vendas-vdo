@@ -3,38 +3,36 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import ProductCard from './ProductCard';
 import { Page } from '../common/Page';
+import PedidosNav from './PedidosNav';
 
-import { PRODUCTS } from '../../definitions/products';
+import './PedidosPage.scss';
 
-import './HomePage.scss';
-
-class HomePage extends Component {
+export class PedidosPage extends Component {
   static propTypes = {
     user: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
+    pedidos: PropTypes.array.isRequired,
   };
 
   render() {
     return (
       <Page
+        pageClassNames="pedidos-page"
         user={this.props.user}
         location={this.props.location}
-        pageClassNames="home-page"
       >
-        <div className="products-container">
-          {PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <PedidosNav pedidos={this.props.pedidos} />
       </Page>
     );
   }
 }
+
 const mapStateToProps = (state) => ({
   user: state.account.user,
+  pedidos: state.pedido.pedidos,
 });
+
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps, mapDispatchToProps)(PedidosPage);
