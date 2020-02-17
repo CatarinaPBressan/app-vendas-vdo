@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 
 import { Form, Card } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
-import { FIELDS, BRAZIL_STATES } from '../../constants/fields';
+
+import { FIELDS, BRAZIL_STATES } from '../../../constants/fields';
 
 class CreditCardForm extends Component {
   render() {

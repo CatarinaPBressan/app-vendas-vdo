@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
 
+import { PropTypes } from 'prop-types';
 import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import LoginPage from './components/LoginPage/LoginPage';
-
-import './styles/main.scss';
 import UserAPI from './api/userAPI';
 import { clearUser } from './actions/account';
 
 import HomePage from './components/HomePage/HomePage';
+import LoginPage from './components/LoginPage/LoginPage';
 import ProductPage from './components/ProductPage/ProductPage';
+import PedidosPage from './components/PedidosPage/PedidosPage';
+import PedidoPage from './components/PedidoPage/PedidoPage';
+
+import './styles/main.scss';
 
 export class App extends Component {
   static propTypes = {
@@ -58,6 +60,8 @@ export class App extends Component {
           <Switch>
             <Route path="/home" component={HomePage} />
             <Route path="/novo-pedido/:productId" component={ProductPage} />
+            <Route path="/pedidos/:pedidoEid" component={PedidoPage} />
+            <Route path="/pedidos" component={PedidosPage} />
             <Route path="/*">
               <Redirect to="/home" />
             </Route>
