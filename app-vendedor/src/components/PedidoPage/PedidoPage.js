@@ -8,12 +8,16 @@ import { Link } from 'react-router-dom';
 import { getPedido } from '../../utils/getPedido';
 
 import { Page } from '../common/Page';
+import CartaoDeCredito from './produtos/CartaoDeCredito';
 
 import './PedidoPage.scss';
 // TODO: Carregar Dinamicamente o produto
 
 const PedidoPage = (props) => {
   const pedido = getPedido(props.pedidos, props.match.params.pedidoEid);
+  const ProductDisplay = {
+    'cartao-de-credito': CartaoDeCredito,
+  }[pedido.product];
   return (
     <Page
       pageClassNames="pedido-page"
@@ -57,87 +61,7 @@ const PedidoPage = (props) => {
           </Form.Group>
         </Card.Body>
       </Card>
-      <Card>
-        <Card.Header>Cartão de Crédito</Card.Header>
-        <Card.Body>
-          <Form.Group controlId="cep">
-            <Form.Label>CEP</Form.Label>
-            <Form.Control plaintext readOnly defaultValue={pedido.data.cep} />
-          </Form.Group>
-          <Form.Group controlId="estado">
-            <Form.Label>UF</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.estado}
-            />
-          </Form.Group>
-          <Form.Group controlId="cidade">
-            <Form.Label>Cidade</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.cidade}
-            />
-          </Form.Group>
-          <Form.Group controlId="logradouro">
-            <Form.Label>Logradouro / Rua</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.logradouro}
-            />
-          </Form.Group>
-          <Form.Group controlId="endereco_numero">
-            <Form.Label>Número</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.endereco_numero}
-            />
-          </Form.Group>
-          <Form.Group controlId="complemento">
-            <Form.Label>Complemento</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.complemento}
-            />
-          </Form.Group>
-          <Form.Group controlId="estado_civil">
-            <Form.Label>Estado Civil</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.estado_civil}
-            />
-          </Form.Group>
-          <Form.Group controlId="ocupacao">
-            <Form.Label>Ocupação</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.ocupacao}
-            />
-          </Form.Group>
-          <Form.Group controlId="nome_mae">
-            <Form.Label>Nome da Mãe</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.nome_mae}
-            />
-          </Form.Group>
-          <Form.Group controlId="data_vencimento">
-            <Form.Label>Data de Vencimento</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.data.data_vencimento}
-            />
-          </Form.Group>
-        </Card.Body>
-      </Card>
+      <ProductDisplay data={pedido.data} />
       <Card>
         <Card.Header>Observações</Card.Header>
         <Card.Body>

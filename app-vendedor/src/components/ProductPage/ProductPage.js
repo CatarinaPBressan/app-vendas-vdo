@@ -31,7 +31,7 @@ class ProductPage extends Component {
 
   getProductForm = () => {
     return {
-      'cartao-de-credito': <CreditCardForm />,
+      'cartao-de-credito': CreditCardForm,
     }[this.state.product.id];
   };
 
@@ -52,7 +52,7 @@ class ProductPage extends Component {
   };
 
   render() {
-    const productForm = this.getProductForm();
+    const ProductForm = this.getProductForm();
     return (
       <Page
         pageClassNames="product-page"
@@ -106,7 +106,7 @@ class ProductPage extends Component {
               </Form.Group>
             </Card.Body>
           </Card>
-          {productForm}
+          <ProductForm />
           <Card>
             <Card.Header>Observações</Card.Header>
             <Card.Body>
