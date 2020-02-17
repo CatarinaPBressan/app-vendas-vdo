@@ -16,9 +16,6 @@ import {
   faMobileAlt,
   faHeartbeat,
   faPlus,
-  faChevronRight,
-  faFrown,
-  faChevronLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const initIconLibrary = () => {
@@ -37,9 +34,6 @@ export const initIconLibrary = () => {
     faMotorcycle,
     faMobileAlt,
     faCreditCard,
-    faPlus,
-    faChevronRight,
-    faFrown,
-    faChevronLeft
+    faPlus
   );
 };

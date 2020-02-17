@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Container } from 'react-bootstrap';
 
+import Navbar from '../common/Navbar';
 import ProductCard from './ProductCard';
-import { Page } from '../common/Page';
 
 import { PRODUCTS } from '../../definitions/products';
 
@@ -18,17 +19,16 @@ class HomePage extends Component {
 
   render() {
     return (
-      <Page
-        user={this.props.user}
-        location={this.props.location}
-        pageClassNames="home-page"
-      >
-        <div className="products-container">
-          {PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </Page>
+      <div className="home-page">
+        <Navbar user={this.props.user} location={this.props.location} />
+        <Container>
+          <div className="products-container">
+            {PRODUCTS.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </Container>
+      </div>
     );
   }
 }
