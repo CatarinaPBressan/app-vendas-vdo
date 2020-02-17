@@ -16,7 +16,7 @@ export const FIELDS = {
   },
 };
 
-export const BRAZIL_STATES = [
+export const UFS_BRASIL = [
   'AC',
   'AL',
   'AP',

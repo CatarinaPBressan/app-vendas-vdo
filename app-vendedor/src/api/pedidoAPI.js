@@ -8,14 +8,14 @@ function uuidv4() {
 }
 
 const PedidoAPI = {
-  create: (product, user, data) => {
+  create: (produto, usuario, data) => {
     return new Promise((resolve, reject) => {
       resolve({
         eid: uuidv4(),
-        product: product.id,
-        user: user.eid,
+        produto: produto.id,
+        usuario: usuario.eid,
         data: data,
-        status: 'NEW',
+        status: 'NOVO',
         created_date: new Date().toISOString(),
       });
     });

@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import { Form, Card } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
-import { FIELDS, BRAZIL_STATES } from '../../../constants/fields';
+import { FIELDS, UFS_BRASIL } from '../../../constants/fields';
 
-class CreditCardForm extends Component {
+class CartaoDeCredito extends Component {
   render() {
     return (
       <Card>
@@ -31,9 +31,9 @@ class CreditCardForm extends Component {
             <Form.Label>UF</Form.Label>
             <Form.Control as="select" name="estado" required={true}>
               <option value="">(Selecione)</option>
-              {BRAZIL_STATES.map((state) => (
-                <option value={state} key={state}>
-                  {state}
+              {UFS_BRASIL.map((uf) => (
+                <option value={uf} key={uf}>
+                  {uf}
                 </option>
               ))}
             </Form.Control>
@@ -95,4 +95,4 @@ class CreditCardForm extends Component {
     );
   }
 }
-export default CreditCardForm;
+export default CartaoDeCredito;

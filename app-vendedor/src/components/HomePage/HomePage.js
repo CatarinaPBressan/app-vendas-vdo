@@ -3,29 +3,29 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import ProductCard from './ProductCard';
+import ProdutoCard from './ProdutoCard';
 import Page from '../common/Page';
 
-import { PRODUCTS } from '../../definitions/products';
+import { PRODUTOS } from '../../definitions/produtos';
 
 import './HomePage.scss';
 
 class HomePage extends Component {
   static propTypes = {
-    user: PropTypes.object.isRequired,
+    usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
   };
 
   render() {
     return (
       <Page
-        user={this.props.user}
+        usuario={this.props.usuario}
         location={this.props.location}
         pageClassNames="home-page"
       >
         <div className="products-container">
-          {PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {PRODUTOS.map((produto) => (
+            <ProdutoCard key={produto.id} produto={produto} />
           ))}
         </div>
       </Page>
@@ -33,7 +33,7 @@ class HomePage extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  user: state.account.user,
+  usuario: state.usuario.usuario,
 });
 const mapDispatchToProps = {};
 

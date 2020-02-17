@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import './styles/main.scss';
 import App from './App';
 
-import account from './reducers/account';
+import usuario from './reducers/usuario';
 import pedido from './reducers/pedido';
 import { loadState, saveState } from './utils/localStorage';
 import { initIconLibrary } from './utils/faLibrary';
@@ -17,7 +17,7 @@ initIconLibrary();
 
 const reduxStore = configureStore({
   reducer: {
-    account,
+    usuario,
     pedido,
   },
   preloadedState: loadState(),
@@ -25,7 +25,7 @@ const reduxStore = configureStore({
 
 reduxStore.subscribe(() => {
   // We might want to debounce/throttle the saveState function
-  saveState({ account: reduxStore.getState().account });
+  saveState({ usuario: reduxStore.getState().usuario });
 });
 
 ReactDOM.render(

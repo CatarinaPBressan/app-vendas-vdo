@@ -11,17 +11,16 @@ import CartaoDeCredito from './produtos/CartaoDeCredito';
 import { getPedido } from '../../utils/getPedido';
 
 import './PedidoPage.scss';
-// TODO: Carregar Dinamicamente o produto
 
 const PedidoPage = (props) => {
   const pedido = getPedido(props.pedidos, props.match.params.pedidoEid);
   const ProductDisplay = {
     'cartao-de-credito': CartaoDeCredito,
-  }[pedido.product];
+  }[pedido.produto];
   return (
     <Page
       pageClassNames="pedido-page"
-      user={props.user}
+      usuario={props.usuario}
       location={props.location}
     >
       <Button
@@ -91,7 +90,7 @@ const PedidoPage = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: state.account.user,
+  usuario: state.usuario.usuario,
   pedidos: state.pedido.pedidos,
 });
 

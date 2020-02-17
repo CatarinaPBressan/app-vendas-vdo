@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
 import './PedidoCard.scss';
-import { getProduct } from '../../utils/getProduct';
+import { getProduto } from '../../utils/getProduto';
 
 const STATUS_MAP = {
-  NEW: 'Novo',
-  CREDIT_CHECK: 'Análise de Crédito',
-  CANCELED: 'Cancelado',
-  APPROVED: 'Aprovado',
+  NOVO: 'Novo',
+  ANALISE_DE_CREDITO: 'Análise de Crédito',
+  CANCELADO: 'Cancelado',
+  APROVADO: 'Aprovado',
 };
 
 const PedidoCard = (props) => {
@@ -27,7 +27,7 @@ const PedidoCard = (props) => {
           <b>Status:</b> {STATUS_MAP[props.pedido.status]}
         </div>
         <div>
-          <b>Produto: {getProduct(props.pedido.product).name}</b>
+          <b>Produto: {getProduto(props.pedido.produto).nome}</b>
         </div>
       </span>
       <span className="icon-container">
