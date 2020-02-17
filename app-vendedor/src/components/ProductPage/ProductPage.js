@@ -6,13 +6,13 @@ import { Form, Button, Card } from 'react-bootstrap';
 import InputMask from 'react-input-mask';
 
 import CreditCardForm from './products/CreditCardForm';
+import Page from '../common/Page';
 
 import { getProduct } from '../../utils/getProduct';
 import { FIELDS } from '../../constants/fields';
 import { createPedido } from '../../actions/pedido';
 
 import './ProductPage.scss';
-import { Page } from '../common/Page';
 
 class ProductPage extends Component {
   static propTypes = {

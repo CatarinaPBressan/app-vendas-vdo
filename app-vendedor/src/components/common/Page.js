@@ -5,7 +5,7 @@ import { Container } from 'react-bootstrap';
 
 import AppNavbar from './AppNavbar';
 
-export class Page extends Component {
+class Page extends Component {
   static propTypes = {
     pageClassNames: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
