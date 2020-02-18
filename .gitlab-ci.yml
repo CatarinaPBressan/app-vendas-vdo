@@ -56,6 +56,7 @@ test_frontend:
 deploy_frontend:
   stage: deploy
   script:
+    - echo $AWS_ACCESS_KEY_ID
     - docker run \
       -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
       -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
