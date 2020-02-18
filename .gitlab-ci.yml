@@ -36,5 +36,5 @@ build_backend_image:
 build_frontend:
   script:
     - docker build -t frontend app-vendedor/
-    - docker run frontend yarn test
+    - docker run -e CI=true frontend yarn test
     - docker run frontend scripts/deploy.sh

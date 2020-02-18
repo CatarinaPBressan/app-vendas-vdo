@@ -11,7 +11,6 @@ RUN ./aws/install
 
 WORKDIR /home/docker/code
 COPY . /home/docker/code
-RUN ls /home/docker/code
 RUN cd /home/docker/code && yarn install
 RUN cd /home/docker/code && yarn build
 # A ideia aqui é:
