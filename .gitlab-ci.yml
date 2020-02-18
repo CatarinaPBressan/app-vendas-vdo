@@ -56,4 +56,4 @@ test_frontend:
 deploy_frontend:
   stage: deploy
   script:
-    - docker run frontend scripts/deploy.sh
+    - docker run frontend bash scripts/deploy.sh
