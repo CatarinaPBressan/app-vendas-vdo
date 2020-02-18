@@ -25,16 +25,32 @@ variables:
 services:
   - docker:19.03.1-dind
 
-before_script:
-  - docker info
+stages:
+  - build
+  - test
+  - deploy
 
-build_backend_image:
+build_backend:
+  stage: build
   script:
     - docker build -t backend backend/
+
+test_backend:
+  stage: test
+  script:
     - docker run backend python --version
 
 build_frontend:
+  stage: build
   script:
     - docker build -t frontend app-vendedor/
+
+test_frontend:
+  stage: test
+  script:
     - docker run -e CI=true frontend yarn test
+
+deploy_frontend:
+  stage: deploy
+  script:
     - docker run frontend scripts/deploy.sh
