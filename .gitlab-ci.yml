@@ -25,6 +25,9 @@ variables:
 services:
   - docker:19.03.1-dind
 
+before_script:
+  - docker info
+
 stages:
   - build
   - test
