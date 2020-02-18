@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres:12.2
+    container_name: app_vendas_db
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  app_vendas:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      cache_from:
+        - backend:latest
+    image: backend:latest
+    ports:
+      - "5000:5000"
+    hostname: app_vendas
+    networks:
+      default:
+        aliases:
+          - app_vendas
+    environment:
+      - FLASK_ENV=development
+    container_name: app_vendas
+    command: pipenv run flask run --host 0.0.0.0 --port 5000
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/home/docker/code
+    links:
+      - db:db
+    depends_on:
+      - db
