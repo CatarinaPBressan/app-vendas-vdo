@@ -56,8 +56,8 @@ test_frontend:
 deploy_frontend:
   stage: deploy
   script:
-    - docker run frontend ls
-    - docker run frontend ls build
-    - docker run frontend ls build/static
-    - docker run frontend cat scripts/deploy.sh
-    - docker run frontend bash scripts/deploy.sh
+    - docker run -e \
+      AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+      AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+      frontend \
+      bash scripts/deploy.sh
