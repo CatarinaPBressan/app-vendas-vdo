@@ -30,11 +30,11 @@ before_script:
 
 build_backend_image:
   script:
-    - docker build -t backend backend/Dockerfile
+    - docker build -t backend backend/
     - docker run backend python --version
 
 build_frontend:
   script:
-    - docker build -t frontend app-vendedor/Dockerfile
+    - docker build -t frontend app-vendedor/
     - docker run frontend yarn test
     - docker run frontend scripts/deploy.sh
