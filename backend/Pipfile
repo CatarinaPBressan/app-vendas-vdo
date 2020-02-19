@@ -7,8 +7,8 @@ verify_ssl = true
 ipdb = "*"
 pylint = "*"
 pylint-flask-sqlalchemy = "*"
-autopep8 = "*"
 flask-shell-ipython = "*"
+black = "*"
 
 [packages]
 flask = "*"
