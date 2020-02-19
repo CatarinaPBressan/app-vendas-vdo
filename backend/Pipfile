@@ -5,10 +5,17 @@ verify_ssl = true
 
 [dev-packages]
 ipdb = "*"
+pylint = "*"
+pylint-flask-sqlalchemy = "*"
+autopep8 = "*"
+flask-shell-ipython = "*"
 
 [packages]
 flask = "*"
 python-dotenv = "*"
+flask-sqlalchemy = "*"
+flask-migrate = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"

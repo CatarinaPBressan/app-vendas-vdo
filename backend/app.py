@@ -1,9 +1,3 @@
-from flask import Flask, request, escape
+from app_vendedor import create_app
 
-app = Flask(__name__)
-
-
-@app.route('/')
-def hello():
-    name = request.args.get("name", "World")
-    return f'Hello, {escape(name)}!'
+app = create_app()
