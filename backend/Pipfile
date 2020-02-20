@@ -9,6 +9,7 @@ pylint = "*"
 pylint-flask-sqlalchemy = "*"
 flask-shell-ipython = "*"
 black = "*"
+pytest = "*"
 
 [packages]
 flask = "*"
@@ -16,6 +17,11 @@ python-dotenv = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 psycopg2 = "*"
+flask-restful = "*"
+flask-httpauth = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
