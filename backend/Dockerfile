@@ -12,6 +12,7 @@ WORKDIR /home/docker/code
 COPY Pipfile /home/docker/code
 COPY Pipfile.lock /home/docker/code
 RUN pipenv sync
+RUN pipenv sync --dev
 ENV PYTHONPATH /home/docker/code:$PYTHONPATH
 
 EXPOSE 5000

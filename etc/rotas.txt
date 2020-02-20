@@ -1,0 +1,4 @@
+URL                     | METODO | DESCRICAO
+v0/users                | POST   | Login de usuario com username + senha. Retorna token
+v0/pedidos/             | GET    | Pega lista pedidos para um usuario. Retorna resumo dos pedidos.
+v0/pedidos/{pedido_eid} | GET    | Pega pedido de um usuario completo

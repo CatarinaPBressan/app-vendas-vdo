@@ -1,6 +1,9 @@
 from datetime import timedelta
 
+from flask import current_app
+from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm import relationship
+from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 
 from app_vendedor.base import db
 from app_vendedor import utils
@@ -17,10 +20,34 @@ class _BaseTable(object):
     )
 
 
+ONE_DAY = 60 * 60 * 24
+
+
 class Usuario(db.Model, _BaseTable):
     username = db.Column(db.String(255), index=True, unique=True)
     cpf = db.Column(db.String(11), unique=True)
     password = db.Column(db.String(128))
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def generate_auth_token(self, expiration=ONE_DAY):
+        s = TimedJSONWebSignatureSerializer(
+            current_app.config["SECRET_KEY"], expires_in=expiration
+        )
+        return s.dumps({"eid": self.eid})
+
+    @staticmethod
+    def get_user_via_token(token):
+        s = TimedJSONWebSignatureSerializer(current_app.config["SECRET_KEY"])
+        try:
+            data = s.loads(token)
+        except (SignatureExpired, BadSignature):
+            return None
+        return Usuario.query.filter_by(eid=data["eid"]).one()
 
 
 def _generate_expires_on(context):
