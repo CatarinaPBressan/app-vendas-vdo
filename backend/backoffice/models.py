@@ -5,9 +5,9 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm import relationship
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 
-from app_vendedor.base import db
-from app_vendedor import utils
-from app_vendedor.enums import EstadoCivil, Ocupacao, DataVencimento
+from backoffice.base import db
+from backoffice import utils
+from backoffice.enums import EstadoCivil, Ocupacao, DataVencimento
 
 
 class _BaseTable(object):

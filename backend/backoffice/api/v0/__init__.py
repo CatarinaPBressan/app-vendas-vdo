@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from flask_restful import Api
 
-from app_vendedor.api.v0.users import LoginAPI
+from backoffice.api.v0.users import LoginAPI
 
 
 def init_app(app, api_template):

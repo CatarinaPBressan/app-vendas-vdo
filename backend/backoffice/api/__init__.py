@@ -1,4 +1,4 @@
-from app_vendedor.api import v0
+from backoffice.api import v0
 
 
 def init_app(app):

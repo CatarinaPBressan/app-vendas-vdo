@@ -1,7 +1,7 @@
 from flask import g
 
-from app_vendedor.base import basic_auth
-from app_vendedor.models import Usuario
+from backoffice.base import basic_auth
+from backoffice.models import Usuario
 
 
 @basic_auth.verify_password

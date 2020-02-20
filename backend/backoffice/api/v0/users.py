@@ -1,7 +1,7 @@
 from flask import g
 from flask_restful import Resource
 
-from app_vendedor.auth import basic_auth
+from backoffice.auth import basic_auth
 
 
 class LoginAPI(Resource):
