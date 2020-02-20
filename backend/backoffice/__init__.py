@@ -1,6 +1,6 @@
 from flask import Flask
 
-from app_vendedor import (
+from backoffice import (
     settings,
     base,
     routes,

@@ -3,11 +3,11 @@ version: "3.7"
 services:
   db:
     image: postgres:12.2
-    container_name: app_vendas_db
+    container_name: backoffice_db
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
 
-  app_vendas:
+  backoffice:
     build:
       context: .
       dockerfile: Dockerfile
@@ -16,14 +16,14 @@ services:
     image: backend:latest
     ports:
       - "5000:5000"
-    hostname: app_vendas
+    hostname: backoffice
     networks:
       default:
         aliases:
-          - app_vendas
+          - backoffice
     environment:
       - FLASK_ENV=development
-    container_name: app_vendas
+    container_name: backoffice
     command: pipenv run flask run --host 0.0.0.0 --port 5000
     tty: true
     stdin_open: true
