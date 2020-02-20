@@ -1,17 +1,23 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
 
+import ReactDOM from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import * as Sentry from '@sentry/browser';
 
-import './styles/main.scss';
-import App from './App';
-
+import * as serviceWorker from './serviceWorker';
 import usuario from './reducers/usuario';
 import pedido from './reducers/pedido';
 import { loadState, saveState } from './utils/localStorage';
 import { initIconLibrary } from './utils/faLibrary';
+
+import App from './App';
+
+import './styles/main.scss';
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+});
 
 initIconLibrary();
 
