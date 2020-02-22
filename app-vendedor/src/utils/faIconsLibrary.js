@@ -1,4 +1,4 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { library } from "@fortawesome/fontawesome-svg-core";
 
 import {
   faClipboard,
@@ -19,7 +19,8 @@ import {
   faChevronRight,
   faFrown,
   faChevronLeft,
-} from '@fortawesome/free-solid-svg-icons';
+  faSignOutAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const initIconLibrary = () => {
   library.add(
@@ -40,6 +41,7 @@ export const initIconLibrary = () => {
     faPlus,
     faChevronRight,
     faFrown,
-    faChevronLeft
+    faChevronLeft,
+    faSignOutAlt,
   );
 };

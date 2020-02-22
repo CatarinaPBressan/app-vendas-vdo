@@ -1,110 +1,23 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer } from "@reduxjs/toolkit";
 
-import { appendPedido } from '../actions/pedido';
+import { addPedido, setPedidos } from "../actions/pedido";
 
 const initialState = {
-  pedidos: [
-    {
-      eid: '30210487-28a5-41c2-9ab2-821320c2e849',
-      produto: 'cartao-de-credito',
-      usuario: 'ABCDEF',
-      data: {
-        nome: '111',
-        cpf: '111.111.111-11',
-        email: '111@111',
-        telefone_celular: '(11)11111-1111',
-        cep: '11111-111',
-        estado: 'AC',
-        cidade: '1111',
-        logradouro: '11',
-        endereco_numero: '111',
-        complemento: '111',
-        estado_civil: 'solteiro',
-        ocupacao: 'assalariado',
-        nome_mae: '11',
-        data_vencimento: '5',
-        observacoes: '11',
-      },
-      status: 'NOVO',
-      created_date: '2020-02-15T18:07:17.124Z',
-    },
-    {
-      eid: 'af17418a-5218-40bb-ae16-546e2f8d2b42',
-      produto: 'cartao-de-credito',
-      usuario: 'ABCDEF',
-      data: {
-        nome: '111',
-        cpf: '111.111.111-11',
-        email: '111@111',
-        telefone_celular: '(11)11111-1111',
-        cep: '11111-111',
-        estado: 'AC',
-        cidade: '1111',
-        logradouro: '11',
-        endereco_numero: '111',
-        complemento: '111',
-        estado_civil: 'solteiro',
-        ocupacao: 'assalariado',
-        nome_mae: '11',
-        data_vencimento: '5',
-        observacoes: '11',
-      },
-      status: 'ANALISE_DE_CREDITO',
-      created_date: '2020-02-15T18:07:17.898Z',
-    },
-    {
-      eid: 'd9a9d2ec-1395-4369-98fc-fe1408ccf5ab',
-      produto: 'cartao-de-credito',
-      usuario: 'ABCDEF',
-      data: {
-        nome: '111',
-        cpf: '111.111.111-11',
-        email: '111@111',
-        telefone_celular: '(11)11111-1111',
-        cep: '11111-111',
-        estado: 'AC',
-        cidade: '1111',
-        logradouro: '11',
-        endereco_numero: '111',
-        complemento: '111',
-        estado_civil: 'solteiro',
-        ocupacao: 'assalariado',
-        nome_mae: '11',
-        data_vencimento: '5',
-        observacoes: '11',
-      },
-      status: 'APROVADO',
-      created_date: '2020-02-15T18:07:19.429Z',
-    },
-    {
-      eid: '3fb867cf-2541-44e8-83c1-b33ecb6aecf9',
-      produto: 'cartao-de-credito',
-      usuario: 'ABCDEF',
-      data: {
-        nome: '111',
-        cpf: '111.111.111-11',
-        email: '111@111',
-        telefone_celular: '(11)11111-1111',
-        cep: '11111-111',
-        estado: 'AC',
-        cidade: '1111',
-        logradouro: '11',
-        endereco_numero: '111',
-        complemento: '111',
-        estado_civil: 'solteiro',
-        ocupacao: 'assalariado',
-        nome_mae: '11',
-        data_vencimento: '5',
-        observacoes: '11',
-      },
-      status: 'CANCELADO',
-      created_date: '2020-02-15T18:07:27.027Z',
-    },
-  ],
+  pedidos: {},
+};
+
+const _setPedido = (state, pedido) => {
+  state.pedidos[pedido.eid] = pedido;
 };
 
 export default createReducer(initialState, {
-  [appendPedido]: (state, { payload }) => {
-    state.pedidos.push(payload);
+  [addPedido]: (state, { payload }) => {
+    _setPedido(state, payload);
+  },
+
+  [setPedidos]: (state, { payload }) => {
+    payload.forEach((pedido) => {
+      _setPedido(state, pedido);
+    });
   },
 });

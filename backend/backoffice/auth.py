@@ -18,6 +18,7 @@ def verify_token(token):
     usuario = Usuario.get_user_via_token(token)
     if not usuario:
         return False
+    usuario.token = token
     g.usuario = usuario
     return True
 

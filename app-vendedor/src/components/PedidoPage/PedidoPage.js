@@ -1,22 +1,29 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
 
-import { Button, Form, Card } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { Button, Form, Card } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
-import Page from '../common/Page';
-import CartaoDeCredito from './produtos/CartaoDeCredito';
+import Page from "../common/Page";
+import CartaoDeCredito from "./produtos/CartaoDeCredito";
 
-import { getPedido } from '../../utils/getPedido';
+import { fetchPedidoProduto } from "../../actions/pedido";
 
-import './PedidoPage.scss';
+import "./PedidoPage.scss";
 
 const PedidoPage = (props) => {
-  const pedido = getPedido(props.pedidos, props.match.params.pedidoEid);
+  const pedido = props.pedidos[props.match.params.pedidoEid];
+
+  useEffect(() => {
+    if (!pedido.produto) {
+      props.fetchPedidoProduto(pedido, props.usuario);
+    }
+  });
+
   const ProductDisplay = {
-    'cartao-de-credito': CartaoDeCredito,
-  }[pedido.produto];
+    "cartao-de-credito": CartaoDeCredito,
+  }[pedido.produto_slug];
   return (
     <Page
       pageClassNames="pedido-page"
@@ -40,27 +47,35 @@ const PedidoPage = (props) => {
         <Card.Body>
           <Form.Group controlId="nome">
             <Form.Label>Nome Completo</Form.Label>
-            <Form.Control plaintext readOnly defaultValue={pedido.data.nome} />
+            <Form.Control
+              plaintext
+              readOnly
+              defaultValue={pedido.nome_completo}
+            />
           </Form.Group>
           <Form.Group controlId="cpf">
             <Form.Label>CPF</Form.Label>
-            <Form.Control plaintext readOnly defaultValue={pedido.data.cpf} />
+            <Form.Control plaintext readOnly defaultValue={pedido.cpf} />
           </Form.Group>
           <Form.Group controlId="email">
             <Form.Label>Email</Form.Label>
-            <Form.Control plaintext readOnly defaultValue={pedido.data.email} />
+            <Form.Control plaintext readOnly defaultValue={pedido.email} />
           </Form.Group>
           <Form.Group controlId="telefone_celular">
             <Form.Label>Telefone Celular</Form.Label>
             <Form.Control
               plaintext
               readOnly
-              defaultValue={pedido.data.telefone_celular}
+              defaultValue={pedido.telefone_celular}
             />
           </Form.Group>
         </Card.Body>
       </Card>
-      <ProductDisplay data={pedido.data} />
+      {pedido.produto ? (
+        <ProductDisplay data={pedido.produto} />
+      ) : (
+        <div>Carregando dados</div>
+      )}
       <Card>
         <Card.Header>Observações</Card.Header>
         <Card.Body>
@@ -69,7 +84,7 @@ const PedidoPage = (props) => {
               name="observacoes"
               as="textarea"
               disabled
-              defaultValue={pedido.data.observacoes}
+              defaultValue={pedido.observacoes}
             />
           </Form.Group>
         </Card.Body>
@@ -94,6 +109,8 @@ const mapStateToProps = (state) => ({
   pedidos: state.pedido.pedidos,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  fetchPedidoProduto,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PedidoPage);

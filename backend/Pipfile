@@ -20,6 +20,7 @@ psycopg2 = "*"
 flask-restful = "*"
 flask-httpauth = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
+marshmallow = "*"
 
 [requires]
 python_version = "3.8"

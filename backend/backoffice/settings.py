@@ -11,6 +11,7 @@ class ConfigBase(object):
 
 class ConfigDev(ConfigBase):
     SQLALCHEMY_DATABASE_URI = "postgres://db/app_vendas"
+    SENTRY_DSN = None
 
 
 def init_app(app, extra_config=None):

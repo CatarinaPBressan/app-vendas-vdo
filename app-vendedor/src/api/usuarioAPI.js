@@ -1,21 +1,37 @@
+import axios from "axios";
+import { getHeaders } from "./utils";
+
 const UsuarioAPI = {
-  fetchUsuario: (username, password) => {
-    return new Promise((resolve, reject) =>
-      resolve({
-        name: 'Arthur de Paula Bressan',
-        cpf: '38830880809',
-        cnpj: null,
-        token: 'userToken',
-        eid: 'ABCDEF',
-      })
-    );
+  login: (username, password) => {
+    return axios
+      .post(
+        "/api/v0/usuarios/",
+        {},
+        {
+          auth: {
+            username: username,
+            password: password,
+          },
+        },
+      )
+      .then((response) => {
+        return response.data.usuario;
+      });
   },
 
-  checkTokenExpired: (usuario) => {
-    return new Promise((resolve, reject) => {
-      const isExpired = false;
-      resolve(isExpired);
-    });
+  getUsuario: (token) => {
+    return axios
+      .get("/api/v0/usuarios/", {
+        headers: getHeaders(token),
+      })
+      .then((response) => {
+        return response.data.usuario;
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 401) {
+          return null;
+        }
+      });
   },
 };
 

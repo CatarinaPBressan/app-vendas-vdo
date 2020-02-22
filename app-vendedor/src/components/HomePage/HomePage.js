@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import ProdutoCard from './ProdutoCard';
-import Page from '../common/Page';
+import ProdutoCard from "./ProdutoCard";
+import Page from "../common/Page";
 
-import { PRODUTOS } from '../../definitions/produtos';
+import { PRODUTOS } from "../../definitions/produtos";
 
-import './HomePage.scss';
+import "./HomePage.scss";
 
 class HomePage extends Component {
   static propTypes = {
@@ -24,7 +24,7 @@ class HomePage extends Component {
         pageClassNames="home-page"
       >
         <div className="products-container">
-          {PRODUTOS.map((produto) => (
+          {Object.values(PRODUTOS).map((produto) => (
             <ProdutoCard key={produto.id} produto={produto} />
           ))}
         </div>

@@ -27,6 +27,7 @@ class Usuario(db.Model, _BaseTable):
     username = db.Column(db.String(255), index=True, unique=True)
     cpf = db.Column(db.String(11), unique=True)
     password = db.Column(db.String(128))
+    nome = db.Column(db.String(255))
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -38,7 +39,7 @@ class Usuario(db.Model, _BaseTable):
         s = TimedJSONWebSignatureSerializer(
             current_app.config["SECRET_KEY"], expires_in=expiration
         )
-        return s.dumps({"eid": self.eid})
+        return s.dumps({"eid": self.eid}).decode("ascii")
 
     @staticmethod
     def get_user_via_token(token):
@@ -65,9 +66,10 @@ class Pedido(db.Model, _BaseTable):
     usuario_id = db.Column(db.ForeignKey("usuario.id"))
     produto = relationship("PedidoProduto", uselist=False)
     produto_slug = db.Column(db.String(255))
+    status = db.Column(db.String(255), default="NOVO")
     # Dados do pedido compartilhado entre todos os produtos
     nome_completo = db.Column(db.String(255))
-    cpf = db.Column(db.String(11))
+    cpf = db.Column(db.String(14))
     email = db.Column(db.String(255))
     telefone_celular = db.Column(db.String(14))
     observacoes = db.Column(db.Text)
@@ -82,6 +84,7 @@ class PedidoProduto(db.Model, _BaseTable):
     """
 
     pedido_id = db.Column(db.ForeignKey("pedido.id"))
+    # Dados dos produtos
     cep = db.Column(db.String(9))
     uf = db.Column(db.String(2))
     cidade = db.Column(db.String(255))
@@ -94,5 +97,5 @@ class PedidoProduto(db.Model, _BaseTable):
     data_vencimento = db.Column(db.Enum(DataVencimento))
 
 
-def init_app(app):
+def init_app(app):  # pylint: disable=unused-argument
     pass

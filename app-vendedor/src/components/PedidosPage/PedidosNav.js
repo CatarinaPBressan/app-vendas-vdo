@@ -1,14 +1,15 @@
-import React from 'react';
+import React from "react";
 
-import PedidoCard from './PedidoCard';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PedidoCard from "./PedidoCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const PedidosNav = (props) => {
+  const pedidos = Object.values(props.pedidos);
   return (
     <div>
-      {props.pedidos.length ? (
+      {pedidos.length ? (
         <div>
-          {props.pedidos.map((pedido) => (
+          {pedidos.map((pedido) => (
             <PedidoCard key={pedido.eid} pedido={pedido} />
           ))}
         </div>

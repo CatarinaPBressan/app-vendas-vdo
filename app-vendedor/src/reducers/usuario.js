@@ -1,6 +1,6 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer } from "@reduxjs/toolkit";
 
-import { setUsuario } from '../actions/usuario';
+import { setUsuario } from "../actions/usuario";
 
 const initialState = {
   usuario: null,

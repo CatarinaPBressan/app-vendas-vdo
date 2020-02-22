@@ -1,6 +1,6 @@
 {
   "python.pythonPath": "/home/arthur/.local/share/virtualenvs/backend-BsrfFKB7/bin/python3.8",
-  "python.linting.pylintArgs": ["--load-plugins", "pylint-flask-sqlalchemy"],
+  "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy"],
   "[python]": {
     "editor.tabSize": 4,
     "editor.rulers": [88],

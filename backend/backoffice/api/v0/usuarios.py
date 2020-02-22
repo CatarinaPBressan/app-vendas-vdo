@@ -1,13 +1,17 @@
 from flask import g
 from flask_restful import Resource
 
-from backoffice.auth import basic_auth
+from backoffice.auth import basic_auth, token_auth
+from backoffice.api.v0.schemas import usuario_schema
 
 
 class LoginAPI(Resource):
-
-    decorators = [basic_auth.login_required]
-
+    @basic_auth.login_required
     def post(self):
-        token = g.usuario.generate_auth_token()
-        return {"token": token.decode("ascii")}
+        usuario = g.usuario
+        usuario.token = usuario.generate_auth_token()
+        return {"usuario": usuario_schema.dump(usuario)}
+
+    @token_auth.login_required
+    def get(self):
+        return {"usuario": usuario_schema.dump(g.usuario)}
