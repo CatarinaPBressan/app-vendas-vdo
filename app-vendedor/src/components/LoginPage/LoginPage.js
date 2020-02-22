@@ -1,56 +1,21 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import React, { Component } from "react";
+import { PropTypes } from "prop-types";
 
-import { connect } from 'react-redux';
-import { Form, Button } from 'react-bootstrap';
-import InputMask from 'react-input-mask';
+import { connect } from "react-redux";
+import { Form, Button } from "react-bootstrap";
 
-import { fetchUsuario } from '../../actions/usuario';
-import { FIELDS } from '../../constants/fields';
-
-const CNPJ_MASK = '99.999.999/9999-99';
-
-const MASKS = {
-  cpf: FIELDS.cpf.mask,
-  cnpj: CNPJ_MASK,
-};
+import { login } from "../../actions/usuario";
 
 export class LoginPage extends Component {
   static propTypes = {
-    fetchUser: PropTypes.func.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-    const loginWith = 'cpf';
-    this.state = {
-      usernameMask: MASKS[loginWith],
-      username: '',
-      password: '',
-      loginWith: loginWith,
-    };
-  }
-
-  onLoginChoiceChanged = (event) => {
-    const loginWith = event.target.value;
-    this.setState({
-      loginWith,
-      usernameMask: MASKS[loginWith],
-    });
+    login: PropTypes.func.isRequired,
   };
 
   onSubmit = (e) => {
     e.preventDefault();
-
-    this.props.fetchUser(this.state.username, this.state.password);
-  };
-
-  onPasswordChange = (e) => {
-    this.setState({ password: e.target.value });
-  };
-
-  onUsernameChange = (e) => {
-    this.setState({ username: e.target.value });
+    const username = e.target.elements.username.value;
+    const password = e.target.elements.password.value;
+    this.props.login(username, password);
   };
 
   render() {
@@ -58,57 +23,17 @@ export class LoginPage extends Component {
       <div className="login-page">
         <div className="login-box">
           <Form onSubmit={this.onSubmit}>
-            <Form.Group>
-              <Form.Label htmlFor="usuario">
+            <Form.Group controlId="username">
+              <Form.Label>
                 <b>Usuário:</b>
               </Form.Label>
-              <Form.Check
-                label="CPF"
-                type="radio"
-                value="cpf"
-                name="username-type"
-                checked={this.state.loginWith === 'cpf'}
-                onChange={this.onLoginChoiceChanged}
-                id="username-type-cpf"
-              />
-              <Form.Check
-                label="CNPJ"
-                type="radio"
-                value="cnpj"
-                name="username-type"
-                checked={this.state.loginWith === 'cnpj'}
-                onChange={this.onLoginChoiceChanged}
-                id="username-type-cnpj"
-              />
+              <Form.Control type="text" required size="lg" />
             </Form.Group>
-            <Form.Group controlId="username">
-              <InputMask
-                mask={this.state.usernameMask}
-                onChange={this.onUsernameChange}
-                value={this.state.username}
-              >
-                {() => (
-                  <Form.Control
-                    type="text"
-                    inputMode="numeric"
-                    required
-                    size="lg"
-                  />
-                )}
-              </InputMask>
-            </Form.Group>
-
             <Form.Group controlId="password">
               <Form.Label>
                 <b>Senha:</b>
               </Form.Label>
-              <Form.Control
-                type="password"
-                required
-                size="lg"
-                onChange={this.onPasswordChange}
-                value={this.state.password}
-              />
+              <Form.Control type="password" required size="lg" />
             </Form.Group>
             <Button variant="primary" type="submit" size="lg" block>
               Entrar
@@ -122,7 +47,7 @@ export class LoginPage extends Component {
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = {
-  fetchUser: fetchUsuario,
+  login: login,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

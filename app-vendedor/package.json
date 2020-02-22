@@ -13,10 +13,12 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
     "cpf-cnpj-validator": "^0.1.0",
     "jquery": "1.9.1",
+    "lodash": "^4.17.15",
     "node-sass": "^4.13.0",
     "popper.js": "^1.16.0",
     "react": "^16.12.0",
@@ -55,8 +57,9 @@
     "prettier": "^1.19.1"
   },
   "prettier": {
-    "singleQuote": true,
-    "trailingComma": "es5",
+    "singleQuote": false,
+    "trailingComma": "all",
     "arrowParens": "always"
-  }
+  },
+  "proxy": "http://localhost:5000/"
 }

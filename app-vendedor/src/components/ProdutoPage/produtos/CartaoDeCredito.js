@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { Form, Card } from 'react-bootstrap';
-import InputMask from 'react-input-mask';
+import { Form, Card } from "react-bootstrap";
+import InputMask from "react-input-mask";
 
-import { FIELDS, UFS_BRASIL } from '../../../constants/fields';
+import { FIELDS, UFS_BRASIL } from "../../../constants/fields";
 
 class CartaoDeCredito extends Component {
   render() {
@@ -27,9 +27,9 @@ class CartaoDeCredito extends Component {
             </InputMask>
             <Form.Text className="text-muted">Somente números</Form.Text>
           </Form.Group>
-          <Form.Group controlId="estado">
+          <Form.Group controlId="uf">
             <Form.Label>UF</Form.Label>
-            <Form.Control as="select" name="estado" required={true}>
+            <Form.Control as="select" name="uf" required={true}>
               <option value="">(Selecione)</option>
               {UFS_BRASIL.map((uf) => (
                 <option value={uf} key={uf}>
@@ -83,11 +83,11 @@ class CartaoDeCredito extends Component {
             <Form.Label>Data de Vencimento</Form.Label>
             <Form.Control as="select" name="data_vencimento" required={true}>
               <option value="">(Selecione)</option>
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="15">15</option>
-              <option value="20">20</option>
-              <option value="25">25</option>
+              <option value="dia_5">5</option>
+              <option value="dia_10">10</option>
+              <option value="dia_15">15</option>
+              <option value="dia_20">20</option>
+              <option value="dia_25">25</option>
             </Form.Control>
           </Form.Group>
         </Card.Body>

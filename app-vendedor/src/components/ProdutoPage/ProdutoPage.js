@@ -1,18 +1,26 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Form, Button, Card } from 'react-bootstrap';
-import InputMask from 'react-input-mask';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Form, Button, Card } from "react-bootstrap";
+import InputMask from "react-input-mask";
 
-import CartaoDeCredito from './produtos/CartaoDeCredito';
-import Page from '../common/Page';
+import CartaoDeCredito from "./produtos/CartaoDeCredito";
+import Page from "../common/Page";
 
-import { getProduto } from '../../utils/getProduto';
-import { FIELDS } from '../../constants/fields';
-import { createPedido } from '../../actions/pedido';
+import { PRODUTOS } from "../../definitions/produtos";
+import { FIELDS } from "../../constants/fields";
+import { createPedido } from "../../actions/pedido";
 
-import './ProdutoPage.scss';
+import "./ProdutoPage.scss";
+
+const PEDIDO_FIELDS = [
+  "nome_completo",
+  "cpf",
+  "email",
+  "telefone_celular",
+  "observacoes",
+];
 
 class ProdutoPage extends Component {
   static propTypes = {
@@ -25,21 +33,32 @@ class ProdutoPage extends Component {
     super(props);
 
     this.state = {
-      produto: getProduto(props.match.params.produtoId),
+      produto: PRODUTOS[this.props.match.params.produtoId],
     };
   }
 
   onSubmit = (e) => {
     e.preventDefault();
-    let data = {};
+    let pedido_data = {};
+    let produto_data = {};
     Object.entries(e.target.elements).forEach(([_, element]) => {
-      if (element.type !== 'submit') {
-        data[element.name] = element.value;
+      if (element.type !== "submit") {
+        const name = element.name;
+        const value = element.value;
+        if (PEDIDO_FIELDS.includes(name)) {
+          pedido_data[name] = value;
+        } else {
+          produto_data[name] = value;
+        }
       }
     });
-    console.log(data);
     this.props
-      .createPedido(this.state.produto, this.props.usuario, data)
+      .createPedido(
+        this.state.produto,
+        this.props.usuario,
+        pedido_data,
+        produto_data,
+      )
       .then((pedido) => {
         console.log(pedido);
       });
@@ -47,7 +66,7 @@ class ProdutoPage extends Component {
 
   render() {
     const ProductForm = {
-      'cartao-de-credito': CartaoDeCredito,
+      "cartao-de-credito": CartaoDeCredito,
     }[this.state.produto.id];
 
     return (
@@ -61,9 +80,9 @@ class ProdutoPage extends Component {
           <Card>
             <Card.Header>Dados básicos</Card.Header>
             <Card.Body>
-              <Form.Group controlId="nome">
+              <Form.Group controlId="nome_completo">
                 <Form.Label>Nome Completo</Form.Label>
-                <Form.Control name="nome" type="text" required />
+                <Form.Control name="nome_completo" type="text" required />
               </Form.Group>
               <Form.Group controlId="cpf">
                 <Form.Label>CPF</Form.Label>

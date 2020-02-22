@@ -1,19 +1,29 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import _ from "lodash";
 
-import Page from '../common/Page';
-import PedidosNav from './PedidosNav';
+import { fetchPedidos } from "../../actions/pedido";
+import Page from "../common/Page";
+import PedidosNav from "./PedidosNav";
 
-import './PedidosPage.scss';
+import "./PedidosPage.scss";
 
 export class PedidosPage extends Component {
   static propTypes = {
     usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
-    pedidos: PropTypes.array.isRequired,
+    pedidos: PropTypes.object.isRequired,
+
+    fetchPedidos: PropTypes.func.isRequired,
   };
+
+  componentDidMount() {
+    if (_.isEmpty(this.props.pedidos)) {
+      this.props.fetchPedidos(this.props.usuario);
+    }
+  }
 
   render() {
     return (
@@ -33,6 +43,8 @@ const mapStateToProps = (state) => ({
   pedidos: state.pedido.pedidos,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  fetchPedidos,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PedidosPage);

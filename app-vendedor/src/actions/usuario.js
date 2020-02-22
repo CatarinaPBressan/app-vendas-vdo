@@ -1,15 +1,23 @@
-import { createAction } from '@reduxjs/toolkit';
+import { createAction } from "@reduxjs/toolkit";
 
-import UsuarioAPI from '../api/usuarioAPI';
+import UsuarioAPI from "../api/usuarioAPI";
 
-export const setUsuario = createAction('usuario/usuario/set');
+export const setUsuario = createAction("usuario/usuario/set");
 
-export const fetchUsuario = (username, password) => (dispatch) => {
-  return UsuarioAPI.fetchUsuario(username, password).then((usuario) => {
+export const login = (username, password) => (dispatch) => {
+  return UsuarioAPI.login(username, password).then((usuario) => {
+    localStorage.setItem("token", usuario.token);
+    dispatch(setUsuario(usuario));
+  });
+};
+
+export const getUsuario = (token) => (dispatch) => {
+  return UsuarioAPI.getUsuario(token).then((usuario) => {
     dispatch(setUsuario(usuario));
   });
 };
 
 export const clearUsuario = () => (dispatch) => {
+  localStorage.removeItem("token");
   dispatch(setUsuario(null));
 };

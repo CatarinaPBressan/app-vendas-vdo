@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import { PropTypes } from 'prop-types';
-import { Switch, Route, Redirect, BrowserRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { PropTypes } from "prop-types";
+import { Switch, Route, Redirect, BrowserRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
-import UsuarioAPI from './api/usuarioAPI';
-import { clearUsuario } from './actions/usuario';
+import { clearUsuario, getUsuario } from "./actions/usuario";
 
-import HomePage from './components/HomePage/HomePage';
-import LoginPage from './components/LoginPage/LoginPage';
-import ProdutoPage from './components/ProdutoPage/ProdutoPage';
-import PedidosPage from './components/PedidosPage/PedidosPage';
-import PedidoPage from './components/PedidoPage/PedidoPage';
+import HomePage from "./components/HomePage/HomePage";
+import LoginPage from "./components/LoginPage/LoginPage";
+import ProdutoPage from "./components/ProdutoPage/ProdutoPage";
+import PedidosPage from "./components/PedidosPage/PedidosPage";
+import PedidoPage from "./components/PedidoPage/PedidoPage";
 
-import './styles/main.scss';
+import "./styles/main.scss";
 
 export class App extends Component {
   static propTypes = {
     usuario: PropTypes.object,
     clearUsuario: PropTypes.func.isRequired,
+    getUsuario: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -30,13 +30,15 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    if (this.props.usuario) {
-      UsuarioAPI.checkTokenExpired(this.props.usuario).then((isExpired) => {
-        if (isExpired) {
-          this.props.clearUsuario();
-        }
+    if (!this.props.usuario) {
+      const usuarioToken = localStorage.getItem("token");
+      if (usuarioToken) {
+        this.props.getUsuario(usuarioToken).then(() => {
+          this.setState({ loading: false });
+        });
+      } else {
         this.setState({ loading: false });
-      });
+      }
     } else {
       this.setState({ loading: false });
     }
@@ -77,6 +79,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   clearUsuario: clearUsuario,
+  getUsuario: getUsuario,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

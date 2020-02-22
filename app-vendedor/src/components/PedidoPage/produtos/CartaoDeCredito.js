@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Form } from 'react-bootstrap';
+import React from "react";
+import { Card, Form } from "react-bootstrap";
 
 const CartaoDeCredito = (props) => {
   return (
@@ -10,9 +10,9 @@ const CartaoDeCredito = (props) => {
           <Form.Label>CEP</Form.Label>
           <Form.Control plaintext readOnly defaultValue={props.data.cep} />
         </Form.Group>
-        <Form.Group controlId="estado">
+        <Form.Group controlId="uf">
           <Form.Label>UF</Form.Label>
-          <Form.Control plaintext readOnly defaultValue={props.data.estado} />
+          <Form.Control plaintext readOnly defaultValue={props.data.uf} />
         </Form.Group>
         <Form.Group controlId="cidade">
           <Form.Label>Cidade</Form.Label>
