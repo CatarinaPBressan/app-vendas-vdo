@@ -8,6 +8,7 @@ from backoffice import (
     context_processors,
     models,
     api,
+    admin,
 )
 
 
@@ -19,6 +20,7 @@ def create_app(extra_config=None):
     base.init_app(app)
     models.init_app(app)
 
+    admin.init_app(app)
     api.init_app(app)
     context_processors.init_app(app)
     routes.init_app(app)

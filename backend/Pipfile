@@ -21,6 +21,7 @@ flask-restful = "*"
 flask-httpauth = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
 marshmallow = "*"
+flask-admin = "*"
 
 [requires]
 python_version = "3.8"

@@ -7,6 +7,7 @@ class ConfigBase(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///app_vendas.sqlite"
     SENTRY_DSN = os.environ.get("SENTRY_DSN")
+    FLASK_ADMIN_SWATCH = "cerulean"
 
 
 class ConfigDev(ConfigBase):
