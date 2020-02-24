@@ -25,7 +25,7 @@ ONE_DAY = 60 * 60 * 24
 
 class Usuario(db.Model, _BaseTable):
     username = db.Column(db.String(255), index=True, unique=True)
-    cpf = db.Column(db.String(11), unique=True)
+    cpf = db.Column(db.String(14), unique=True)
     password = db.Column(db.String(128))
     nome = db.Column(db.String(255))
 
@@ -64,7 +64,7 @@ class Token(db.Model, _BaseTable):
 
 class Pedido(db.Model, _BaseTable):
     usuario_id = db.Column(db.ForeignKey("usuario.id"))
-    produto = relationship("PedidoProduto", uselist=False)
+    produto = relationship("PedidoProduto", uselist=False, backref="pedido")
     produto_slug = db.Column(db.String(255))
     status = db.Column(db.String(255), default="NOVO")
     # Dados do pedido compartilhado entre todos os produtos
