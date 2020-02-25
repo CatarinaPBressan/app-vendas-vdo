@@ -22,6 +22,7 @@ flask-httpauth = "*"
 sentry-sdk = {extras = ["flask"],version = "*"}
 marshmallow = "*"
 flask-admin = "*"
+pusher = "*"
 
 [requires]
 python_version = "3.8"

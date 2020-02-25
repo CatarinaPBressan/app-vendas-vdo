@@ -1,0 +1,26 @@
+.pedido-card {
+  border-top: 1px solid lightgray;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  color: initial;
+
+  &:last-child {
+    border-bottom: 1px solid lightgray;
+  }
+
+  &:hover {
+    color: initial;
+    text-decoration: none;
+  }
+
+  .data-container {
+    flex: 8 0;
+  }
+
+  .icon-container {
+    flex: 1 0;
+    font-size: 25px;
+    color: #989898;
+  }
+}

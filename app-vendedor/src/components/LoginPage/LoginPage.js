@@ -6,6 +6,8 @@ import { Form, Button } from "react-bootstrap";
 
 import { login } from "../../actions/usuario";
 
+import "./LoginPage.scss";
+
 export class LoginPage extends Component {
   static propTypes = {
     login: PropTypes.func.isRequired,
