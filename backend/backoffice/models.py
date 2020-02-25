@@ -19,6 +19,9 @@ class _BaseTable(object):
         db.DateTime, default=utils.datetime_now, onupdate=utils.datetime_now
     )
 
+    def __str__(self):
+        return f"<{self.__class__.__name__} - {self.eid}>"
+
 
 ONE_DAY = 60 * 60 * 24
 
@@ -64,6 +67,7 @@ class Token(db.Model, _BaseTable):
 
 class Pedido(db.Model, _BaseTable):
     usuario_id = db.Column(db.ForeignKey("usuario.id"))
+    usuario = relationship("Usuario")
     produto = relationship("PedidoProduto", uselist=False, backref="pedido")
     produto_slug = db.Column(db.String(255))
     status = db.Column(db.String(255), default="NOVO")

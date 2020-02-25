@@ -33,8 +33,10 @@ class PedidoSchema(Schema):
     produto = fields.Nested(PedidoProdutoSchema, required=True)
     created_at = fields.DateTime(format="iso", dump_only=True)
     updated_at = fields.DateTime(format="iso", dump_only=True)
+    usuario = fields.Nested(UsuarioSchema, dump_only=True)
 
 
-pedido_schema = PedidoSchema()
-pedidos_schema = PedidoSchema(many=True)
+pedido_pusher_schema = PedidoSchema(exclude=["produto", "usuario.token"])
+pedido_schema = PedidoSchema(exclude=["usuario.token"])
+pedidos_schema = PedidoSchema(many=True, exclude=["usuario.token"])
 usuario_schema = UsuarioSchema()

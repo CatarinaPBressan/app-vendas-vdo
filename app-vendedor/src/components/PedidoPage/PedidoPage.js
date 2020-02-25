@@ -47,27 +47,19 @@ const PedidoPage = (props) => {
         <Card.Body>
           <Form.Group controlId="nome">
             <Form.Label>Nome Completo</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.nome_completo}
-            />
+            <Form.Control plaintext readOnly value={pedido.nome_completo} />
           </Form.Group>
           <Form.Group controlId="cpf">
             <Form.Label>CPF</Form.Label>
-            <Form.Control plaintext readOnly defaultValue={pedido.cpf} />
+            <Form.Control plaintext readOnly value={pedido.cpf} />
           </Form.Group>
           <Form.Group controlId="email">
             <Form.Label>Email</Form.Label>
-            <Form.Control plaintext readOnly defaultValue={pedido.email} />
+            <Form.Control plaintext readOnly value={pedido.email} />
           </Form.Group>
           <Form.Group controlId="telefone_celular">
             <Form.Label>Telefone Celular</Form.Label>
-            <Form.Control
-              plaintext
-              readOnly
-              defaultValue={pedido.telefone_celular}
-            />
+            <Form.Control plaintext readOnly value={pedido.telefone_celular} />
           </Form.Group>
         </Card.Body>
       </Card>
@@ -84,7 +76,7 @@ const PedidoPage = (props) => {
               name="observacoes"
               as="textarea"
               disabled
-              defaultValue={pedido.observacoes}
+              value={pedido.observacoes}
             />
           </Form.Group>
         </Card.Body>

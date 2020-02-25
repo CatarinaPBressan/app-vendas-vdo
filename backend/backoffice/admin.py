@@ -47,7 +47,9 @@ class UsuarioModelView(_BaseModelView):
     form_overrides = {"password": fields.PasswordField}
 
     def on_model_change(self, form, model, is_created):
-        model.set_password(form.password.data)
+        password = form.password.data
+        if password:
+            model.set_password(password)
 
 
 class PedidoModelView(_BaseModelView):
