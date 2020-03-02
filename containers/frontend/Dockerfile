@@ -1,5 +1,7 @@
 FROM node:12-slim
 
+ARG APPLICATION_NAME
+
 RUN apt-get update && apt-get install -y \
   zip \
   unzip \
@@ -10,6 +12,9 @@ RUN unzip awscliv2.zip
 RUN ./aws/install
 
 WORKDIR /home/docker/code
-COPY . /home/docker/code
-RUN cd /home/docker/code && yarn install
-RUN cd /home/docker/code && yarn build
+RUN echo "Building react application: ${APPLICATION_NAME}"
+COPY ./${APPLICATION_NAME} .
+COPY ./scripts ./scripts
+
+RUN yarn install
+RUN yarn build

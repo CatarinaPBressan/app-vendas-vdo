@@ -2,10 +2,13 @@ import os
 
 
 class ConfigBase(object):
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "super-secret"
-    PROMOTORES_S3_STATIC_PATH = None
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    PROMOTORES_S3_STATIC_PATH = "https://app-vendedor-static-assets.s3-sa-east-1.amazonaws.com/staging/app-vendedor/static/{filename}"
+    BACKOFFICE_S3_STATIC_PATH = "https://app-vendedor-static-assets.s3-sa-east-1.amazonaws.com/staging/frontend/static/{filename}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = "sqlite:///app_vendas.sqlite"
+    SQLALCHEMY_DATABASE_URI = (
+        os.environ.get("DATABASE_URI") or "sqlite:///app_vendas.sqlite"
+    )
     SENTRY_DSN = os.environ.get("SENTRY_DSN")
     FLASK_ADMIN_SWATCH = "cerulean"
     PUSHER_APP_ID = os.environ.get("PUSHER_APP_ID")
@@ -15,12 +18,13 @@ class ConfigBase(object):
 
 
 class ConfigDev(ConfigBase):
+    SECRET_KEY = "super-secret"
     SQLALCHEMY_DATABASE_URI = "postgres://db/app_vendas"
     SENTRY_DSN = None
 
 
 def init_app(app, extra_config=None):
-    config = {"development": ConfigDev}[os.environ["FLASK_ENV"]]
+    config = {"development": ConfigDev}.get(os.environ.get("FLASK_ENV"), ConfigBase)
     app.config.from_object(config)
 
     if extra_config:
