@@ -96,6 +96,6 @@ deploy_production:
   environment:
     name: production
   script:
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_ECS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_ECS_SECRET_ACCESS_KEY} backend python ecs_task_deployer.py --service backend --version latest --environment production
+    - docker run -e AWS_ACCESS_KEY_ID=${AWS_ECS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_ECS_SECRET_ACCESS_KEY} backend pipenv run python ecs_task_deployer.py --service backend --version latest --environment production
     - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} app-vendedor bash scripts/deploy-statics.sh production app-vendedor
     - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy-statics.sh production frontend
