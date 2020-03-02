@@ -10,7 +10,7 @@ services:
   backoffice:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: containers/backend/Dockerfile
       cache_from:
         - backend:latest
     image: backend:latest
@@ -23,7 +23,6 @@ services:
           - backoffice
     environment:
       - FLASK_ENV=development
-      - SENTRY_DSN=${SENTRY_DSN}
     container_name: backoffice
     command: pipenv run flask run --host 0.0.0.0 --port 5000
     tty: true
