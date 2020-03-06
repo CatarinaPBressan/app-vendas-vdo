@@ -3,11 +3,10 @@ import os
 
 class ConfigBase(object):
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    PROMOTORES_S3_STATIC_PATH = "https://app-vendedor-static-assets.s3-sa-east-1.amazonaws.com/staging/app-vendedor/static/{filename}"
-    BACKOFFICE_S3_STATIC_PATH = "https://app-vendedor-static-assets.s3-sa-east-1.amazonaws.com/staging/frontend/static/{filename}"
+    S3_STATIC_PATH = "https://app-vendedor-static-assets.s3-sa-east-1.amazonaws.com/staging/frontend/static/{filename}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = (
-        os.environ.get("DATABASE_URI") or "sqlite:///app_vendas.sqlite"
+        os.environ.get("DATABASE_URI") or "sqlite:///backoffice.sqlite"
     )
     SENTRY_DSN = os.environ.get("SENTRY_DSN")
     FLASK_ADMIN_SWATCH = "cerulean"
@@ -19,7 +18,7 @@ class ConfigBase(object):
 
 class ConfigDev(ConfigBase):
     SECRET_KEY = "super-secret"
-    SQLALCHEMY_DATABASE_URI = "postgres://db/app_vendas"
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:@db/app_vendas"
     SENTRY_DSN = None
 
 

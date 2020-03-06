@@ -1,20 +1,24 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import PropTypes from "prop-types";
-import { Container } from "react-bootstrap";
+import PropTypes from 'prop-types';
+import { Container } from 'react-bootstrap';
 
-import AppNavbar from "./AppNavbar";
+import AppNavbar from './AppNavbar';
 
 class Page extends Component {
   static propTypes = {
     pageClassNames: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
+    usuario: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired,
   };
-
   render() {
     return (
       <div className={this.props.pageClassNames}>
-        <AppNavbar />
+        <AppNavbar
+          usuario={this.props.usuario}
+          location={this.props.location}
+        />
         <Container>{this.props.children}</Container>
       </div>
     );

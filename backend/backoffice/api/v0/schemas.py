@@ -6,6 +6,8 @@ class UsuarioSchema(Schema):
     cpf = fields.String(dump_only=True)
     nome = fields.String(dump_only=True)
     token = fields.String(dump_only=True)
+    username = fields.String(load_only=True)
+    password = fields.String(load_only=True)
 
 
 class PedidoProdutoSchema(Schema):

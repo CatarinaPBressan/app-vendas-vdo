@@ -4,6 +4,7 @@ from flask import current_app
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm import relationship
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
+import sqlalchemy_utils
 
 from backoffice.base import db
 from backoffice import utils
@@ -101,5 +102,8 @@ class PedidoProduto(db.Model, _BaseTable):
     data_vencimento = db.Column(db.Enum(DataVencimento))
 
 
-def init_app(app):  # pylint: disable=unused-argument
-    pass
+def init_app(app):
+    db_url = app.config["SQLALCHEMY_DATABASE_URI"]
+    if not sqlalchemy_utils.database_exists(db_url):
+        sqlalchemy_utils.create_database(db_url)
+        db.create_all(app=app)

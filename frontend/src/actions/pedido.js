@@ -5,6 +5,17 @@ import PedidoAPI from "../api/pedidoAPI";
 export const addPedido = createAction("pedido/pedido/append");
 export const setPedidos = createAction("pedido/pedidos/set");
 
+export const createPedido = (produto, usuario, pedido_data, produto_data) => (
+  dispatch,
+) => {
+  return PedidoAPI.create(produto, usuario, pedido_data, produto_data).then(
+    (pedido) => {
+      dispatch(addPedido(pedido));
+      return pedido;
+    },
+  );
+};
+
 export const fetchPedidos = (usuario) => (dispatch) => {
   return PedidoAPI.fetchPedidos(usuario).then((pedidos) => {
     dispatch(setPedidos(pedidos));
