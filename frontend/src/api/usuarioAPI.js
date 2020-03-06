@@ -4,16 +4,10 @@ import { getHeaders } from "./utils";
 const UsuarioAPI = {
   login: (username, password) => {
     return axios
-      .post(
-        "/api/v0/usuarios/",
-        {},
-        {
-          auth: {
-            username: username,
-            password: password,
-          },
-        },
-      )
+      .post("/api/v0/usuarios/", {
+        username: username,
+        password: password,
+      })
       .then((response) => {
         return response.data.usuario;
       });

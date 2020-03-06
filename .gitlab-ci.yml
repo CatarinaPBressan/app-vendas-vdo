@@ -36,31 +36,21 @@ stages:
 build_backend:
   stage: build
   script:
-    - docker build -t ${ECR_REPO}backend:${CI_COMMIT_SHORT_SHA} -t ${ECR_REPO}backend:latest -f containers/backend/Dockerfile .
-
-build_app_vendedor:
-  stage: build
-  script:
-    - docker build --build-arg APPLICATION_NAME=app-vendedor -t app-vendedor:${CI_COMMIT_SHORT_SHA} -t app-vendedor:latest -f containers/frontend/Dockerfile .
+    - cd backend
+    - docker build -t ${ECR_REPO}backend:${CI_COMMIT_SHORT_SHA} -t ${ECR_REPO}backend:latest -f Dockerfile .
 
 build_frontend:
   stage: build
   script:
-    - docker build --build-arg APPLICATION_NAME=frontend -t frontend:${CI_COMMIT_SHORT_SHA} -t frontend:latest -f containers/frontend/Dockerfile .
+    - cd frontend
+    - docker build -t frontend:${CI_COMMIT_SHORT_SHA} -t frontend:latest -f Dockerfile .
 
 test_backend:
   stage: test
   except:
     - master
   script:
-    - docker run backend pipenv run pytest
-
-test_app_vendedor:
-  stage: test
-  except:
-    - master
-  script:
-    - docker run -e CI=true app-vendedor yarn test
+    - docker run backend pytest
 
 test_frontend:
   stage: test
@@ -84,9 +74,8 @@ deploy_staging:
     name: staging
     url: http://staging-1338850204.sa-east-1.elb.amazonaws.com/hello_world/
   script:
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_ECS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_ECS_SECRET_ACCESS_KEY} backend pipenv run python ecs_task_deployer.py --service backend --version latest --environment staging
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} app-vendedor bash scripts/deploy-statics.sh production app-vendedor
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy-statics.sh production frontend
+    - docker run -e AWS_ACCESS_KEY_ID=${AWS_ECS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_ECS_SECRET_ACCESS_KEY} backend python scripts/ecs_task_deployer.py --service backend --version latest --environment staging
+    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy_statics.sh staging
 
 deploy_production:
   stage: deploy_production
@@ -96,6 +85,5 @@ deploy_production:
   environment:
     name: production
   script:
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_ECS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_ECS_SECRET_ACCESS_KEY} backend pipenv run python ecs_task_deployer.py --service backend --version latest --environment production
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} app-vendedor bash scripts/deploy-statics.sh production app-vendedor
-    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy-statics.sh production frontend
+    - docker run -e AWS_ACCESS_KEY_ID=${AWS_ECS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_ECS_SECRET_ACCESS_KEY} backend python scripts/ecs_task_deployer.py --service backend --version latest --environment production
+    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy-statics.sh production

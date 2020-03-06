@@ -1,0 +1,15 @@
+.pedidos-nav {
+  flex: 1 0 200px;
+  margin-right: 10px;
+  height: 90vh;
+  overflow-y: auto;
+
+  .no-pedidos {
+    text-align: center;
+    margin-top: 130px;
+    svg {
+      margin-top: 10px;
+      font-size: xx-large;
+    }
+  }
+}

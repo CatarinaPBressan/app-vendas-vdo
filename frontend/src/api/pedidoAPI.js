@@ -4,8 +4,6 @@ import { getHeaders } from "./utils";
 
 const PedidoAPI = {
   create: (produto, usuario, pedido_data, produto_data) => {
-    console.log(pedido_data);
-    console.log(produto_data);
     const data = {
       ...pedido_data,
       produto_slug: produto.id,
