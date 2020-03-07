@@ -21,7 +21,7 @@ BACKEND_TASK_DEFINITION_TEMPLATE = {
         {
             "essential": True,
             "name": "backend-{environment}",
-            "memory": 1024,
+            "memory": 512,
             "cpu": 0,
             "command": [
                 "pipenv",
