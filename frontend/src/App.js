@@ -15,7 +15,7 @@ import PedidosPage from "./components/PedidosPage/PedidosPage";
 
 import "./styles/main.scss";
 
-function App(props) {
+const App = (props) => {
   const [loading, setLoading] = useState(true);
 
   const { usuario, getUsuario, clearUsuario, fetchPedidos, addPedido } = props;
@@ -69,7 +69,7 @@ function App(props) {
       )}
     </>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   usuario: state.usuario.usuario,

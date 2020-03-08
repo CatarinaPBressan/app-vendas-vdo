@@ -1,19 +1,27 @@
 import React from "react";
 
 import { Route } from "react-router-dom";
+import { Row, Col } from "react-bootstrap";
 
 import PedidosNav from "./PedidosNav";
 import PedidoDisplay from "./PedidoDisplay";
 
 const DesktopPedidosPage = (props) => {
   return (
-    <>
-      <PedidosNav match={props.match} pedidos={props.pedidos} />
-      <Route exact path={`${props.match.path}`}>
-        <div style={{ flex: "4 0 auto" }}>Selecione um pedido</div>
-      </Route>
-      <Route path={`${props.match.path}:pedidoEid`} component={PedidoDisplay} />
-    </>
+    <Row>
+      <Col md={4}>
+        <PedidosNav match={props.match} pedidos={props.pedidos} />
+      </Col>
+      <Col>
+        <Route exact path={`${props.match.path}`}>
+          <div>Selecione um pedido</div>
+        </Route>
+        <Route
+          path={`${props.match.path}:pedidoEid`}
+          component={PedidoDisplay}
+        />
+      </Col>
+    </Row>
   );
 };
 
