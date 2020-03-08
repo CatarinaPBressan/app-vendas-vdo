@@ -8,6 +8,7 @@ class UsuarioSchema(Schema):
     token = fields.String(dump_only=True)
     username = fields.String(load_only=True)
     password = fields.String(load_only=True)
+    permissoes = fields.List(fields.String, dump_only=True)
 
 
 class PedidoProdutoSchema(Schema):
