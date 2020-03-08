@@ -27,6 +27,7 @@ class ProdutoPage extends Component {
     usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -74,6 +75,7 @@ class ProdutoPage extends Component {
         pageClassNames="produto-page"
         usuario={this.props.usuario}
         location={this.props.location}
+        history={this.props.history}
       >
         <h1>Novo pedido - {this.state.produto.nome}</h1>
         <Form onSubmit={this.onSubmit}>

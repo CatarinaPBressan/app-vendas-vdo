@@ -9,7 +9,6 @@ const PedidoAPI = {
       produto_slug: produto.id,
       produto: produto_data,
     };
-    console.log(data);
     return axios
       .post("/api/v0/pedidos/", data, {
         headers: getHeaders(usuario.token),
@@ -22,9 +21,6 @@ const PedidoAPI = {
   fetchPedidos: (usuario) => {
     return axios
       .get("/api/v0/pedidos/", {
-        params: {
-          lista_pedidos: true,
-        },
         headers: getHeaders(usuario.token),
       })
       .then((response) => {
@@ -35,9 +31,6 @@ const PedidoAPI = {
   fetchPedidoProduto: (pedido, usuario) => {
     return axios
       .get(`/api/v0/pedidos/${pedido.eid}/`, {
-        params: {
-          lista_pedidos: true,
-        },
         headers: getHeaders(usuario.token),
       })
       .then((response) => {

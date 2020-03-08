@@ -7,6 +7,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { connect } from "react-redux";
 
 import { clearUsuario } from "../../actions/usuario";
+import { clearPedidos } from "../../actions/pedido";
 
 const LINKS = [
   { href: "/", icon: "plus", label: "Novo Pedido", exact: true },
@@ -17,12 +18,16 @@ class AppNavbar extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     usuario: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
 
     clearUsuario: PropTypes.func.isRequired,
+    clearPedidos: PropTypes.func.isRequired,
   };
 
   onLogoutClick = () => {
+    this.props.history.replace("/");
     this.props.clearUsuario();
+    this.props.clearPedidos();
   };
 
   render() {
@@ -70,7 +75,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  clearUsuario: clearUsuario,
+  clearUsuario,
+  clearPedidos,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppNavbar);

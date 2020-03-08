@@ -15,6 +15,7 @@ class PedidosPage extends Component {
     usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
     pedidos: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
   };
 
   render() {
@@ -23,6 +24,7 @@ class PedidosPage extends Component {
         pageClassNames="pedidos-page"
         usuario={this.props.usuario}
         location={this.props.location}
+        history={this.props.history}
       >
         <Breakpoint medium up>
           <DesktopPedidosPage
