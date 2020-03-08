@@ -36,5 +36,11 @@ http://localhost:5000/api/v0/pedidos/YVEUAWEMDZEJXCCY66KZMXLTQY/
 
 curl \
 -X POST \
--u arthur.bressan:12345 \
-http://localhost:5000/api/v0/usuario/
+-H "content-type: application/json" \
+-d '{"username": "admin", "password": "admin"}' \
+http://localhost:5000/api/v0/usuarios/
+
+curl \
+-X GET \
+-H "Authorization: Bearer {}" \
+http://localhost:5000/api/v0/usuarios/

@@ -9,6 +9,7 @@ from backoffice import (
     models,
     api,
     admin,
+    auth,
 )
 
 
@@ -19,6 +20,7 @@ def create_app(extra_config=None):
     logging.init_app(app)
     base.init_app(app)
     models.init_app(app)
+    auth.init_app(app)
 
     admin.init_app(app)
     api.init_app(app)
