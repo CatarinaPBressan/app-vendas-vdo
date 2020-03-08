@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 
-import { PropTypes } from "prop-types";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import { BreakpointProvider } from "react-socks";
@@ -16,67 +15,60 @@ import PedidosPage from "./components/PedidosPage/PedidosPage";
 
 import "./styles/main.scss";
 
-class App extends Component {
-  static propTypes = {
-    usuario: PropTypes.object,
+function App(props) {
+  const [loading, setLoading] = useState(true);
 
-    getUsuario: PropTypes.func.isRequired,
-    fetchPedidos: PropTypes.func.isRequired,
-    addPedido: PropTypes.func.isRequired,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
-  async componentDidMount() {
-    if (!this.props.usuario) {
+  const { usuario, getUsuario, clearUsuario, fetchPedidos, addPedido } = props;
+  useEffect(() => {
+    if (usuario) {
+      (async () => {
+        await fetchPedidos(usuario);
+      })();
+      if (usuario.permissoes.includes("backoffice")) {
+        const pusher = setUpPusher();
+        const channel = pusher.subscribe(PUSHER.PEDIDOS_CHANNEL);
+        channel.bind(PUSHER.EVENT_NOVO_PEDIDO, (data) => {
+          addPedido(data.pedido);
+        });
+      }
+      setLoading(false);
+    } else {
       const token = localStorage.getItem("token");
       if (!token) {
-        this.setState({ loading: false });
+        setLoading(false);
         return;
       }
-      const usuario = await this.props.getUsuario(token);
-      if (!usuario) {
-        this.props.clearUsuario();
-        this.setState({ loading: false });
-        return;
-      }
-      await this.props.fetchPedidos(usuario);
-      const pusher = setUpPusher();
-      const channel = pusher.subscribe(PUSHER.PEDIDOS_CHANNEL);
-      channel.bind(PUSHER.EVENT_NOVO_PEDIDO, (data) => {
-        this.props.addPedido(data.pedido);
-      });
+      (async () => {
+        const usuario = await getUsuario(token);
+        if (!usuario) {
+          clearUsuario();
+          setLoading(false);
+        }
+      })();
     }
-    this.setState({ loading: false });
-  }
+  }, [usuario, clearUsuario, getUsuario, fetchPedidos, addPedido]);
 
-  render() {
-    if (this.state.loading) {
-      return <div>Loading...</div>;
-    }
-
-    return (
-      <BreakpointProvider>
-        {!this.props.usuario ? (
-          <LoginPage />
-        ) : (
-          <BrowserRouter>
-            <Switch>
-              <Route path="/pedidos/" component={PedidosPage} />
-              <Route path="/novo-pedido/:produtoId" component={ProdutoPage} />
-              <Route path="/" component={ProdutosPage} />
-            </Switch>
-          </BrowserRouter>
-        )}
-      </BreakpointProvider>
-    );
-  }
+  return (
+    <>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <BreakpointProvider>
+          {!props.usuario ? (
+            <LoginPage />
+          ) : (
+            <BrowserRouter>
+              <Switch>
+                <Route path="/pedidos/" component={PedidosPage} />
+                <Route path="/novo-pedido/:produtoId" component={ProdutoPage} />
+                <Route path="/" component={ProdutosPage} />
+              </Switch>
+            </BrowserRouter>
+          )}
+        </BreakpointProvider>
+      )}
+    </>
+  );
 }
 
 const mapStateToProps = (state) => ({

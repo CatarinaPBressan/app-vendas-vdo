@@ -4,6 +4,7 @@ import PedidoAPI from "../api/pedidoAPI";
 
 export const addPedido = createAction("pedido/pedido/append");
 export const setPedidos = createAction("pedido/pedidos/set");
+export const clearPedidos = createAction("pedido/pedidos/clear");
 
 export const createPedido = (produto, usuario, pedido_data, produto_data) => (
   dispatch,

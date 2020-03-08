@@ -14,6 +14,7 @@ class ProdutosPage extends Component {
   static propTypes = {
     usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
   };
 
   render() {
@@ -21,6 +22,7 @@ class ProdutosPage extends Component {
       <Page
         usuario={this.props.usuario}
         location={this.props.location}
+        history={this.props.history}
         pageClassNames="produtos-page"
       >
         <div className="produtos-container">

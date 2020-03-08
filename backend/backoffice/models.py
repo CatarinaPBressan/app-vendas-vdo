@@ -70,8 +70,11 @@ class Usuario(db.Model, _BaseTable, UserMixin):
 
     @property
     def is_admin(self):
+        return self.tem_permissao("admin")
+
+    def tem_permissao(self, permissao):
         # pylint: disable=not-an-iterable
-        return "admin" in {permissao.nome for permissao in self.permissoes}
+        return permissao in {permissao.nome for permissao in self.permissoes}
 
 
 class Pedido(db.Model, _BaseTable):

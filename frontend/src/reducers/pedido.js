@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-import { addPedido, setPedidos } from "../actions/pedido";
+import { addPedido, setPedidos, clearPedidos } from "../actions/pedido";
 
 const initialState = {
   pedidos: {},
@@ -19,5 +19,9 @@ export default createReducer(initialState, {
     payload.forEach((pedido) => {
       _setPedido(state, pedido);
     });
+  },
+
+  [clearPedidos]: (state, { payload }) => {
+    state.pedidos = {};
   },
 });

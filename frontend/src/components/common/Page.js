@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import PropTypes from 'prop-types';
-import { Container } from 'react-bootstrap';
+import PropTypes from "prop-types";
+import { Container } from "react-bootstrap";
 
-import AppNavbar from './AppNavbar';
+import AppNavbar from "./AppNavbar";
 
 class Page extends Component {
   static propTypes = {
@@ -11,6 +11,7 @@ class Page extends Component {
     children: PropTypes.node.isRequired,
     usuario: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
   };
   render() {
     return (
@@ -18,6 +19,7 @@ class Page extends Component {
         <AppNavbar
           usuario={this.props.usuario}
           location={this.props.location}
+          history={this.props.history}
         />
         <Container>{this.props.children}</Container>
       </div>
