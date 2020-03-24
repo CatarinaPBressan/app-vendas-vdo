@@ -1,4 +1,4 @@
-from flask import current_app
+import flask
 from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
@@ -54,16 +54,18 @@ class Usuario(db.Model, _BaseTable, UserMixin):
         return check_password_hash(self.password, password)
 
     def generate_auth_token(self, expiration=ONE_DAY):
-        s = TimedJSONWebSignatureSerializer(
-            current_app.config["SECRET_KEY"], expires_in=expiration
+        serializer = TimedJSONWebSignatureSerializer(
+            flask.current_app.config["SECRET_KEY"], expires_in=expiration
         )
-        return s.dumps({"eid": self.eid}).decode("ascii")
+        return serializer.dumps({"eid": self.eid}).decode("ascii")
 
     @staticmethod
     def get_user_via_token(token):
-        s = TimedJSONWebSignatureSerializer(current_app.config["SECRET_KEY"])
+        serializer = TimedJSONWebSignatureSerializer(
+            flask.current_app.config["SECRET_KEY"]
+        )
         try:
-            data = s.loads(token)
+            data = serializer.loads(token)
         except (SignatureExpired, BadSignature):
             return None
         return Usuario.query.filter_by(eid=data["eid"]).one()
@@ -75,6 +77,14 @@ class Usuario(db.Model, _BaseTable, UserMixin):
     def tem_permissao(self, permissao):
         # pylint: disable=not-an-iterable
         return permissao in {permissao.nome for permissao in self.permissoes}
+
+    @property
+    def pusher_key(self):
+        return flask.current_app.config["PUSHER_KEY"]
+
+    @property
+    def pusher_cluster(self):
+        return flask.current_app.config["PUSHER_CLUSTER"]
 
 
 class Pedido(db.Model, _BaseTable):
@@ -127,7 +137,11 @@ class Permissao(db.Model, _BaseTable):
 
 
 def init_app(app):
-    db_url = app.config["SQLALCHEMY_DATABASE_URI"]
+    db_url = app.config.get("SQLALCHEMY_DATABASE_URI")
+    if db_url is None:
+        print("SQLALCHEMY_DATABASE_URI is None.")
+        print("Did you pass the DATABASE_URI env?")
+        return
     if sqlalchemy_utils.database_exists(db_url):
         return
     db_name = db_url.split("/")[-1]

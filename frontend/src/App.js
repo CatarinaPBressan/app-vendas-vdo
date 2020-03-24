@@ -24,8 +24,8 @@ const App = (props) => {
       (async () => {
         await fetchPedidos(usuario);
       })();
+      const pusher = setUpPusher(usuario);
       if (usuario.permissoes.includes("backoffice")) {
-        const pusher = setUpPusher();
         const channel = pusher.subscribe(PUSHER.PEDIDOS_CHANNEL);
         channel.bind(PUSHER.EVENT_NOVO_PEDIDO, (data) => {
           addPedido(data.pedido);

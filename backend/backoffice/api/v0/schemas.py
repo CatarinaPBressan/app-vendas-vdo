@@ -9,6 +9,8 @@ class UsuarioSchema(Schema):
     username = fields.String(load_only=True)
     password = fields.String(load_only=True)
     permissoes = fields.List(fields.String, dump_only=True)
+    pusher_key = fields.String(dump_only=True)
+    pusher_cluster = fields.String(dump_only=True)
 
 
 class PedidoProdutoSchema(Schema):
