@@ -32,5 +32,4 @@ def init_app(app):
     db.init_app(app)
     Migrate(app, db)
     login_manager.init_app(app)
-    if app.config.get("PUSHER_APP_ID"):
-        pusher_client.init_app(app)
+    pusher_client.init_app(app)

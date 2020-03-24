@@ -22,3 +22,7 @@ def create_admin():
     admin = Permissao(nome="admin")
     db.session.add(Usuario(username="admin", password="admin", permissoes=[admin]))
     db.session.commit()
+
+
+if __name__ == "__main__":
+    app.run()

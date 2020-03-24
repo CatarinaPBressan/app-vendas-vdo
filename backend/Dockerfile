@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.6
 
 RUN apt-get update && apt-get install -y \
   python3-dev \
@@ -12,8 +12,5 @@ WORKDIR /home/docker/code
 
 COPY . .
 RUN pipenv install --dev --deploy --system
-
-# UWSGI uses this
-# ENV PYTHONPATH /home/docker/code:$PYTHONPATH
 
 EXPOSE 5000
