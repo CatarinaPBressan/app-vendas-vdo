@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Route, BrowserRouter, Switch } from "react-router-dom";
+import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { BreakpointProvider } from "react-socks";
 
@@ -54,17 +54,26 @@ const App = (props) => {
         <div>Loading...</div>
       ) : (
         <BreakpointProvider>
-          {!props.usuario ? (
-            <LoginPage />
-          ) : (
-            <BrowserRouter>
-              <Switch>
-                <Route path="/pedidos/" component={PedidosPage} />
-                <Route path="/novo-pedido/:produtoId" component={ProdutoPage} />
-                <Route path="/" component={ProdutosPage} />
-              </Switch>
-            </BrowserRouter>
-          )}
+          <BrowserRouter>
+            <Switch>
+              {!props.usuario ? (
+                <Route path="/" component={LoginPage} exact />
+              ) : (
+                <>
+                  <Route path="/pedidos/" component={PedidosPage} />
+                  <Route
+                    path="/novo-pedido/:produtoId"
+                    component={ProdutoPage}
+                    exact
+                  />
+                  <Route path="/" component={ProdutosPage} exact />{" "}
+                </>
+              )}
+              <Route path="*">
+                <Redirect to="/" />
+              </Route>
+            </Switch>
+          </BrowserRouter>
         </BreakpointProvider>
       )}
     </>

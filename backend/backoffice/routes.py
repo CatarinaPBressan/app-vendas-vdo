@@ -1,12 +1,14 @@
 import flask
 
-bp = flask.Blueprint("backoffice", __name__)
+from backoffice import base
+
+backoffice = flask.Blueprint("backoffice", __name__)
 
 
-@bp.route("/health_check/")
+@backoffice.route("/health_check/")
 def health_check():
-    settings = {
-        key: ("Set" if flask.current_app.config.get(key) is not None else "Not set")
+    settings_set = all(
+        key is not None
         for key in {
             "SECRET_KEY",
             "SQLALCHEMY_DATABASE_URI",
@@ -15,25 +17,26 @@ def health_check():
             "PUSHER_SECRET",
             "PUSHER_CLUSTER",
         }
-    }
+    )
+
     return flask.jsonify(
         {
-            "status": (
-                "OK"
-                if all({value == "Set" for value in settings.values()})
+            "settings": ("Ok" if settings_set else "Not Ok"),
+            "environment": flask.current_app.config["ENV"],
+            "db": (
+                "Ok"
+                if [r for r in base.db.engine.execute("SELECT 1")][0][0]
                 else "Not Ok"
             ),
-            "environment": flask.current_app.config["ENV"],
-            "settings": settings,
         }
     )
 
 
-@bp.route("/")
-@bp.route("/<path:_>/")
+@backoffice.route("/")
+@backoffice.route("/<path:_>/")
 def frontend(_=None):
     return flask.render_template("index.html")
 
 
 def init_app(app):
-    app.register_blueprint(bp, url_prefix="")
+    app.register_blueprint(backoffice, url_prefix="")
