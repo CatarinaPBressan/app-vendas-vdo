@@ -55,24 +55,27 @@ const App = (props) => {
       ) : (
         <BreakpointProvider>
           <BrowserRouter>
-            <Switch>
-              {!props.usuario ? (
+            {!props.usuario ? (
+              <Switch>
                 <Route path="/" component={LoginPage} exact />
-              ) : (
-                <>
-                  <Route path="/pedidos/" component={PedidosPage} />
-                  <Route
-                    path="/novo-pedido/:produtoId"
-                    component={ProdutoPage}
-                    exact
-                  />
-                  <Route path="/" component={ProdutosPage} exact />{" "}
-                </>
-              )}
-              <Route path="*">
-                <Redirect to="/" />
-              </Route>
-            </Switch>
+                <Route path="*">
+                  <Redirect to="/" />
+                </Route>
+              </Switch>
+            ) : (
+              <Switch>
+                <Route path="/pedidos/" component={PedidosPage} />
+                <Route
+                  path="/novo-pedido/:produtoId"
+                  component={ProdutoPage}
+                  exact
+                />
+                <Route path="/" component={ProdutosPage} exact />
+                <Route path="*">
+                  <Redirect to="/" />
+                </Route>
+              </Switch>
+            )}
           </BrowserRouter>
         </BreakpointProvider>
       )}
