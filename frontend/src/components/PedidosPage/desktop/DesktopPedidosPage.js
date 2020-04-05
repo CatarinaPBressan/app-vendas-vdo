@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { Row, Col } from "react-bootstrap";
 
 import PedidosNav from "./PedidosNav";
@@ -13,13 +13,19 @@ const DesktopPedidosPage = (props) => {
         <PedidosNav match={props.match} pedidos={props.pedidos} />
       </Col>
       <Col>
-        <Route exact path={`${props.match.path}`}>
-          <div>Selecione um pedido</div>
-        </Route>
-        <Route
-          path={`${props.match.path}:pedidoEid`}
-          component={PedidoDisplay}
-        />
+        <Switch>
+          <Route path={`${props.match.path}`} exact>
+            <div>Selecione um pedido</div>
+          </Route>
+          <Route
+            path={`${props.match.path}:pedidoEid`}
+            exact
+            component={PedidoDisplay}
+          />
+          <Route path="*">
+            <Redirect to="/" />
+          </Route>
+        </Switch>
       </Col>
     </Row>
   );
