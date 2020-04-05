@@ -1,31 +1,31 @@
-import axios from "axios";
-import { getHeaders } from "./utils";
+import { v0Api } from "./utils";
+
+const handleUnauthorized = (error) => {
+  if (error.response && error.response.status === 401) {
+    return null;
+  }
+  throw error;
+};
 
 const UsuarioAPI = {
-  login: (username, password) => {
-    return axios
-      .post("/api/v0/usuarios/", {
-        username: username,
-        password: password,
-      })
-      .then((response) => {
-        return response.data.usuario;
-      });
+  login: async (username, password) => {
+    let response = null;
+    try {
+      response = await v0Api().post("usuarios/", { username, password });
+    } catch (error) {
+      return handleUnauthorized(error);
+    }
+    return response.data.usuario;
   },
 
-  getUsuario: (token) => {
-    return axios
-      .get("/api/v0/usuarios/", {
-        headers: getHeaders(token),
-      })
-      .then((response) => {
-        return response.data.usuario;
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          return null;
-        }
-      });
+  getUsuario: async (token) => {
+    let response = null;
+    try {
+      response = await v0Api(token).get("usuarios/");
+    } catch (error) {
+      return handleUnauthorized(error);
+    }
+    return response.data.usuario;
   },
 };
 

@@ -1,41 +1,24 @@
-import axios from "axios";
-
-import { getHeaders } from "./utils";
+import { v0Api } from "./utils";
 
 const PedidoAPI = {
-  create: (produto, usuario, pedido_data, produto_data) => {
+  create: async (produto, usuario, pedido_data, produto_data) => {
     const data = {
       ...pedido_data,
       produto_slug: produto.id,
       produto: produto_data,
     };
-    return axios
-      .post("/api/v0/pedidos/", data, {
-        headers: getHeaders(usuario.token),
-      })
-      .then((response) => {
-        return response.data.pedido;
-      });
+    const response = await v0Api(usuario.token).post("pedidos/", data);
+    return response.data.pedido;
   },
 
-  fetchPedidos: (usuario) => {
-    return axios
-      .get("/api/v0/pedidos/", {
-        headers: getHeaders(usuario.token),
-      })
-      .then((response) => {
-        return response.data.pedidos;
-      });
+  fetchPedidos: async (usuario) => {
+    const response = await v0Api(usuario.token).get("pedidos/");
+    return response.data.pedidos;
   },
 
-  fetchPedidoProduto: (pedido, usuario) => {
-    return axios
-      .get(`/api/v0/pedidos/${pedido.eid}/`, {
-        headers: getHeaders(usuario.token),
-      })
-      .then((response) => {
-        return response.data.pedido;
-      });
+  fetchPedidoProduto: async (pedido, usuario) => {
+    const response = await v0Api(usuario.token).post(`pedidos/${pedido.eid}`);
+    return response.data.pedido;
   },
 };
 
