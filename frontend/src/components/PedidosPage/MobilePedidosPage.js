@@ -5,13 +5,11 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import PedidosNav from "./PedidosNav";
 import PedidoDisplay from "./PedidoDisplay";
 
-import "./MobilePedidosPage.scss";
-
 const MobilePedidosPage = (props) => {
   return (
     <Switch>
       <Route exact path={`${props.match.path}`}>
-        <PedidosNav pedidos={props.pedidos} />
+        <PedidosNav match={props.match} pedidos={props.pedidos} />
       </Route>
       <Route
         exact
