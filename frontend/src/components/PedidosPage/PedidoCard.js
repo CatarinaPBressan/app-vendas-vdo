@@ -1,9 +1,8 @@
 import React from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-import { PRODUTOS } from "../../../constants/produtos";
+import { PRODUTOS } from "../../constants/produtos";
 
 import "./PedidoCard.scss";
 
@@ -16,7 +15,7 @@ const STATUS_MAP = {
 
 const PedidoCard = (props) => {
   return (
-    <Link to={`/pedidos/${props.pedido.eid}`} className="pedido-card-mobile">
+    <Link to={`${props.match.path}${props.pedido.eid}`} className="pedido-card">
       <span className="data-container">
         <div>
           <b>Nome:</b> {props.pedido.nome_completo}
@@ -28,11 +27,11 @@ const PedidoCard = (props) => {
           <b>Status:</b> {STATUS_MAP[props.pedido.status]}
         </div>
         <div>
-          <b>Produto: {PRODUTOS[props.pedido.produto_slug].nome}</b>
+          <b>Produto:</b> <b>{PRODUTOS[props.pedido.produto_slug].nome}</b>
         </div>
-      </span>
-      <span className="icon-container">
-        <FontAwesomeIcon icon="chevron-right" />
+        <div>
+          <b>Vendedor:</b> {props.pedido.usuario.nome}
+        </div>
       </span>
     </Link>
   );

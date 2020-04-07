@@ -5,8 +5,8 @@ import { connect } from "react-redux";
 import { Breakpoint } from "react-socks";
 
 import Page from "../common/Page";
-import DesktopPedidosPage from "./desktop/DesktopPedidosPage";
-import MobilePedidosPage from "./mobile/MobilePedidosPage";
+import DesktopPedidosPage from "./DesktopPedidosPage";
+import MobilePedidosPage from "./MobilePedidosPage";
 
 import "./PedidosPage.scss";
 
@@ -26,18 +26,20 @@ class PedidosPage extends Component {
         location={this.props.location}
         history={this.props.history}
       >
-        <Breakpoint medium up>
-          <DesktopPedidosPage
-            match={this.props.match}
-            pedidos={this.props.pedidos}
-          />
-        </Breakpoint>
-        <Breakpoint small down>
-          <MobilePedidosPage
-            match={this.props.match}
-            pedidos={this.props.pedidos}
-          />
-        </Breakpoint>
+        <div className="pedido-display">
+          <Breakpoint medium up>
+            <DesktopPedidosPage
+              match={this.props.match}
+              pedidos={this.props.pedidos}
+            />
+          </Breakpoint>
+          <Breakpoint small down>
+            <MobilePedidosPage
+              match={this.props.match}
+              pedidos={this.props.pedidos}
+            />
+          </Breakpoint>
+        </div>
       </Page>
     );
   }

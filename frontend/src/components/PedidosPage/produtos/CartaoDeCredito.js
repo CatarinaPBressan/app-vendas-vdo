@@ -7,15 +7,15 @@ const CartaoDeCredito = (props) => {
       <Card.Header>Cartão de Crédito</Card.Header>
       <Card.Body>
         <Form.Row>
-          <Form.Group controlId="cep" as={Col}>
+          <Form.Group controlId="cep" as={Col} lg={4}>
             <Form.Label>CEP</Form.Label>
             <Form.Control plaintext readOnly value={props.data.cep} />
           </Form.Group>
-          <Form.Group controlId="uf" as={Col}>
+          <Form.Group controlId="uf" as={Col} lg={4}>
             <Form.Label>UF</Form.Label>
             <Form.Control plaintext readOnly value={props.data.uf} />
           </Form.Group>
-          <Form.Group controlId="cidade" as={Col}>
+          <Form.Group controlId="cidade" as={Col} lg={4}>
             <Form.Label>Cidade</Form.Label>
             <Form.Control plaintext readOnly value={props.data.cidade} />
           </Form.Group>
@@ -35,21 +35,21 @@ const CartaoDeCredito = (props) => {
               value={props.data.endereco_numero}
             />
           </Form.Group>
-          <Form.Group controlId="complemento" as={Col}>
+          <Form.Group controlId="complemento" as={Col} lg={9}>
             <Form.Label>Complemento</Form.Label>
             <Form.Control plaintext readOnly value={props.data.complemento} />
           </Form.Group>
         </Form.Row>
         <Form.Row>
-          <Form.Group controlId="estado_civil" as={Col}>
+          <Form.Group controlId="estado_civil" as={Col} lg={4}>
             <Form.Label>Estado Civil</Form.Label>
             <Form.Control plaintext readOnly value={props.data.estado_civil} />
           </Form.Group>
-          <Form.Group controlId="ocupacao" as={Col}>
+          <Form.Group controlId="ocupacao" as={Col} lg={4}>
             <Form.Label>Ocupação</Form.Label>
             <Form.Control plaintext readOnly value={props.data.ocupacao} />
           </Form.Group>
-          <Form.Group controlId="data_vencimento" as={Col}>
+          <Form.Group controlId="data_vencimento" as={Col} lg={4}>
             <Form.Label>Data de Vencimento</Form.Label>
             <Form.Control
               plaintext
