@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Breakpoint } from "react-socks";
 
-import Page from "../common/Page";
 import DesktopPedidosPage from "./DesktopPedidosPage";
 import MobilePedidosPage from "./MobilePedidosPage";
 
@@ -20,27 +19,20 @@ class PedidosPage extends Component {
 
   render() {
     return (
-      <Page
-        pageClassNames="pedidos-page"
-        usuario={this.props.usuario}
-        location={this.props.location}
-        history={this.props.history}
-      >
-        <div className="pedido-display">
-          <Breakpoint medium up>
-            <DesktopPedidosPage
-              match={this.props.match}
-              pedidos={this.props.pedidos}
-            />
-          </Breakpoint>
-          <Breakpoint small down>
-            <MobilePedidosPage
-              match={this.props.match}
-              pedidos={this.props.pedidos}
-            />
-          </Breakpoint>
-        </div>
-      </Page>
+      <div className="pedidos-page">
+        <Breakpoint medium up>
+          <DesktopPedidosPage
+            match={this.props.match}
+            pedidos={this.props.pedidos}
+          />
+        </Breakpoint>
+        <Breakpoint small down>
+          <MobilePedidosPage
+            match={this.props.match}
+            pedidos={this.props.pedidos}
+          />
+        </Breakpoint>
+      </div>
     );
   }
 }

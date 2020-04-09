@@ -1,9 +1,18 @@
 .login-page {
   .login-box {
+    margin-top: 56px;
     width: 100%;
     border: 1px lightgray solid;
     border-radius: 5px;
     padding: 10px;
     background-color: white;
+  }
+
+  @media screen and (min-width: 768px) {
+    .login-box {
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }

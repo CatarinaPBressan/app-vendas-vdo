@@ -4,23 +4,16 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Form, Button, Card } from "react-bootstrap";
 import InputMask from "react-input-mask";
+import { toast } from "react-toastify";
 
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
-import Page from "../common/Page";
 
 import { PRODUTOS } from "../../constants/produtos";
-import { FIELDS } from "../../constants/fields";
+import { PEDIDO_FIELDS, FIELDS } from "../../constants/fields";
 import { createPedido } from "../../actions/pedido";
 
 import "./ProdutoPage.scss";
-
-const PEDIDO_FIELDS = [
-  "nome_completo",
-  "cpf",
-  "email",
-  "telefone_celular",
-  "observacoes",
-];
+import { Link } from "react-router-dom";
 
 class ProdutoPage extends Component {
   static propTypes = {
@@ -61,7 +54,20 @@ class ProdutoPage extends Component {
         produto_data,
       )
       .then((pedido) => {
-        console.log(pedido);
+        toast.success(
+          <div>
+            Novo pedido de {this.state.produto.nome} criado com sucesso!
+            <Button
+              as={Link}
+              to={`/pedidos/${pedido.eid}`}
+              variant="primary"
+              block
+            >
+              <span className="label">Abrir Pedido</span>
+            </Button>
+          </div>,
+        );
+        this.props.history.push("/");
       });
   };
 
@@ -71,12 +77,7 @@ class ProdutoPage extends Component {
     }[this.state.produto.id];
 
     return (
-      <Page
-        pageClassNames="produto-page"
-        usuario={this.props.usuario}
-        location={this.props.location}
-        history={this.props.history}
-      >
+      <div className="produto-page">
         <h1>Novo pedido - {this.state.produto.nome}</h1>
         <Form onSubmit={this.onSubmit}>
           <Card>
@@ -134,11 +135,17 @@ class ProdutoPage extends Component {
             </Card.Body>
           </Card>
 
-          <Button variant="primary" type="submit">
-            Submit
+          <Button
+            variant="primary"
+            type="submit"
+            block
+            size="lg"
+            className="btn-criar-pedido"
+          >
+            Criar Novo Pedido
           </Button>
         </Form>
-      </Page>
+      </div>
     );
   }
 }

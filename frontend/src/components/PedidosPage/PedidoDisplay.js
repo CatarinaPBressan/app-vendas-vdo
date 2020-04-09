@@ -44,7 +44,7 @@ const PedidoDisplay = ({
   }
 
   return (
-    <>
+    <div className="pedido-display">
       <Button
         as={Link}
         to="/pedidos"
@@ -115,7 +115,7 @@ const PedidoDisplay = ({
         <FontAwesomeIcon icon="chevron-left" />
         <span className="label">Voltar</span>
       </Button>
-    </>
+    </div>
   );
 };
 
