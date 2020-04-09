@@ -15,6 +15,7 @@ import ProdutosPage from "./components/ProdutosPage/ProdutosPage";
 import ProdutoPage from "./components/ProdutoPage/ProdutoPage";
 import PedidosPage from "./components/PedidosPage/PedidosPage";
 import AppNavbar from "./components/common/AppNavbar";
+import NovoPedidoNotifier from "./components/common/NotificationManager";
 
 import "./styles/main.scss";
 
@@ -26,6 +27,7 @@ const App = ({
   addPedido,
 }) => {
   const [loading, setLoading] = useState(true);
+  const [notificationPedido, setNotificationPedido] = useState(null);
 
   useEffect(() => {
     if (usuario) {
@@ -36,7 +38,9 @@ const App = ({
       if (usuario.permissoes.includes("backoffice")) {
         const channel = pusher.subscribe(PUSHER.PEDIDOS_CHANNEL);
         channel.bind(PUSHER.EVENT_NOVO_PEDIDO, (data) => {
-          addPedido(data.pedido);
+          const pedido = data.pedido;
+          addPedido(pedido);
+          setNotificationPedido(pedido);
         });
       }
       setLoading(false);
@@ -66,6 +70,11 @@ const App = ({
         closeOnClick={false}
         pauseOnHover
         draggable
+      />
+      <NovoPedidoNotifier
+        usuario={usuario}
+        notificationPedido={notificationPedido}
+        setNotificationPedido={setNotificationPedido}
       />
       <AppNavbar />
       <Container>
