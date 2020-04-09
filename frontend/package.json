@@ -26,7 +26,8 @@
     "react-scripts": "3.4.0",
     "react-socks": "^2.1.0",
     "react-toastify": "^5.5.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "uifx": "^2.0.7"
   },
   "scripts": {
     "start": "BROWSER=chromium-browser react-scripts start",
