@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { BreakpointProvider } from "react-socks";
+import { toast, ToastContainer } from "react-toastify";
+import { Container } from "react-bootstrap";
 
 import { getUsuario, clearUsuario } from "./actions/usuario";
 import { fetchPedidos, addPedido } from "./actions/pedido";
@@ -12,13 +14,19 @@ import LoginPage from "./components/LoginPage/LoginPage";
 import ProdutosPage from "./components/ProdutosPage/ProdutosPage";
 import ProdutoPage from "./components/ProdutoPage/ProdutoPage";
 import PedidosPage from "./components/PedidosPage/PedidosPage";
+import AppNavbar from "./components/common/AppNavbar";
 
 import "./styles/main.scss";
 
-const App = (props) => {
+const App = ({
+  usuario,
+  getUsuario,
+  clearUsuario,
+  fetchPedidos,
+  addPedido,
+}) => {
   const [loading, setLoading] = useState(true);
 
-  const { usuario, getUsuario, clearUsuario, fetchPedidos, addPedido } = props;
   useEffect(() => {
     if (usuario) {
       (async () => {
@@ -43,19 +51,29 @@ const App = (props) => {
         if (!usuario) {
           clearUsuario();
           setLoading(false);
+          toast.info("Login expirado. Faça login novamente.");
         }
       })();
     }
   }, [usuario, clearUsuario, getUsuario, fetchPedidos, addPedido]);
 
   return (
-    <>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <BreakpointProvider>
-          <BrowserRouter>
-            {!props.usuario ? (
+    <BrowserRouter>
+      <ToastContainer
+        position={toast.POSITION.TOP_RIGHT}
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick={false}
+        pauseOnHover
+        draggable
+      />
+      <AppNavbar />
+      <Container>
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <BreakpointProvider>
+            {!usuario ? (
               <Switch>
                 <Route path="/" component={LoginPage} exact />
                 <Route path="*">
@@ -76,10 +94,10 @@ const App = (props) => {
                 </Route>
               </Switch>
             )}
-          </BrowserRouter>
-        </BreakpointProvider>
-      )}
-    </>
+          </BreakpointProvider>
+        )}
+      </Container>
+    </BrowserRouter>
   );
 };
 

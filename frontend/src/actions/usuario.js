@@ -9,9 +9,8 @@ export const login = (username, password) => async (dispatch) => {
   if (usuario) {
     localStorage.setItem("token", usuario.token);
     dispatch(setUsuario(usuario));
-  } else {
-    console.log("Login Failed");
   }
+  return usuario;
 };
 
 export const getUsuario = (token) => async (dispatch) => {

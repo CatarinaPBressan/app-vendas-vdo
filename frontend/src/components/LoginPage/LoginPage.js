@@ -1,51 +1,51 @@
-import React, { Component } from "react";
-import { PropTypes } from "prop-types";
+import React from "react";
 
 import { connect } from "react-redux";
 import { Form, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 import { login } from "../../actions/usuario";
 
 import "./LoginPage.scss";
 
-class LoginPage extends Component {
-  static propTypes = {
-    login: PropTypes.func.isRequired,
-  };
-
-  onSubmit = (e) => {
+const LoginPage = ({ login }) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const username = e.target.elements.username.value;
-    const password = e.target.elements.password.value;
-    this.props.login(username, password);
+    const usuario = await login(
+      e.target.elements.username.value,
+      e.target.elements.password.value,
+    );
+    if (usuario) {
+      toast.dismiss();
+    } else {
+      toast.error("Usuário ou senha incorretos.");
+    }
   };
 
-  render() {
-    return (
-      <div className="login-page">
-        <div className="login-box">
-          <Form onSubmit={this.onSubmit}>
-            <Form.Group controlId="username">
-              <Form.Label>
-                <b>Usuário:</b>
-              </Form.Label>
-              <Form.Control type="text" required size="lg" />
-            </Form.Group>
-            <Form.Group controlId="password">
-              <Form.Label>
-                <b>Senha:</b>
-              </Form.Label>
-              <Form.Control type="password" required size="lg" />
-            </Form.Group>
-            <Button variant="primary" type="submit" size="lg" block>
-              Entrar
-            </Button>
-          </Form>
-        </div>
+  return (
+    <div className="login-page">
+      <div className="login-box">
+        <Form onSubmit={onSubmit}>
+          <Form.Group controlId="username">
+            <Form.Label>
+              <b>Usuário:</b>
+            </Form.Label>
+            <Form.Control type="text" required size="lg" />
+          </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Label>
+              <b>Senha:</b>
+            </Form.Label>
+            <Form.Control type="password" required size="lg" />
+          </Form.Group>
+          <Button variant="primary" type="submit" size="lg" block>
+            Entrar
+          </Button>
+        </Form>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => ({});
 const mapDispatchToProps = {
