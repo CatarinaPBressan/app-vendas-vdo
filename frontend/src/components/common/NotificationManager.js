@@ -16,9 +16,15 @@ const NovoPedidoNotifier = ({
   const history = useHistory();
   const notificationFx = new UiFx(notificationAudio);
 
+  const usuarioIsBackoffice = (usuario) =>
+    usuario?.permissoes.includes("backoffice");
+
   const playNotification = useCallback(
     (pedido) => {
-      if (Notification.permission === NOTIFICATION_STATUS.GRANTED) {
+      if (
+        usuarioIsBackoffice(usuario) &&
+        Notification.permission === NOTIFICATION_STATUS.GRANTED
+      ) {
         const notification = new Notification(
           `Novo pedido de ${PRODUTOS[pedido.produto_slug].nome} (${
             pedido.eid
@@ -30,28 +36,28 @@ const NovoPedidoNotifier = ({
         };
       }
     },
-    [history, notificationFx],
+    [history, notificationFx, usuario],
   );
 
   useEffect(() => {
-    if (usuario) {
-      if (usuario.permissoes.includes("backoffice")) {
-        if (Notification.permission !== NOTIFICATION_STATUS.GRANTED) {
-          Notification.requestPermission();
-        }
-      }
+    if (
+      usuarioIsBackoffice(usuario) &&
+      Notification.permission !== NOTIFICATION_STATUS.GRANTED
+    ) {
+      Notification.requestPermission();
     }
   });
 
   useEffect(() => {
     if (
       notificationPedido &&
+      usuarioIsBackoffice(usuario) &&
       Notification.permission === NOTIFICATION_STATUS.GRANTED
     ) {
       playNotification(notificationPedido);
       setNotificationPedido(null);
     }
-  }, [notificationPedido, playNotification, setNotificationPedido]);
+  }, [notificationPedido, playNotification, setNotificationPedido, usuario]);
 
   return null;
 };

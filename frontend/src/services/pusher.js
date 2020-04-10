@@ -11,7 +11,10 @@ export const setUpPusher = (usuario) => {
   });
 };
 
-export const PUSHER = {
-  PEDIDOS_CHANNEL: "pedidos",
-  EVENT_NOVO_PEDIDO: "novo-pedido",
+export const PUSHER_CHANNELS = {
+  PEDIDOS: "pedidos",
+};
+
+export const PUSHER_EVENTS = {
+  NOVO_PEDIDO: "novo-pedido",
 };

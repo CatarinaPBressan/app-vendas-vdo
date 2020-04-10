@@ -8,7 +8,6 @@ import { Container } from "react-bootstrap";
 
 import { getUsuario, clearUsuario } from "./actions/usuario";
 import { fetchPedidos, addPedido } from "./actions/pedido";
-import { setUpPusher, PUSHER } from "./services/pusher";
 
 import LoginPage from "./components/LoginPage/LoginPage";
 import ProdutosPage from "./components/ProdutosPage/ProdutosPage";
@@ -16,6 +15,7 @@ import ProdutoPage from "./components/ProdutoPage/ProdutoPage";
 import PedidosPage from "./components/PedidosPage/PedidosPage";
 import AppNavbar from "./components/common/AppNavbar";
 import NovoPedidoNotifier from "./components/common/NotificationManager";
+import PusherManager from "./components/common/PusherManager";
 
 import "./styles/main.scss";
 
@@ -34,15 +34,6 @@ const App = ({
       (async () => {
         await fetchPedidos(usuario);
       })();
-      const pusher = setUpPusher(usuario);
-      if (usuario.permissoes.includes("backoffice")) {
-        const channel = pusher.subscribe(PUSHER.PEDIDOS_CHANNEL);
-        channel.bind(PUSHER.EVENT_NOVO_PEDIDO, (data) => {
-          const pedido = data.pedido;
-          addPedido(pedido);
-          setNotificationPedido(pedido);
-        });
-      }
       setLoading(false);
     } else {
       const token = localStorage.getItem("token");
@@ -70,6 +61,11 @@ const App = ({
         closeOnClick={false}
         pauseOnHover
         draggable
+      />
+      <PusherManager
+        usuario={usuario}
+        addPedido={addPedido}
+        setNotificationPedido={setNotificationPedido}
       />
       <NovoPedidoNotifier
         usuario={usuario}
