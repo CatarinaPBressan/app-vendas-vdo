@@ -58,6 +58,22 @@ const PedidoDisplay = ({
       </Button>
 
       <Card>
+        <Card.Header>Dados do Vendedor</Card.Header>
+        <Card.Body>
+          <Form.Row>
+            <Form.Group controlId="nome_vendedor" as={Col} lg={9}>
+              <Form.Label>Nome</Form.Label>
+              <Form.Control plaintext readOnly value={pedido.usuario.nome} />
+            </Form.Group>
+            <Form.Group controlId="cpf_vendedor" as={Col} lg={3}>
+              <Form.Label>CPF</Form.Label>
+              <Form.Control plaintext readOnly value={pedido.usuario.cpf} />
+            </Form.Group>
+          </Form.Row>
+        </Card.Body>
+      </Card>
+
+      <Card>
         <Card.Header>Dados básicos</Card.Header>
         <Card.Body>
           <Form.Row>
