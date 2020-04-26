@@ -8,7 +8,7 @@ backoffice = flask.Blueprint("backoffice", __name__)
 @backoffice.route("/health_check/")
 def health_check():
     settings_set = all(
-        key is not None
+        flask.current_app.config.get(key) is not None
         for key in {
             "SECRET_KEY",
             "SQLALCHEMY_DATABASE_URI",
@@ -18,15 +18,14 @@ def health_check():
             "PUSHER_CLUSTER",
         }
     )
-
     return flask.jsonify(
         {
-            "settings": ("Ok" if settings_set else "Not Ok"),
+            "settings": ("OK" if settings_set else "Not OK"),
             "environment": flask.current_app.config["ENV"],
             "db": (
-                "Ok"
+                "OK"
                 if [r for r in base.db.engine.execute("SELECT 1")][0][0]
-                else "Not Ok"
+                else "Not OK"
             ),
         }
     )

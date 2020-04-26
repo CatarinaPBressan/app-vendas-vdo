@@ -1,36 +1,50 @@
-{% extends 'admin/base.html' %} {% block body %} {{ super() }}
+{% extends 'admin/base.html' %}
+
+{% block head_css %}
+{{ super() }}
+
+<style>
+  .admin-login-form {
+    width: 400px;
+    margin: auto;
+    padding: 10px;
+    display: block;
+  }
+  .admin-login-form > button {
+    margin-top: 20px;
+  }
+</style>
+
+{% endblock head_css %}
+
+{% block body %}
+{{ super() }}
 <div class="row-fluid">
   <div>
     {% if current_user.is_authenticated %}
-    <h1>Flask-Admin example</h1>
-    <p class="lead">
-      Authentication
-    </p>
-    <p>
-      This example shows how you can use Flask-Login for authentication. It is
-      only intended as a basic demonstration.
-    </p>
+    <h1>App Vendas Admin</h1>
+    <a href="{{ url_for('admin.logout_view') }}">Sair</a>
     {% else %}
     <form method="POST" action="">
-      {{ form.hidden_tag() if form.hidden_tag }} {% for f in form if f.type !=
-      'CSRFTokenField' %}
-      <div>
-        {{ f.label }} {{ f }} {% if f.errors %}
-        <ul>
-          {% for e in f.errors %}
-          <li>{{ e }}</li>
-          {% endfor %}
-        </ul>
-        {% endif %}
+      {{ form.hidden_tag() if form.hidden_tag }}
+      <div class="form-group admin-login-form">
+        {% for field in form %}
+        <div>
+          {{ field.label }}
+          {{ field }}
+          {% if field.errors %}
+          <ul>
+            {% for error in field.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <button class="btn btn-primary btn-block" type="submit" >Entrar</button>
       </div>
-      {% endfor %}
-      <button class="btn" type="submit">Submit</button>
     </form>
     {% endif %}
   </div>
-
-  <a class="btn btn-primary" href="/"
-    ><i class="icon-arrow-left icon-white"></i> Back</a
-  >
 </div>
 {% endblock body %}

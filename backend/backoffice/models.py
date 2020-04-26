@@ -11,11 +11,16 @@ from backoffice.enums import EstadoCivil, Ocupacao, DataVencimento
 
 class _BaseTable(object):
     id = db.Column(db.Integer, primary_key=True)
-    eid = db.Column(db.String(26), index=True, unique=True, default=utils.create_eid)
+    eid = db.Column(
+        db.String(26), index=True, unique=True, default=utils.create_eid, nullable=False
+    )
 
-    created_at = db.Column(db.DateTime, default=utils.datetime_now)
+    created_at = db.Column(db.DateTime, default=utils.datetime_now, nullable=False)
     updated_at = db.Column(
-        db.DateTime, default=utils.datetime_now, onupdate=utils.datetime_now
+        db.DateTime,
+        default=utils.datetime_now,
+        onupdate=utils.datetime_now,
+        nullable=False,
     )
 
     def __str__(self):
@@ -68,13 +73,13 @@ class Usuario(db.Model, _BaseTable, UserMixin):
             data = serializer.loads(token)
         except (SignatureExpired, BadSignature):
             return None
-        return Usuario.query.filter_by(eid=data["eid"]).one()
+        return Usuario.query.filter_by(eid=data["eid"]).first()
 
     @property
     def is_admin(self):
-        return self.tem_permissao("admin")
+        return self.has_permission("admin")
 
-    def tem_permissao(self, permissao):
+    def has_permission(self, permissao):
         # pylint: disable=not-an-iterable
         return permissao in {permissao.nome for permissao in self.permissoes}
 
@@ -93,7 +98,7 @@ class Pedido(db.Model, _BaseTable):
     produto = db.relationship("PedidoProduto", uselist=False, backref="pedido")
     produto_slug = db.Column(db.String(255))
     status = db.Column(db.String(255), default="NOVO")
-    # Dados do pedido compartilhado entre todos os produtos
+    # Dados do pedido compartilhados entre todos os produtos
     nome_completo = db.Column(db.String(255))
     cpf = db.Column(db.String(14))
     email = db.Column(db.String(255))
@@ -105,9 +110,10 @@ class PedidoProduto(db.Model, _BaseTable):
     """
     Tabela que segura os dados dos pedidos.
     As colunas são compartilhados entre produtos.
-    Idealmente os produtos que não utilizarem alguma coluna não devem mostrar
-    essa coluna no JSON.
     """
+
+    # TODO: Os produtos que não utilizarem alguma coluna não devem mostrar essa coluna no JSON.
+    # ref: https://github.com/marshmallow-code/marshmallow/issues/229#issuecomment-134387999
 
     pedido_id = db.Column(db.ForeignKey("pedido.id"))
     # Dados dos produtos
@@ -146,6 +152,6 @@ def init_app(app):
         return
     db_name = db_url.split("/")[-1]
     print(f"Database {db_name} does not exist, creating...")
-    print("NOTE: Migrations still need to be ran.")
+    print("NOTE: Migrations still need to be run.")
     sqlalchemy_utils.create_database(db_url)
     print("Created.")

@@ -36,7 +36,7 @@ Build Backend:
   stage: build
   script:
     - cd backend
-    - docker build -t backend:${CI_COMMIT_SHORT_SHA} -t backend:latest -f Dockerfile .
+    - make
 
 Build Frontend:
   stage: build
@@ -49,7 +49,8 @@ Test Backend:
   except:
     - master
   script:
-    - docker run backend pytest
+    - cd backend
+    - make test
 
 Test Frontend:
   stage: test

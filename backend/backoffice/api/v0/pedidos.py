@@ -20,7 +20,7 @@ class PedidosAPI(Resource):
     def get(self):
         usuario = g.usuario
         pedidos_q = Pedido.query
-        if not usuario.tem_permissao("backoffice"):
+        if not usuario.has_permission("backoffice"):
             pedidos_q = pedidos_q.filter_by(usuario_id=g.usuario.id)
         return {"pedidos": pedidos_schema.dump(pedidos_q.all())}
 
@@ -46,6 +46,6 @@ class PedidoAPI(Resource):
     def get(self, pedido_eid):
         usuario = g.usuario
         pedido = Pedido.query.filter_by(eid=pedido_eid).one()
-        if not usuario.tem_permissao("backoffice") and pedido.usuario_id != usuario.id:
+        if not usuario.has_permission("backoffice") and pedido.usuario_id != usuario.id:
             abort(403, message="Pedido de outro usuário")
         return {"pedido": pedido_schema.dump(pedido)}

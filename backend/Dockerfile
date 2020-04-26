@@ -1,4 +1,7 @@
-FROM python:3.6
+FROM python:3.8-buster
+
+RUN groupadd -g 1000 app_vendas
+RUN useradd -g 1000 app_vendas
 
 RUN apt-get update && apt-get install -y \
   python3-dev \
@@ -14,3 +17,6 @@ COPY . .
 RUN pipenv install --dev --deploy --system
 
 EXPOSE 5000
+
+RUN chown -R app_vendas:app_vendas /home/docker/code
+USER app_vendas
