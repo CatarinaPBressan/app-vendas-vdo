@@ -41,7 +41,13 @@ class PedidoSchema(Schema):
     usuario = fields.Nested(UsuarioSchema, dump_only=True)
 
 
-pedido_pusher_schema = PedidoSchema(exclude=["produto", "usuario.token"])
-pedido_schema = PedidoSchema(exclude=["usuario.token"])
-pedidos_schema = PedidoSchema(many=True, exclude=["usuario.token"])
+_excluded_usuario_fields = [
+    "usuario.token",
+    "usuario.pusher_key",
+    "usuario.pusher_cluster",
+]
+
+pedido_pusher_schema = PedidoSchema(exclude=["produto"] + _excluded_usuario_fields)
+pedido_schema = PedidoSchema(exclude=_excluded_usuario_fields)
+pedidos_schema = PedidoSchema(many=True, exclude=_excluded_usuario_fields)
 usuario_schema = UsuarioSchema()

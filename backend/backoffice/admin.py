@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from flask import url_for, redirect, request
+import flask
 import flask_login
-from flask_admin import Admin, AdminIndexView, expose, helpers
+from flask_admin import Admin, AdminIndexView, expose, helpers, menu
 from flask_admin.model import typefmt
 from flask_admin.contrib.sqla import ModelView
 from wtforms import fields, Form, ValidationError, validators
@@ -39,18 +39,26 @@ column_type_formatters_detail_base = {
 }
 
 
-class LoginForm(Form):
-    username = fields.StringField(validators=[validators.DataRequired()])
-    password = fields.PasswordField(validators=[validators.DataRequired()])
-
-    def validate_login(self, field):
-        user = self.get_user()
-        if not user or not user.verify_password(self.password.data):
-            raise ValidationError("Invalid user or password.")
+class AdminLoginForm(Form):
+    _render_kws = {"class": "form-control"}
+    username = fields.StringField(
+        validators=[validators.DataRequired()], label="Usuário", render_kw=_render_kws,
+    )
+    password = fields.PasswordField(
+        validators=[validators.DataRequired()], label="Senha", render_kw=_render_kws,
+    )
 
     def get_user(self):
-        print(self.username.data)
-        return Usuario.query.filter_by(username=self.username.data).first()
+        usuario = Usuario.query.filter_by(username=self.username.data).first()
+        if (
+            not usuario
+            or not usuario.verify_password(self.password.data)
+            or not usuario.is_admin
+        ):
+            raise ValidationError(
+                "Usário ou senha inválidos, ou usuário não tem permissão para acessar."
+            )
+        return usuario
 
 
 def _user_is_admin(user):
@@ -61,27 +69,29 @@ class BackofficeIndexView(AdminIndexView):
     @expose("/")
     def index(self):
         if not _user_is_admin(flask_login.current_user):
-            return redirect(url_for(".login_view"))
+            return flask.redirect(flask.url_for(".login_view"))
         return super(BackofficeIndexView, self).index()
 
     @expose("/login/", methods=("GET", "POST"))
     def login_view(self):
-        # handle user login
-        form = LoginForm(request.form)
+        form = AdminLoginForm(flask.request.form)
         if helpers.validate_form_on_submit(form):
-            user = form.get_user()
-            if _user_is_admin(user):
+            try:
+                user = form.get_user()
+            except ValidationError as error:
+                flask.flash(str(error))
+            else:
                 flask_login.login_user(user)
 
         if _user_is_admin(flask_login.current_user):
-            return redirect(url_for(".index"))
+            return flask.redirect(flask.url_for(".index"))
         self._template_args["form"] = form
         return super(BackofficeIndexView, self).index()
 
     @expose("/logout/")
     def logout_view(self):
         flask_login.logout_user()
-        return redirect(url_for(".index"))
+        return flask.redirect(flask.url_for(".index"))
 
 
 class _BaseModelView(ModelView):
@@ -158,6 +168,17 @@ class PedidoProdutoModelView(_BaseModelView):
     can_export = True
 
 
+class LogoutLink(menu.MenuLink):
+    name = "Sair"
+    endpoint = "admin.logout_view"
+
+    def __init__(self):
+        super().__init__(self.name, endpoint=self.endpoint)
+
+    def is_accessible(self):
+        return not flask_login.current_user.is_anonymous
+
+
 def init_app(app):
     admin = Admin(
         app,
@@ -172,3 +193,4 @@ def init_app(app):
         PedidoModelView(Pedido, db.session),
         PedidoProdutoModelView(PedidoProduto, db.session),
     )
+    admin.add_link(LogoutLink())

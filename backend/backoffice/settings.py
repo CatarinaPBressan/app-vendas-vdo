@@ -22,15 +22,34 @@ class ConfigDev(ConfigBase):
     SENTRY_DSN = None
 
 
+class ConfigTest(ConfigDev):
+    SERVER_NAME = "test.backoffice"
+    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:@db/app_vendas_test"
+    ENV = "test"
+    PUSHER_APP_ID = "PUSHER_APP_ID"
+    PUSHER_KEY = "PUSHER_KEY"
+    PUSHER_SECRET = "PUSHER_SECRET"
+    PUSHER_CLUSTER = "PUSHER_CLUSTER"
+
+
 class ConfigStaging(ConfigBase):
     S3_STATIC_PATH = functools.partial(ConfigBase.S3_STATIC_PATH.format, env="staging")
 
 
 def init_app(app, extra_config=None):
-    config = {"development": ConfigDev, "staging": ConfigStaging}.get(
-        os.environ.get("FLASK_ENV"), ConfigBase
-    )
-    app.config.from_object(config)
+    if extra_config is None:
+        extra_config = {}
 
-    if extra_config:
-        app.config.update(extra_config)
+    flask_env = extra_config.get("FLASK_ENV", os.environ.get("FLASK_ENV"))
+
+    if flask_env is None:
+        raise ValueError("FLASK_ENV not found in config.")
+
+    config = {
+        "development": ConfigDev,
+        "staging": ConfigStaging,
+        "test": ConfigTest,
+    }.get(flask_env, ConfigBase)
+
+    app.config.from_object(config)
+    app.config.update(extra_config)
