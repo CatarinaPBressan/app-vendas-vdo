@@ -149,7 +149,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                 "pedido": {
                     "eid": pedido.eid,
                     "produto_slug": "cartao-de-credito",
-                    "status": "NOVO",
+                    "status": "novo",
                     "nome_completo": "Arthur Bressan",
                     "cpf": "388.308.808-09",
                     "email": "eu@arthurbressan.org",
@@ -185,7 +185,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                     "pedido": {
                         "eid": pedido.eid,
                         "produto_slug": "cartao-de-credito",
-                        "status": "NOVO",
+                        "status": "novo",
                         "nome_completo": "Arthur Bressan",
                         "cpf": "388.308.808-09",
                         "email": "eu@arthurbressan.org",
@@ -236,7 +236,7 @@ class TestPedidoAPIGet(APIV0TestClient):
                 },
                 "created_at": pedido.created_at.isoformat(),
                 "updated_at": pedido.updated_at.isoformat(),
-                "status": "NOVO",
+                "status": "novo",
                 "usuario": {
                     "eid": usuario.eid,
                     "cpf": "477.417.717-10",

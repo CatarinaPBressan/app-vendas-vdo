@@ -12,3 +12,6 @@ test:
 		-f docker-compose.test.yml \
 		up \
 		--exit-code-from backoffice
+
+backoffice-container:
+	docker-compose exec backoffice bash
