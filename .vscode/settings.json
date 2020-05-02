@@ -1,14 +1,12 @@
 {
-  "python.pythonPath": "/home/arthur/.local/share/virtualenvs/backend-BsrfFKB7/bin/python3.8",
-  "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy"],
   "[python]": {
     "editor.tabSize": 4,
     "editor.rulers": [88],
     "editor.formatOnPaste": false
   },
-  "[javascript]": {
-    "editor.tabSize": 2
-  },
+  "python.pythonPath": "/home/arthur/.local/share/virtualenvs/backend-BsrfFKB7/bin/python3.8",
+  "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy"],
+  "python.formatting.provider": "black",
   "python.linting.flake8Enabled": false,
   "python.linting.pylintEnabled": true,
   "python.linting.enabled": true,
@@ -17,9 +15,21 @@
   "python.testing.nosetestsEnabled": false,
   "python.testing.pytestEnabled": true,
 
-  "[yaml]": {
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": false,
-    "editor.formatOnType": false
-  }
+  "[javascript]": {
+    "editor.tabSize": 2
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "search.exclude": {
+    "**/.gitignore": true,
+    "**/package.json": true,
+    "**/public": true,
+    "**/yarn.lock": true
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true
 }
