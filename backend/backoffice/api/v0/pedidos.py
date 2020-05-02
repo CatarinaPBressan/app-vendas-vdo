@@ -2,6 +2,7 @@ from flask import g, request
 
 from marshmallow import ValidationError, Schema, fields, validate
 from flask_restful import Resource, abort
+from transitions import MachineError
 
 from backoffice.auth import token_auth
 from backoffice.models import db, Pedido, PedidoProduto, pedidos
@@ -64,19 +65,22 @@ class PedidoAPI(Resource):
         return {"pedido": pedido_schema.dump(pedido)}
 
     def patch(self, pedido_eid):
+        usuario = g.usuario
+        if not usuario.has_permission("backoffice"):
+            abort(403, message="Não permitido")
+
         pedido = Pedido.query.filter_by(eid=pedido_eid).one()
         try:
             parsed = _patch_pedido_schema.load(request.json)
         except ValidationError as validation_errors:
             abort(400, message=validation_errors.messages)
 
-        pedido.trigger(parsed["transicao"])
+        try:
+            pedido.trigger(parsed["transicao"])
+        except MachineError as machine_error:
+            abort(400, message=str(machine_error))
 
         db.session.add(pedido)
         db.session.commit()
 
         return {"pedido": pedido_schema.dump(pedido)}
-        # usuario = g.usuario
-        # pedido = Pedido.query.filter_by(eid=pedido_eid).one()
-        # if not usuario.has_permission("backoffice"):
-        #     abort(403, message="Não permitido")
