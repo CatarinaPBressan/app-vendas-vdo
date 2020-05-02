@@ -1,5 +1,7 @@
 from unittest import mock
 
+import pytest
+
 from backoffice.models import (
     db,
     Usuario,
@@ -11,10 +13,12 @@ from backoffice.models import (
     Permissao,
 )
 
+from backoffice.models import pedidos
+
 from backoffice.tests.api.v0 import APIV0TestClient
 
 
-def _create_pedido(usuario=None):
+def _create_pedido(usuario=None, status=pedidos.ESTADOS.NOVO):
     if not usuario:
         usuario = Usuario(cpf="477.417.717-10", nome="Fulano de Tal")
 
@@ -39,6 +43,7 @@ def _create_pedido(usuario=None):
         email="eu@arthurbressan.org",
         telefone_celular="(12)99123-2413",
         observacoes="Obs.",
+        status=status.value,
     )
     db.session.add(pedido)
     db.session.commit()
@@ -270,3 +275,79 @@ class TestPedidoAPIGet(APIV0TestClient):
         assert response.status_code == 200
         assert pedido.eid == response.json["pedido"]["eid"]
         assert pedido.usuario.eid == response.json["pedido"]["usuario"]["eid"]
+
+
+class TestPedidoAPIPatch(APIV0TestClient):
+    endpoint = "pedidoapi"
+
+    @pytest.mark.parametrize(
+        "transicao,status_inicial,status_final",
+        [
+            (
+                pedidos.TRANSICOES.INICIAR,
+                pedidos.ESTADOS.NOVO,
+                pedidos.ESTADOS.ANALISE_CREDITO,
+            ),
+            (
+                pedidos.TRANSICOES.APROVAR,
+                pedidos.ESTADOS.ANALISE_CREDITO,
+                pedidos.ESTADOS.EM_ANDAMENTO,
+            ),
+            (
+                pedidos.TRANSICOES.COMPLETAR,
+                pedidos.ESTADOS.EM_ANDAMENTO,
+                pedidos.ESTADOS.COMPLETO,
+            ),
+            (
+                pedidos.TRANSICOES.REPROVAR,
+                pedidos.ESTADOS.ANALISE_CREDITO,
+                pedidos.ESTADOS.REPROVADO,
+            ),
+        ],
+    )
+    def test_patch_pedidos_transicoes(
+        self, client, transicao, status_inicial, status_final
+    ):
+        pedido = _create_pedido(status=status_inicial)
+
+        backoffice = Usuario(permissoes=[Permissao("backoffice")])
+        db.session.add(backoffice)
+        db.session.commit()
+
+        response = self.patch(
+            client, backoffice, pedido_eid=pedido.eid, json={"transicao": transicao}
+        )
+
+        assert response.status_code == 200
+        assert response.json == {
+            "pedido": {
+                "eid": pedido.eid,
+                "produto_slug": "cartao-de-credito",
+                "nome_completo": "Arthur Bressan",
+                "cpf": "388.308.808-09",
+                "email": "eu@arthurbressan.org",
+                "telefone_celular": "(12)99123-2413",
+                "observacoes": "Obs.",
+                "produto": {
+                    "cep": "12240-310",
+                    "uf": "SP",
+                    "cidade": "SJC",
+                    "logradouro": "Rua Presidente Epitácio",
+                    "endereco_numero": "97",
+                    "complemento": "casa",
+                    "nome_mae": "Izolda",
+                    "estado_civil": str(EstadoCivil.solteiro),
+                    "ocupacao": str(Ocupacao.assalariado),
+                    "data_vencimento": str(DataVencimento.dia_10),
+                },
+                "created_at": pedido.created_at.isoformat(),
+                "updated_at": pedido.updated_at.isoformat(),
+                "status": status_final.value,
+                "usuario": {
+                    "eid": pedido.usuario.eid,
+                    "cpf": "477.417.717-10",
+                    "nome": "Fulano de Tal",
+                    "permissoes": [],
+                },
+            }
+        }

@@ -6,7 +6,7 @@ import sqlalchemy_utils
 
 from backoffice import utils
 from backoffice.base import db, BaseTable
-from backoffice.models.pedido import Pedido
+from backoffice.models.pedidos import Pedido
 from backoffice.enums import EstadoCivil, Ocupacao, DataVencimento
 
 usuario_permissao = db.Table(
