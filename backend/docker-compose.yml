@@ -30,7 +30,7 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - .:/home/docker/code
+      - .:/home/app_vendas/code
     links:
       - db:db
     depends_on:

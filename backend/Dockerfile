@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install pipenv
 
-WORKDIR /home/docker/code
+WORKDIR /home/app_vendas/code
 
 COPY . .
 RUN pipenv install --dev --deploy --system
 
 EXPOSE 5000
 
-RUN chown -R app_vendas:app_vendas /home/docker/code
+RUN chown -R app_vendas:app_vendas /home/app_vendas
 USER app_vendas

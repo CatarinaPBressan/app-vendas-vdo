@@ -145,7 +145,7 @@ class PedidoModelView(_BaseModelView):
 
     column_exclude_list = ["email", "telefone_celular", "observacoes"]
     column_searchable_list = column_searchable_list_base + ["cpf", "nome_completo"]
-    column_filters = ["produto_slug", "state"]
+    column_filters = ["produto_slug", "status"]
     form_excluded_columns = form_excluded_columns_base + [
         "produto",
         "produto_slug",
