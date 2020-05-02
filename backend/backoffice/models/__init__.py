@@ -17,6 +17,8 @@ usuario_permissao = db.Table(
     db.Column("permissao_id", db.ForeignKey("permissao.id")),
 )
 
+ONE_DAY = 60 * 60 * 24
+
 
 class Usuario(db.Model, BaseTable, UserMixin):
     username = db.Column(db.String(255), index=True, unique=True)
@@ -38,9 +40,9 @@ class Usuario(db.Model, BaseTable, UserMixin):
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
-    TOKEN_TTL = 60 * 60 * 24  # Um dia
+    TOKEN_TTL = 60 * 60 * 24
 
-    def generate_auth_token(self, expiration=TOKEN_TTL):
+    def generate_auth_token(self, expiration=ONE_DAY):
         serializer = TimedJSONWebSignatureSerializer(
             flask.current_app.config["SECRET_KEY"], expires_in=expiration
         )
