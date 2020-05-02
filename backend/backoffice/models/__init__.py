@@ -4,11 +4,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 import sqlalchemy_utils
 
-from backoffice import utils, base
-from backoffice.base import db
+from backoffice import utils
+from backoffice.base import db, BaseTable
 from backoffice.models.pedido import Pedido
 from backoffice.enums import EstadoCivil, Ocupacao, DataVencimento
-
 
 usuario_permissao = db.Table(
     "usuario_permissao",
@@ -19,7 +18,7 @@ usuario_permissao = db.Table(
 )
 
 
-class Usuario(db.Model, base.BaseTable, UserMixin):
+class Usuario(db.Model, BaseTable, UserMixin):
     username = db.Column(db.String(255), index=True, unique=True)
     cpf = db.Column(db.String(14), unique=True)
     password = db.Column(db.String(128))
@@ -75,7 +74,7 @@ class Usuario(db.Model, base.BaseTable, UserMixin):
         return flask.current_app.config["PUSHER_CLUSTER"]
 
 
-class PedidoProduto(db.Model, base.BaseTable):
+class PedidoProduto(db.Model, BaseTable):
     """
     Tabela que segura os dados dos pedidos.
     As colunas são compartilhados entre produtos.
@@ -98,7 +97,7 @@ class PedidoProduto(db.Model, base.BaseTable):
     data_vencimento = db.Column(db.Enum(DataVencimento))
 
 
-class Permissao(db.Model, base.BaseTable):
+class Permissao(db.Model, BaseTable):
     nome = db.Column(db.String(255), unique=True)
 
     def __init__(self, nome):

@@ -1,8 +1,7 @@
-from backoffice import base
-from backoffice.base import db
+from backoffice.base import db, BaseTable
 
 
-class Pedido(db.Model, base.BaseTable):
+class Pedido(db.Model, BaseTable):
     usuario_id = db.Column(db.ForeignKey("usuario.id"))
     usuario = db.relationship("Usuario")
     produto = db.relationship("PedidoProduto", uselist=False, backref="pedido")
