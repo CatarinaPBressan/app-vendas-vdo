@@ -334,3 +334,21 @@ class TestPedidoAPIPatch(APIV0TestClient):
                 },
             }
         }
+
+    def test_patch_pedidos_transicoes_nao_permitidas(self, client):
+        pedido = _create_pedido()
+
+        backoffice = Usuario(permissoes=[Permissao("backoffice")])
+        db.session.add(backoffice)
+        db.session.commit()
+
+        response = self.patch(
+            client, backoffice, pedido_eid=pedido.eid, json={"transicao": "blah"}
+        )
+
+        assert response.status_code == 400
+        assert "message" in response.json
+        assert "transicao" in response.json["message"]
+        message = response.json["message"]["transicao"][0]
+        for transicao in TRANSICOES:
+            assert transicao.value in message

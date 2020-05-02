@@ -44,7 +44,7 @@ class PedidosAPI(Resource):
 
 class PatchPedidoSchema(Schema):
     transicao = fields.String(
-        validate=validate.OneOf({transicao.value for transicao in pedidos.TRANSICOES})
+        validate=validate.OneOf([transicao.value for transicao in pedidos.TRANSICOES])
     )
 
 
