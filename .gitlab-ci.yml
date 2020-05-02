@@ -35,7 +35,8 @@ stages:
 default:
   before_script:
     # For installing make and etc.
-    - apt-get install build-essential
+    # apk is alpine's package manager
+    - apk add build-essential
 
 Build Backend:
   stage: build
