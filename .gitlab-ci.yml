@@ -35,7 +35,7 @@ stages:
 default:
   before_script:
     # For installing make and etc.
-    - sudo apt-get install build-essential
+    - apt-get install build-essential
 
 Build Backend:
   stage: build
