@@ -12,13 +12,12 @@ from backoffice.models import (
     DataVencimento,
     Permissao,
 )
-
-from backoffice.models import pedidos
+from backoffice.models.pedidos import ESTADOS, TRANSICOES
 
 from backoffice.tests.api.v0 import APIV0TestClient
 
 
-def _create_pedido(usuario=None, status=pedidos.ESTADOS.NOVO):
+def _create_pedido(usuario=None, status=ESTADOS.NOVO):
     if not usuario:
         usuario = Usuario(cpf="477.417.717-10", nome="Fulano de Tal")
 
@@ -283,26 +282,10 @@ class TestPedidoAPIPatch(APIV0TestClient):
     @pytest.mark.parametrize(
         "transicao,status_inicial,status_final",
         [
-            (
-                pedidos.TRANSICOES.INICIAR,
-                pedidos.ESTADOS.NOVO,
-                pedidos.ESTADOS.ANALISE_CREDITO,
-            ),
-            (
-                pedidos.TRANSICOES.APROVAR,
-                pedidos.ESTADOS.ANALISE_CREDITO,
-                pedidos.ESTADOS.EM_ANDAMENTO,
-            ),
-            (
-                pedidos.TRANSICOES.COMPLETAR,
-                pedidos.ESTADOS.EM_ANDAMENTO,
-                pedidos.ESTADOS.COMPLETO,
-            ),
-            (
-                pedidos.TRANSICOES.REPROVAR,
-                pedidos.ESTADOS.ANALISE_CREDITO,
-                pedidos.ESTADOS.REPROVADO,
-            ),
+            (TRANSICOES.INICIAR, ESTADOS.NOVO, ESTADOS.ANALISE_CREDITO,),
+            (TRANSICOES.APROVAR, ESTADOS.ANALISE_CREDITO, ESTADOS.EM_ANDAMENTO,),
+            (TRANSICOES.COMPLETAR, ESTADOS.EM_ANDAMENTO, ESTADOS.COMPLETO,),
+            (TRANSICOES.REPROVAR, ESTADOS.ANALISE_CREDITO, ESTADOS.REPROVADO,),
         ],
     )
     def test_patch_pedidos_transicoes(
