@@ -13,4 +13,14 @@
   label {
     font-weight: bold;
   }
+
+  .pedido-actions-card {
+    position: sticky;
+    top: 0;
+    z-index: 99999999999;
+
+    .status-container {
+      margin-bottom: 10px;
+    }
+  }
 }

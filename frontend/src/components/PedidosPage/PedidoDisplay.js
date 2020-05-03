@@ -60,12 +60,12 @@ const PedidoDisplay = ({
       </Button>
 
       {usuario.permissoes.includes("backoffice") && (
-        <Card style={{ position: "sticky", top: 0, zIndex: 99999999 }}>
+        <Card className="pedido-actions-card">
           <Card.Header>
             <b>Pedido:</b> {pedido.eid}
           </Card.Header>
           <Card.Body>
-            <div style={{ marginBottom: 10 }}>
+            <div className="status-container">
               <b>Situação:</b> {PEDIDO_STATUS_LABELS[pedido.status]}
             </div>
             <PedidoActionButtons pedido={pedido} usuario={usuario} />

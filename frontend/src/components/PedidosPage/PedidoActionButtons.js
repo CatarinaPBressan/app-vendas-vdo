@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { PEDIDO_STATUS, PEDIDO_TRANSICOES } from "../../constants/pedidos";
 import { updatePedidoStatus } from "../../actions/pedido";
 
+import "./PedidoActionButtons.scss";
+
 export const PedidoActionButtons = ({
   pedido,
   usuario,
@@ -15,7 +17,7 @@ export const PedidoActionButtons = ({
     updatePedidoStatus(pedido, usuario, transicao);
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <div className="pedido-action-button-container">
       {pedido.status === PEDIDO_STATUS.NOVO && (
         <Button
           size="md"
@@ -30,7 +32,7 @@ export const PedidoActionButtons = ({
           <Button
             size="md"
             variant="success"
-            style={{ marginRight: 10 }}
+            className="aprovar-analise-btn"
             onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.APROVAR)}
           >
             Aprovar
