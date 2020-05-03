@@ -37,13 +37,13 @@ default:
     # For installing make and etc.
     # apk is alpine's package manager
     - apk add --update --virtual build-dependencies \
-        build-base \
-        py-pip \
-        python-dev \
-        libffi-dev \
-        openssl-dev \
-        libc-dev \
-        gcc \
+        build-base\
+        py-pip\
+        python-dev\
+        libffi-dev\
+        openssl-dev\
+        libc-dev\
+        gcc\
         curl
     - sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
