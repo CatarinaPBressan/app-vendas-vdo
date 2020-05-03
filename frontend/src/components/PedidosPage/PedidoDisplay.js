@@ -11,6 +11,8 @@ import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import { fetchPedidoProduto } from "../../actions/pedido";
 
 import "./PedidoDisplay.scss";
+import { STATUS_MAP } from "../../constants/pedidos";
+import { PedidoActionButtons } from "./PedidoActionButtons";
 
 const PedidoDisplay = ({
   pedidos,
@@ -23,20 +25,21 @@ const PedidoDisplay = ({
   const [pedido, setPedido] = useState();
   const [ProdutoDisplay, setProdutoDisplay] = useState();
   useEffect(() => {
-    if (_.isEmpty(pedidos)) {
-      return;
-    }
-    const _pedido = pedidos[pedidoEid];
-    const produtoDisplay = {
-      "cartao-de-credito": CartaoDeCredito,
-    }[_pedido.produto_slug];
-    setPedido(_pedido);
-    setProdutoDisplay(() => produtoDisplay);
-    if (!_pedido.produto) {
-      (async () => {
+    const loadPedido = async () => {
+      if (_.isEmpty(pedidos)) {
+        return;
+      }
+      const _pedido = pedidos[pedidoEid];
+      const produtoDisplay = {
+        "cartao-de-credito": CartaoDeCredito,
+      }[_pedido.produto_slug];
+      setPedido(_pedido);
+      setProdutoDisplay(() => produtoDisplay);
+      if (!_pedido.produto) {
         await fetchPedidoProduto(_pedido, usuario);
-      })();
-    }
+      }
+    };
+    loadPedido();
   }, [pedidos, pedidoEid, fetchPedidoProduto, usuario]);
 
   if (!pedido) {
@@ -70,6 +73,15 @@ const PedidoDisplay = ({
               <Form.Control plaintext readOnly value={pedido.usuario.cpf} />
             </Form.Group>
           </Form.Row>
+        </Card.Body>
+      </Card>
+
+      <Card>
+        <Card.Header>
+          <b>Situação:</b> {STATUS_MAP[pedido.status]}{" "}
+        </Card.Header>
+        <Card.Body>
+          <PedidoActionButtons pedido={pedido} />
         </Card.Body>
       </Card>
 

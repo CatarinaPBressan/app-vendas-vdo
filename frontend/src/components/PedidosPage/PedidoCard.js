@@ -3,15 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { PRODUTOS } from "../../constants/produtos";
+import { STATUS_MAP } from "../../constants/pedidos";
 
 import "./PedidoCard.scss";
-
-const STATUS_MAP = {
-  NOVO: "Novo",
-  ANALISE_DE_CREDITO: "Análise de Crédito",
-  CANCELADO: "Cancelado",
-  APROVADO: "Aprovado",
-};
 
 const PedidoCard = (props) => {
   return (
