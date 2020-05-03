@@ -7,8 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
+import PedidoActionButtons from "./PedidoActionButtons";
 
 import { fetchPedidoProduto } from "../../actions/pedido";
+import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
 
 import "./PedidoDisplay.scss";
 
@@ -23,26 +25,26 @@ const PedidoDisplay = ({
   const [pedido, setPedido] = useState();
   const [ProdutoDisplay, setProdutoDisplay] = useState();
   useEffect(() => {
-    if (_.isEmpty(pedidos)) {
-      return;
-    }
-    const _pedido = pedidos[pedidoEid];
-    const produtoDisplay = {
-      "cartao-de-credito": CartaoDeCredito,
-    }[_pedido.produto_slug];
-    setPedido(_pedido);
-    setProdutoDisplay(() => produtoDisplay);
-    if (!_pedido.produto) {
-      (async () => {
+    const loadPedido = async () => {
+      if (_.isEmpty(pedidos)) {
+        return;
+      }
+      const _pedido = pedidos[pedidoEid];
+      const produtoDisplay = {
+        "cartao-de-credito": CartaoDeCredito,
+      }[_pedido.produto_slug];
+      setPedido(_pedido);
+      setProdutoDisplay(() => produtoDisplay);
+      if (!_pedido.produto) {
         await fetchPedidoProduto(_pedido, usuario);
-      })();
-    }
+      }
+    };
+    loadPedido();
   }, [pedidos, pedidoEid, fetchPedidoProduto, usuario]);
 
   if (!pedido) {
     return <div> Carregando pedido... </div>;
   }
-
   return (
     <div className="pedido-display">
       <Button
@@ -57,6 +59,19 @@ const PedidoDisplay = ({
         <span className="label">Voltar</span>
       </Button>
 
+      {usuario.permissoes.includes("backoffice") && (
+        <Card className="pedido-actions-card">
+          <Card.Header>
+            <b>Pedido:</b> {pedido.eid}
+          </Card.Header>
+          <Card.Body>
+            <div className="status-container">
+              <b>Situação:</b> {PEDIDO_STATUS_LABELS[pedido.status]}
+            </div>
+            <PedidoActionButtons pedido={pedido} usuario={usuario} />
+          </Card.Body>
+        </Card>
+      )}
       <Card>
         <Card.Header>Dados do Vendedor</Card.Header>
         <Card.Body>

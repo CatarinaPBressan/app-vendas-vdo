@@ -29,6 +29,7 @@ uwsgi = "*"
 sqlalchemy-utils = "*"
 flask-login = "*"
 psycopg2-binary = "*"
+transitions = "*"
 
 [requires]
 python_version = "3.8"

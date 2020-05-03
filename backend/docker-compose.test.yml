@@ -4,4 +4,4 @@ services:
   backoffice:
     environment:
       - FLASK_ENV=test
-    command: pytest -p no:cacheprovider
+    command: pytest -vv --ff

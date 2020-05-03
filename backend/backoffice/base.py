@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from pusher import Pusher
 
+from backoffice import utils
+
 db = SQLAlchemy()
 token_auth = HTTPTokenAuth("Bearer")
 login_manager = LoginManager()
@@ -34,6 +36,24 @@ class PusherClient:
 
 
 pusher_client = PusherClient()
+
+
+class BaseTable(object):
+    id = db.Column(db.Integer, primary_key=True)
+    eid = db.Column(
+        db.String(26), index=True, unique=True, default=utils.create_eid, nullable=False
+    )
+
+    created_at = db.Column(db.DateTime, default=utils.datetime_now, nullable=False)
+    updated_at = db.Column(
+        db.DateTime,
+        default=utils.datetime_now,
+        onupdate=utils.datetime_now,
+        nullable=False,
+    )
+
+    def __str__(self):
+        return f"<{self.__class__.__name__} - {self.eid}>"
 
 
 def init_app(app):

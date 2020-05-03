@@ -3,34 +3,28 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { PRODUTOS } from "../../constants/produtos";
+import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
 
 import "./PedidoCard.scss";
 
-const STATUS_MAP = {
-  NOVO: "Novo",
-  ANALISE_DE_CREDITO: "Análise de Crédito",
-  CANCELADO: "Cancelado",
-  APROVADO: "Aprovado",
-};
-
-const PedidoCard = (props) => {
+const PedidoCard = ({ pedido, match }) => {
   return (
-    <Link to={`${props.match.path}${props.pedido.eid}`} className="pedido-card">
+    <Link to={`${match.path}${pedido.eid}`} className="pedido-card">
       <span className="data-container">
         <div>
-          <b>Nome:</b> {props.pedido.nome_completo}
+          <b>Nome:</b> {pedido.nome_completo}
         </div>
         <div>
-          <b>CPF:</b> {props.pedido.cpf}
+          <b>CPF:</b> {pedido.cpf}
         </div>
         <div>
-          <b>Status:</b> {STATUS_MAP[props.pedido.status]}
+          <b>Status:</b> {PEDIDO_STATUS_LABELS[pedido.status]}
         </div>
         <div>
-          <b>Produto:</b> <b>{PRODUTOS[props.pedido.produto_slug].nome}</b>
+          <b>Produto:</b> <b>{PRODUTOS[pedido.produto_slug].nome}</b>
         </div>
         <div>
-          <b>Vendedor:</b> {props.pedido.usuario.nome}
+          <b>Vendedor:</b> {pedido.usuario.nome}
         </div>
       </span>
     </Link>

@@ -25,3 +25,6 @@ class APIV0TestClient:
 
     def post(self, client, usuario, json, **kwargs):
         return self._do_request("post", client, usuario, json=json, **kwargs)
+
+    def patch(self, client, usuario, json, **kwargs):
+        return self._do_request("patch", client, usuario, json=json, **kwargs)

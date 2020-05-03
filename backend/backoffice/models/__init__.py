@@ -4,28 +4,10 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 import sqlalchemy_utils
 
-from backoffice.base import db
 from backoffice import utils
+from backoffice.base import db, BaseTable
+from backoffice.models.pedidos import Pedido
 from backoffice.enums import EstadoCivil, Ocupacao, DataVencimento
-
-
-class _BaseTable(object):
-    id = db.Column(db.Integer, primary_key=True)
-    eid = db.Column(
-        db.String(26), index=True, unique=True, default=utils.create_eid, nullable=False
-    )
-
-    created_at = db.Column(db.DateTime, default=utils.datetime_now, nullable=False)
-    updated_at = db.Column(
-        db.DateTime,
-        default=utils.datetime_now,
-        onupdate=utils.datetime_now,
-        nullable=False,
-    )
-
-    def __str__(self):
-        return f"<{self.__class__.__name__} - {self.eid}>"
-
 
 usuario_permissao = db.Table(
     "usuario_permissao",
@@ -38,7 +20,7 @@ usuario_permissao = db.Table(
 ONE_DAY = 60 * 60 * 24
 
 
-class Usuario(db.Model, _BaseTable, UserMixin):
+class Usuario(db.Model, BaseTable, UserMixin):
     username = db.Column(db.String(255), index=True, unique=True)
     cpf = db.Column(db.String(14), unique=True)
     password = db.Column(db.String(128))
@@ -57,6 +39,8 @@ class Usuario(db.Model, _BaseTable, UserMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
+
+    TOKEN_TTL = 60 * 60 * 24
 
     def generate_auth_token(self, expiration=ONE_DAY):
         serializer = TimedJSONWebSignatureSerializer(
@@ -92,21 +76,7 @@ class Usuario(db.Model, _BaseTable, UserMixin):
         return flask.current_app.config["PUSHER_CLUSTER"]
 
 
-class Pedido(db.Model, _BaseTable):
-    usuario_id = db.Column(db.ForeignKey("usuario.id"))
-    usuario = db.relationship("Usuario")
-    produto = db.relationship("PedidoProduto", uselist=False, backref="pedido")
-    produto_slug = db.Column(db.String(255))
-    status = db.Column(db.String(255), default="NOVO")
-    # Dados do pedido compartilhados entre todos os produtos
-    nome_completo = db.Column(db.String(255))
-    cpf = db.Column(db.String(14))
-    email = db.Column(db.String(255))
-    telefone_celular = db.Column(db.String(14))
-    observacoes = db.Column(db.Text)
-
-
-class PedidoProduto(db.Model, _BaseTable):
+class PedidoProduto(db.Model, BaseTable):
     """
     Tabela que segura os dados dos pedidos.
     As colunas são compartilhados entre produtos.
@@ -129,7 +99,7 @@ class PedidoProduto(db.Model, _BaseTable):
     data_vencimento = db.Column(db.Enum(DataVencimento))
 
 
-class Permissao(db.Model, _BaseTable):
+class Permissao(db.Model, BaseTable):
     nome = db.Column(db.String(255), unique=True)
 
     def __init__(self, nome):

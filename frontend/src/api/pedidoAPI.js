@@ -20,6 +20,14 @@ const PedidoAPI = {
     const response = await v0Api(usuario.token).get(`pedidos/${pedido.eid}/`);
     return response.data.pedido;
   },
+
+  updatePedidoStatus: async (pedido, usuario, transicao) => {
+    const response = await v0Api(usuario.token).patch(
+      `pedidos/${pedido.eid}/`,
+      { transicao },
+    );
+    return response.data.pedido;
+  },
 };
 
 export default PedidoAPI;

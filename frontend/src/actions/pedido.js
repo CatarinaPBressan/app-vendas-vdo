@@ -29,7 +29,19 @@ export const fetchPedidos = (usuario) => async (dispatch) => {
 };
 
 export const fetchPedidoProduto = (pedido, usuario) => async (dispatch) => {
-  const pedidoComProduto = await PedidoAPI.fetchPedidoProduto(pedido, usuario);
-  dispatch(addPedido(pedidoComProduto));
-  return pedidoComProduto;
+  const _pedido = await PedidoAPI.fetchPedidoProduto(pedido, usuario);
+  dispatch(addPedido(_pedido));
+  return _pedido;
+};
+
+export const updatePedidoStatus = (pedido, usuario, transicao) => async (
+  dispatch,
+) => {
+  const _pedido = await PedidoAPI.updatePedidoStatus(
+    pedido,
+    usuario,
+    transicao,
+  );
+  dispatch(addPedido(_pedido));
+  return _pedido;
 };
