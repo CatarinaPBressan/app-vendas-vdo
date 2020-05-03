@@ -7,12 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
+import PedidoActionButtons from "./PedidoActionButtons";
 
 import { fetchPedidoProduto } from "../../actions/pedido";
+import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
 
 import "./PedidoDisplay.scss";
-import { STATUS_MAP } from "../../constants/pedidos";
-import { PedidoActionButtons } from "./PedidoActionButtons";
 
 const PedidoDisplay = ({
   pedidos,
@@ -45,7 +45,6 @@ const PedidoDisplay = ({
   if (!pedido) {
     return <div> Carregando pedido... </div>;
   }
-
   return (
     <div className="pedido-display">
       <Button
@@ -60,6 +59,19 @@ const PedidoDisplay = ({
         <span className="label">Voltar</span>
       </Button>
 
+      {usuario.permissoes.includes("backoffice") && (
+        <Card style={{ position: "sticky", top: 0, zIndex: 99999999 }}>
+          <Card.Header>
+            <b>Pedido:</b> {pedido.eid}
+          </Card.Header>
+          <Card.Body>
+            <div style={{ marginBottom: 10 }}>
+              <b>Situação:</b> {PEDIDO_STATUS_LABELS[pedido.status]}
+            </div>
+            <PedidoActionButtons pedido={pedido} usuario={usuario} />
+          </Card.Body>
+        </Card>
+      )}
       <Card>
         <Card.Header>Dados do Vendedor</Card.Header>
         <Card.Body>
@@ -73,15 +85,6 @@ const PedidoDisplay = ({
               <Form.Control plaintext readOnly value={pedido.usuario.cpf} />
             </Form.Group>
           </Form.Row>
-        </Card.Body>
-      </Card>
-
-      <Card>
-        <Card.Header>
-          <b>Situação:</b> {STATUS_MAP[pedido.status]}{" "}
-        </Card.Header>
-        <Card.Body>
-          <PedidoActionButtons pedido={pedido} />
         </Card.Body>
       </Card>
 

@@ -2,15 +2,29 @@ import React from "react";
 
 import { Button } from "react-bootstrap";
 
-export const PedidoActionButtons = ({ pedido }) => {
+import { updatePedidoStatus } from "../../actions/pedido";
+import { connect } from "react-redux";
+
+export const PedidoActionButtons = ({
+  pedido,
+  usuario,
+  updatePedidoStatus,
+}) => {
+  const _updatePedidoStatus = (transicao) => () =>
+    updatePedidoStatus(pedido, usuario, transicao);
+
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>
-      {pedido.status == "novo" && (
-        <Button size="md" variant="success">
+      {pedido.status === "novo" && (
+        <Button
+          size="md"
+          variant="success"
+          onClick={_updatePedidoStatus("iniciar")}
+        >
           Iniciar
         </Button>
       )}
-      {pedido.status == "analise_credito" && (
+      {pedido.status === "analise_credito" && (
         <>
           <Button size="md" variant="success">
             Aprovar
@@ -20,7 +34,7 @@ export const PedidoActionButtons = ({ pedido }) => {
           </Button>
         </>
       )}
-      {pedido.status == "em_andamento" && (
+      {pedido.status === "em_andamento" && (
         <Button size="md" variant="success">
           Completar
         </Button>
@@ -33,3 +47,9 @@ export const PedidoActionButtons = ({ pedido }) => {
     </div>
   );
 };
+
+const mapDispatchToProps = {
+  updatePedidoStatus,
+};
+
+export default connect(() => ({}), mapDispatchToProps)(PedidoActionButtons);
