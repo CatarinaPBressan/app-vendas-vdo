@@ -1,78 +1,66 @@
-# image: docker:19.03.1
+image: docker:19.03.1
 
-# variables:
-#   # When using dind service, we need to instruct docker, to talk with
-#   # the daemon started inside of the service. The daemon is available
-#   # with a network connection instead of the default
-#   # /var/run/docker.sock socket. docker:19.03.1 does this automatically
-#   # by setting the DOCKER_HOST in
-#   # https://github.com/docker-library/docker/blob/d45051476babc297257df490d22cbd806f1b11e4/19.03.1/docker-entrypoint.sh#L23-L29
-#   #
-#   # The 'docker' hostname is the alias of the service container as described at
-#   # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services.
-#   #
-#   # Note that if you're using GitLab Runner 12.7 or earlier with the Kubernetes executor and Kubernetes 1.6 or earlier,
-#   # the variable must be set to tcp://localhost:2376 because of how the
-#   # Kubernetes executor connects services to the job container
-#   # DOCKER_HOST: tcp://localhost:2376
-#   #
-#   # Specify to Docker where to create the certificates, Docker will
-#   # create them automatically on boot, and will create
-#   # `/certs/client` that will be shared between the service and job
-#   # container, thanks to volume mount from config.toml
-#   DOCKER_TLS_CERTDIR: "/certs"
-#   ECR_REPO: "776942401551.dkr.ecr.sa-east-1.amazonaws.com/"
+variables:
+  # When using dind service, we need to instruct docker, to talk with
+  # the daemon started inside of the service. The daemon is available
+  # with a network connection instead of the default
+  # /var/run/docker.sock socket. docker:19.03.1 does this automatically
+  # by setting the DOCKER_HOST in
+  # https://github.com/docker-library/docker/blob/d45051476babc297257df490d22cbd806f1b11e4/19.03.1/docker-entrypoint.sh#L23-L29
+  #
+  # The 'docker' hostname is the alias of the service container as described at
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services.
+  #
+  # Note that if you're using GitLab Runner 12.7 or earlier with the Kubernetes executor and Kubernetes 1.6 or earlier,
+  # the variable must be set to tcp://localhost:2376 because of how the
+  # Kubernetes executor connects services to the job container
+  # DOCKER_HOST: tcp://localhost:2376
+  #
+  # Specify to Docker where to create the certificates, Docker will
+  # create them automatically on boot, and will create
+  # `/certs/client` that will be shared between the service and job
+  # container, thanks to volume mount from config.toml
+  DOCKER_TLS_CERTDIR: "/certs"
+  ECR_REPO: "776942401551.dkr.ecr.sa-east-1.amazonaws.com/"
 
-# services:
-#   - docker:19.03.1-dind
+services:
+  - docker:19.03.1-dind
 
-# stages:
-#   - build
-#   - test
-#   - deploy_staging
-#   - deploy_production
+stages:
+  - build
+  - test
+  - deploy_staging
+  - deploy_production
 
-# default:
-#   before_script:
-#     # For installing make and etc.
-#     # apk is alpine's package manager
-#     - apk update
-#     - apk add --virtual build-dependencies build-base py-pip python-dev libffi-dev openssl-dev libc-dev gcc curl
-#     - curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-#     - chmod +x /usr/local/bin/docker-compose
-#     - ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-#     - docker-compose --version
+Build Backend:
+  stage: build
+  script:
+    - cd backend
+    - make
 
+Build Frontend:
+  stage: build
+  script:
+    - cd frontend
+    - docker build -t frontend:${CI_COMMIT_SHORT_SHA} -t frontend:latest -f Dockerfile .
 
-# Build Backend:
-#   stage: build
-#   script:
-#     - cd backend
-#     - make
+Test Backend:
+  stage: test
+  except:
+    - master
+  script:
+    - cd backend
+    - make test
 
-# Build Frontend:
-#   stage: build
-#   script:
-#     - cd frontend
-#     - docker build -t frontend:${CI_COMMIT_SHORT_SHA} -t frontend:latest -f Dockerfile .
+Test Frontend:
+  stage: test
+  except:
+    - master
+  script:
+    - docker run -e CI=true frontend yarn test
 
-# Test Backend:
-#   stage: test
-#   except:
-#     - master
-#   script:
-#     - cd backend
-#     - make test
-
-# Test Frontend:
-#   stage: test
-#   except:
-#     - master
-#   script:
-#     - docker run -e CI=true frontend yarn test
-
-# Deploy Staging:
-#   stage: deploy_staging
-#   when: manual
-#   script:
-#     - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy_statics.sh staging
+Deploy Staging:
+  stage: deploy_staging
+  when: manual
+  script:
+    - docker run -e AWS_ACCESS_KEY_ID=${AWS_S3_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY} frontend bash scripts/deploy_statics.sh staging
