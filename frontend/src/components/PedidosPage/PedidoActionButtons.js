@@ -1,9 +1,10 @@
 import React from "react";
 
 import { Button } from "react-bootstrap";
-
-import { updatePedidoStatus } from "../../actions/pedido";
 import { connect } from "react-redux";
+
+import { PEDIDO_STATUS, PEDIDO_TRANSICOES } from "../../constants/pedidos";
+import { updatePedidoStatus } from "../../actions/pedido";
 
 export const PedidoActionButtons = ({
   pedido,
@@ -15,32 +16,53 @@ export const PedidoActionButtons = ({
 
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>
-      {pedido.status === "novo" && (
+      {pedido.status === PEDIDO_STATUS.NOVO && (
         <Button
           size="md"
           variant="success"
-          onClick={_updatePedidoStatus("iniciar")}
+          onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.INICIAR)}
         >
           Iniciar
         </Button>
       )}
-      {pedido.status === "analise_credito" && (
-        <>
-          <Button size="md" variant="success">
+      {pedido.status === PEDIDO_STATUS.ANALISE_CREDITO && (
+        <div>
+          <Button
+            size="md"
+            variant="success"
+            style={{ marginRight: 10 }}
+            onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.APROVAR)}
+          >
             Aprovar
           </Button>
-          <Button size="md" variant="danger">
+          <Button
+            size="md"
+            variant="danger"
+            onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.REPROVAR)}
+          >
             Reprovar
           </Button>
-        </>
+        </div>
       )}
-      {pedido.status === "em_andamento" && (
-        <Button size="md" variant="success">
+      {pedido.status === PEDIDO_STATUS.EM_ANDAMENTO && (
+        <Button
+          size="md"
+          variant="success"
+          onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.COMPLETAR)}
+        >
           Completar
         </Button>
       )}
-      {!["completo", "cancelado"].includes(pedido.status) && (
-        <Button size="md" variant="danger">
+      {![
+        PEDIDO_STATUS.COMPLETO,
+        PEDIDO_STATUS.CANCELADO,
+        PEDIDO_STATUS.REPROVADO,
+      ].includes(pedido.status) && (
+        <Button
+          size="md"
+          variant="outline-danger"
+          onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.CANCELAR)}
+        >
           Cancelar
         </Button>
       )}

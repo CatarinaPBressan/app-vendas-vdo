@@ -1,17 +1,25 @@
 export const PEDIDO_STATUS = {
-  novo: "novo",
-  analise_credito: "analise_credito",
-  em_andamento: "em_andamento",
-  completo: "completo",
-  cancelado: "cancelado",
-  reprovado: "reprovado",
+  NOVO: "novo",
+  ANALISE_CREDITO: "analise_credito",
+  EM_ANDAMENTO: "em_andamento",
+  COMPLETO: "completo",
+  CANCELADO: "cancelado",
+  REPROVADO: "reprovado",
 };
 
 export const PEDIDO_STATUS_LABELS = {
-  [PEDIDO_STATUS.novo]: "Novo",
-  [PEDIDO_STATUS.analise_credito]: "Análise de Crédito",
-  [PEDIDO_STATUS.em_andamento]: "Em andamento",
-  [PEDIDO_STATUS.completo]: "Completo",
-  [PEDIDO_STATUS.cancelado]: "Cancelado",
-  [PEDIDO_STATUS.reprovado]: "Reprovado",
+  [PEDIDO_STATUS.NOVO]: "Novo",
+  [PEDIDO_STATUS.ANALISE_CREDITO]: "Análise de Crédito",
+  [PEDIDO_STATUS.EM_ANDAMENTO]: "Em andamento",
+  [PEDIDO_STATUS.COMPLETO]: "Completo",
+  [PEDIDO_STATUS.CANCELADO]: "Cancelado",
+  [PEDIDO_STATUS.REPROVADO]: "Reprovado",
+};
+
+export const PEDIDO_TRANSICOES = {
+  INICIAR: "iniciar",
+  APROVAR: "aprovar",
+  COMPLETAR: "completar",
+  CANCELAR: "cancelar",
+  REPROVAR: "reprovar",
 };

@@ -44,7 +44,11 @@ _transicoes = [
         "source": ESTADOS.ANALISE_CREDITO.value,
         "dest": ESTADOS.REPROVADO.value,
     },
-    {"trigger": TRANSICOES.CANCELAR.value, "source": "*", "dest": ESTADOS.CANCELADO},
+    {
+        "trigger": TRANSICOES.CANCELAR.value,
+        "source": "*",
+        "dest": ESTADOS.CANCELADO.value,
+    },
 ]
 
 

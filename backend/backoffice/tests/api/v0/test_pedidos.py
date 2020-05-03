@@ -375,3 +375,59 @@ class TestPedidoAPIPatch(APIV0TestClient):
         )
 
         assert response.status_code == 400
+
+    @pytest.mark.parametrize(
+        "status_inicial",
+        [
+            ESTADOS.NOVO,
+            ESTADOS.CANCELADO,
+            ESTADOS.COMPLETO,
+            ESTADOS.ANALISE_CREDITO,
+            ESTADOS.REPROVADO,
+            ESTADOS.EM_ANDAMENTO,
+        ],
+    )
+    def test_patch_pedidos_cancelamento(self, client, status_inicial):
+        pedido = _create_pedido(status=status_inicial)
+
+        backoffice = Usuario(permissoes=[Permissao("backoffice")])
+        db.session.add(backoffice)
+        db.session.commit()
+
+        response = self.patch(
+            client, backoffice, pedido_eid=pedido.eid, json={"transicao": "cancelar"}
+        )
+
+        assert response.status_code == 200
+        assert response.json == {
+            "pedido": {
+                "eid": pedido.eid,
+                "produto_slug": "cartao-de-credito",
+                "nome_completo": "Arthur Bressan",
+                "cpf": "388.308.808-09",
+                "email": "eu@arthurbressan.org",
+                "telefone_celular": "(12)99123-2413",
+                "observacoes": "Obs.",
+                "produto": {
+                    "cep": "12240-310",
+                    "uf": "SP",
+                    "cidade": "SJC",
+                    "logradouro": "Rua Presidente Epitácio",
+                    "endereco_numero": "97",
+                    "complemento": "casa",
+                    "nome_mae": "Izolda",
+                    "estado_civil": str(EstadoCivil.solteiro),
+                    "ocupacao": str(Ocupacao.assalariado),
+                    "data_vencimento": str(DataVencimento.dia_10),
+                },
+                "created_at": pedido.created_at.isoformat(),
+                "updated_at": pedido.updated_at.isoformat(),
+                "status": ESTADOS.CANCELADO.value,
+                "usuario": {
+                    "eid": pedido.usuario.eid,
+                    "cpf": "477.417.717-10",
+                    "nome": "Fulano de Tal",
+                    "permissoes": [],
+                },
+            }
+        }
