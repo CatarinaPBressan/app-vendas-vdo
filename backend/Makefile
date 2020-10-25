@@ -15,3 +15,6 @@ test:
 
 backoffice-container:
 	docker-compose exec backoffice bash
+
+requirements:
+	pipenv run pip freeze > requirements.txt
