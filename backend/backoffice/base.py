@@ -53,7 +53,7 @@ class BaseTable(object):
     )
 
     def __str__(self):
-        return f"<{self.__class__.__name__} - {self.eid}>"
+        return f"<{self.__class__.__name__} {self.id} - {self.eid}>"
 
 
 def init_app(app):
