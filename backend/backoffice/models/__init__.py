@@ -94,9 +94,9 @@ class PedidoProduto(db.Model, BaseTable):
     endereco_numero = db.Column(db.String(255))
     complemento = db.Column(db.String(255))
     nome_mae = db.Column(db.String(255))
-    estado_civil = db.Column(db.Enum(EstadoCivil))
-    ocupacao = db.Column(db.Enum(Ocupacao))
-    data_vencimento = db.Column(db.Enum(DataVencimento))
+    estado_civil = db.Column(db.String)
+    ocupacao = db.Column(db.String)
+    data_vencimento = db.Column(db.String)
 
 
 class Permissao(db.Model, BaseTable):
