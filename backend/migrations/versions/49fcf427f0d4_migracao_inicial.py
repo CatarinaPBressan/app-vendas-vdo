@@ -1,16 +1,16 @@
-"""Migração inicial
+"""Migracao inicial
 
-Revision ID: 28fceb841faf
+Revision ID: 49fcf427f0d4
 Revises: 
-Create Date: 2020-11-02 14:44:02.682936
+Create Date: 2020-11-02 16:38:59.231268
 
 """
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision = '28fceb841faf'
+revision = '49fcf427f0d4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -86,16 +86,7 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.Column('pedido_id', sa.Integer(), nullable=True),
-    sa.Column('cep', sa.String(length=9), nullable=True),
-    sa.Column('uf', sa.String(length=2), nullable=True),
-    sa.Column('cidade', sa.String(length=255), nullable=True),
-    sa.Column('logradouro', sa.String(length=255), nullable=True),
-    sa.Column('endereco_numero', sa.String(length=255), nullable=True),
-    sa.Column('complemento', sa.String(length=255), nullable=True),
-    sa.Column('nome_mae', sa.String(length=255), nullable=True),
-    sa.Column('estado_civil', sa.String(), nullable=True),
-    sa.Column('ocupacao', sa.String(), nullable=True),
-    sa.Column('data_vencimento', sa.String(), nullable=True),
+    sa.Column('dados_produto', postgresql.JSON(astext_type=sa.Text()), nullable=True),
     sa.ForeignKeyConstraint(['pedido_id'], ['pedido.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
