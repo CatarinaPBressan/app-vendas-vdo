@@ -19,16 +19,18 @@ def _create_pedido(usuario=None, status=ESTADOS.NOVO):
         usuario = Usuario(cpf="789.123.456-79", nome="Fulano de Tal")
 
     pedido_produto = PedidoProduto(
-        cep="12240-310",
-        uf="SP",
-        cidade="SJC",
-        logradouro="Rua Presidente Epitácio",
-        endereco_numero="97",
-        complemento="casa",
-        nome_mae="Nome mae",
-        estado_civil="solteiro",
-        ocupacao="assalariado",
-        data_vencimento="dia_10",
+        dados_produto={
+            "cep": "12240-310",
+            "uf": "SP",
+            "cidade": "SJC",
+            "logradouro": "Rua Presidente Epitácio",
+            "endereco_numero": "97",
+            "complemento": "casa",
+            "nome_mae": "Nome mae",
+            "estado_civil": "solteiro",
+            "ocupacao": "assalariado",
+            "data_vencimento": "dia_10",
+        }
     )
     pedido = Pedido(
         usuario=usuario,

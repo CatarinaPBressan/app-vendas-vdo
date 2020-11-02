@@ -1,3 +1,4 @@
+import marshmallow
 from marshmallow import Schema, fields
 
 
@@ -14,16 +15,14 @@ class UsuarioSchema(Schema):
 
 
 class PedidoProdutoSchema(Schema):
-    cep = fields.String()
-    uf = fields.String()
-    cidade = fields.String()
-    logradouro = fields.String()
-    endereco_numero = fields.String()
-    complemento = fields.String()
-    nome_mae = fields.String()
-    estado_civil = fields.String()
-    ocupacao = fields.String()
-    data_vencimento = fields.String()
+    class Meta:
+        unknown = marshmallow.INCLUDE
+
+    dados_produto = fields.Dict()
+
+    @marshmallow.post_dump(pass_many=False)
+    def _flatten(self, dumped, **_):
+        return dumped["dados_produto"]
 
 
 class PedidoSchema(Schema):

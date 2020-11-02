@@ -29,9 +29,10 @@ class PedidosAPI(Resource):
         try:
             parsed = pedido_schema.load(request.json)
         except ValidationError as validation_errors:
+            print(validation_errors.messages)
             abort(400, errors=validation_errors.messages)
 
-        produto = PedidoProduto(**parsed.pop("produto"))
+        produto = PedidoProduto(dados_produto=parsed.pop("produto"))
         pedido = Pedido(usuario_id=g.usuario.id, produto=produto, **parsed)
 
         db.session.add(pedido)

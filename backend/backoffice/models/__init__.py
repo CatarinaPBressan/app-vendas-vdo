@@ -3,6 +3,7 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 import sqlalchemy_utils
+from sqlalchemy.dialects import postgresql
 
 from backoffice import utils
 from backoffice.base import db, BaseTable
@@ -87,24 +88,10 @@ class Usuario(db.Model, BaseTable, UserMixin):
 class PedidoProduto(db.Model, BaseTable):
     """
     Tabela que segura os dados dos pedidos.
-    As colunas são compartilhados entre produtos.
     """
 
-    # TODO: Os produtos que não utilizarem alguma coluna não devem mostrar essa coluna no JSON.
-    # ref: https://github.com/marshmallow-code/marshmallow/issues/229#issuecomment-134387999
-
     pedido_id = db.Column(db.ForeignKey("pedido.id"))
-    # Dados dos produtos
-    cep = db.Column(db.String(9))
-    uf = db.Column(db.String(2))
-    cidade = db.Column(db.String(255))
-    logradouro = db.Column(db.String(255))
-    endereco_numero = db.Column(db.String(255))
-    complemento = db.Column(db.String(255))
-    nome_mae = db.Column(db.String(255))
-    estado_civil = db.Column(db.String)
-    ocupacao = db.Column(db.String)
-    data_vencimento = db.Column(db.String)
+    dados_produto = db.Column(postgresql.JSON)
 
 
 class Permissao(db.Model, BaseTable):
