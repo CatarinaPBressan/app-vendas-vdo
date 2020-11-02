@@ -20,11 +20,22 @@ usuario_permissao = db.Table(
 ONE_DAY = 60 * 60 * 24
 
 
+class Franquia(db.Model, BaseTable):
+    nome = db.Column(db.String())
+    cnpj = db.Column(db.String(19), unique=True)  # 12.456.890/2345-789
+
+    def __str__(self):
+        return f"<Franquia {self.nome} - {self.cnpj}>"
+
+
 class Usuario(db.Model, BaseTable, UserMixin):
     username = db.Column(db.String(255), index=True, unique=True)
-    cpf = db.Column(db.String(14), unique=True)
+    cpf = db.Column(db.String(14), unique=True)  # 123.567.901-34
     password = db.Column(db.String(128))
     nome = db.Column(db.String(255))
+
+    franquia_id = db.Column(db.ForeignKey("franquia.id"))
+    franquia = db.relationship("Franquia")
 
     permissoes = db.relationship("Permissao", secondary=usuario_permissao)
 
@@ -39,8 +50,6 @@ class Usuario(db.Model, BaseTable, UserMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
-
-    TOKEN_TTL = 60 * 60 * 24
 
     def generate_auth_token(self, expiration=ONE_DAY):
         serializer = TimedJSONWebSignatureSerializer(

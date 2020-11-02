@@ -13,6 +13,7 @@ from backoffice.models import (
     Pedido,
     PedidoProduto,
     Permissao,
+    Franquia,
 )
 
 column_searchable_list_base = ["eid"]
@@ -106,6 +107,10 @@ class _BaseModelView(ModelView):
         return _user_is_admin(flask_login.current_user)
 
 
+class FranquiaModelView(_BaseModelView):
+    pass
+
+
 class PermissaoModelView(_BaseModelView):
     column_searchable_list = ["nome"]
     column_list = ["nome"]
@@ -119,6 +124,7 @@ class UsuarioModelView(_BaseModelView):
         "nome",
         "cpf",
         "username",
+        "franquia.nome",
         "created_at",
         "updated_at",
         "permissoes",
@@ -131,7 +137,7 @@ class UsuarioModelView(_BaseModelView):
 
     form_extra_fields = {"password_new": fields.PasswordField("Senha")}
 
-    form_columns = ["username", "password_new", "cpf", "nome", "permissoes"]
+    form_columns = ["username", "password_new", "cpf", "nome", "permissoes", "franquia"]
 
     def on_model_change(self, form, model, is_created):
         password_new = form.password_new.data
@@ -192,5 +198,6 @@ def init_app(app):
         UsuarioModelView(Usuario, db.session),
         PedidoModelView(Pedido, db.session),
         PedidoProdutoModelView(PedidoProduto, db.session),
+        FranquiaModelView(Franquia, db.session),
     )
     admin.add_link(LogoutLink())
