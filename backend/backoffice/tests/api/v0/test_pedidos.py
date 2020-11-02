@@ -7,9 +7,6 @@ from backoffice.models import (
     Usuario,
     Pedido,
     PedidoProduto,
-    EstadoCivil,
-    Ocupacao,
-    DataVencimento,
     Permissao,
 )
 from backoffice.models.pedidos import ESTADOS, TRANSICOES
