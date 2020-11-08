@@ -7,6 +7,7 @@ import InputMask from "react-input-mask";
 import { toast } from "react-toastify";
 
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
+import SeguroVida from "./produtos/SeguroVida";
 
 import { PRODUTOS } from "../../constants/produtos";
 import { PEDIDO_FIELDS, FIELDS } from "../../constants/fields";
@@ -33,19 +34,22 @@ class ProdutoPage extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
+
     let pedido_data = {};
     let produto_data = {};
     Object.entries(e.target.elements).forEach(([_, element]) => {
       if (element.type !== "submit") {
         const name = element.name;
         const value = element.value;
+
         if (PEDIDO_FIELDS.includes(name)) {
           pedido_data[name] = value;
-        } else {
+        } else if (element.type != "radio" || element.checked) {
           produto_data[name] = value;
         }
       }
     });
+
     this.props
       .createPedido(
         this.state.produto,
@@ -74,6 +78,7 @@ class ProdutoPage extends Component {
   render() {
     const ProductForm = {
       "cartao-de-credito": CartaoDeCredito,
+      "seguro-vida": SeguroVida,
     }[this.state.produto.id];
 
     return (

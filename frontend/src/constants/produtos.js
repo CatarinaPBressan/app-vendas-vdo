@@ -5,4 +5,10 @@ export const PRODUTOS = {
     id: "cartao-de-credito",
     ordem: 1,
   },
+  "seguro-vida": {
+    nome: "Seguro de Vida Individual",
+    icone: "user",
+    id: "seguro-vida",
+    ordem: 2,
+  },
 };

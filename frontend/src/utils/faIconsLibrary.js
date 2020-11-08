@@ -20,6 +20,7 @@ import {
   faFrown,
   faChevronLeft,
   faSignOutAlt,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const initIconLibrary = () => {
@@ -43,5 +44,6 @@ export const initIconLibrary = () => {
     faFrown,
     faChevronLeft,
     faSignOutAlt,
+    faUser,
   );
 };
