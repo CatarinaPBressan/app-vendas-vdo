@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
+import SeguroVida from "./produtos/SeguroVida";
 import PedidoActionButtons from "./PedidoActionButtons";
 
 import { fetchPedidoProduto } from "../../actions/pedido";
@@ -32,6 +33,7 @@ const PedidoDisplay = ({
       const _pedido = pedidos[pedidoEid];
       const produtoDisplay = {
         "cartao-de-credito": CartaoDeCredito,
+        "seguro-vida": SeguroVida,
       }[_pedido.produto_slug];
       setPedido(_pedido);
       setProdutoDisplay(() => produtoDisplay);

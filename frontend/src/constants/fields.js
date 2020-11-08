@@ -14,6 +14,11 @@ export const FIELDS = {
     pattern: "\\d{5}-\\d{3}",
     placeholder: "XXXXX-XXX",
   },
+  data: {
+    mask: "99/99/9999",
+    pattern: "\\d{2}/\\d{2}/\\d{4}",
+    placeholder: "DD/MM/AAAA",
+  },
 };
 
 export const UFS_BRASIL = [

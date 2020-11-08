@@ -22,7 +22,7 @@ const CartaoDeCredito = (props) => {
         </Form.Row>
         <Form.Row>
           <Form.Group controlId="logradouro" as={Col}>
-            <Form.Label>Logradouro / Rua</Form.Label>
+            <Form.Label>Logradouro</Form.Label>
             <Form.Control plaintext readOnly value={props.data.logradouro} />
           </Form.Group>
         </Form.Row>

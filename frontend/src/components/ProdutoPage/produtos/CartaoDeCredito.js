@@ -43,7 +43,7 @@ class CartaoDeCredito extends Component {
             <Form.Control type="text" name="cidade" required={true} />
           </Form.Group>
           <Form.Group controlId="logradouro">
-            <Form.Label>Logradouro / Rua</Form.Label>
+            <Form.Label>Logradouro</Form.Label>
             <Form.Control type="text" name="logradouro" required={true} />
           </Form.Group>
           <Form.Group controlId="endereco_numero">
