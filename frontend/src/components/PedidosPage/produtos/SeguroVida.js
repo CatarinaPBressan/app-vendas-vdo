@@ -205,7 +205,7 @@ const SeguroVida = (props) => {
         </Card.Header>
         <Card.Body>
           <Form.Row>
-            <Form.Group controlId="inserir_conjugue" as={Col} lg={12}>
+            <Form.Group controlId="possui_endereco_comercial" as={Col} lg={12}>
               <Form.Label>Possui Endereço Comercial?</Form.Label>
               <Form.Control
                 readOnly
@@ -215,7 +215,7 @@ const SeguroVida = (props) => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="cep" as={Col} lg={4}>
+            <Form.Group controlId="cep_comercial" as={Col} lg={4}>
               <Form.Label>CEP</Form.Label>
               <Form.Control
                 plaintext
@@ -223,7 +223,7 @@ const SeguroVida = (props) => {
                 value={props.data.cep_comercial}
               />
             </Form.Group>
-            <Form.Group controlId="uf" as={Col} lg={4}>
+            <Form.Group controlId="uf_comercial" as={Col} lg={4}>
               <Form.Label>UF</Form.Label>
               <Form.Control
                 plaintext
@@ -231,7 +231,7 @@ const SeguroVida = (props) => {
                 value={props.data.uf_comercial}
               />
             </Form.Group>
-            <Form.Group controlId="cidade" as={Col} lg={4}>
+            <Form.Group controlId="cidade_comercial" as={Col} lg={4}>
               <Form.Label>Cidade</Form.Label>
               <Form.Control
                 plaintext
@@ -241,7 +241,7 @@ const SeguroVida = (props) => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="logradouro" as={Col}>
+            <Form.Group controlId="logradouro_comercial" as={Col}>
               <Form.Label>Logradouro</Form.Label>
               <Form.Control
                 plaintext
@@ -251,7 +251,7 @@ const SeguroVida = (props) => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="endereco_numero" as={Col} lg={3}>
+            <Form.Group controlId="endereco_numero_comercial" as={Col} lg={3}>
               <Form.Label>Número</Form.Label>
               <Form.Control
                 plaintext
@@ -259,7 +259,7 @@ const SeguroVida = (props) => {
                 value={props.data.endereco_numero_comercial}
               />
             </Form.Group>
-            <Form.Group controlId="complemento" as={Col} lg={9}>
+            <Form.Group controlId="complemento_comercial" as={Col} lg={9}>
               <Form.Label>Complemento</Form.Label>
               <Form.Control
                 plaintext
