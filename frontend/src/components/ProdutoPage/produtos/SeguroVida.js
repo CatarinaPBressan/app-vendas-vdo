@@ -68,7 +68,6 @@ const SeguroVida = () => {
               <option value="separado">Separado(a) ou Divorciado(a)</option>
             </Form.Control>
           </Form.Group>
-
           <Form.Group controlId="fumante">
             <Form.Label>Fumante</Form.Label>
             <Form.Control as="select" name="fumante" required={true}>

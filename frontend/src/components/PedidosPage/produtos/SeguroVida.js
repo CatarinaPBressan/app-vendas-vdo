@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Form, Col, InputGroup } from "react-bootstrap";
+import { Card, Form, Col } from "react-bootstrap";
 
 const SeguroVida = (props) => {
   return (
