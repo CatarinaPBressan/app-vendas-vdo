@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import SeguroVida from "./produtos/SeguroVida";
+import SeguroResidencial from "./produtos/SeguroResidencial";
 import PedidoActionButtons from "./PedidoActionButtons";
 
 import { fetchPedidoProduto } from "../../actions/pedido";
@@ -34,6 +35,7 @@ const PedidoDisplay = ({
       const produtoDisplay = {
         "cartao-de-credito": CartaoDeCredito,
         "seguro-vida": SeguroVida,
+        "seguro-residencial": SeguroResidencial,
       }[_pedido.produto_slug];
       setPedido(_pedido);
       setProdutoDisplay(() => produtoDisplay);
@@ -120,7 +122,7 @@ const PedidoDisplay = ({
         </Card.Body>
       </Card>
       {pedido.produto ? (
-        <ProdutoDisplay data={pedido.produto} />
+        <ProdutoDisplay data={pedido.produto} usuario={usuario} />
       ) : (
         <div>Carregando dados</div>
       )}

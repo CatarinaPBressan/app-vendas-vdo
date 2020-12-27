@@ -3,11 +3,11 @@ from flask_login import UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, SignatureExpired
 import sqlalchemy_utils
-from sqlalchemy.dialects import postgresql
 
 from backoffice import utils
 from backoffice.base import db, BaseTable
 from backoffice.models.pedidos import Pedido
+from backoffice.models.pedido_produtos import PedidoProduto
 
 usuario_permissao = db.Table(
     "usuario_permissao",
@@ -83,15 +83,6 @@ class Usuario(db.Model, BaseTable, UserMixin):
     @property
     def pusher_cluster(self):
         return flask.current_app.config["PUSHER_CLUSTER"]
-
-
-class PedidoProduto(db.Model, BaseTable):
-    """
-    Tabela que segura os dados dos pedidos.
-    """
-
-    pedido_id = db.Column(db.ForeignKey("pedido.id"))
-    dados_produto = db.Column(postgresql.JSON)
 
 
 class Permissao(db.Model, BaseTable):

@@ -21,6 +21,8 @@ import {
   faChevronLeft,
   faSignOutAlt,
   faUser,
+  faHouseUser,
+  faCloudDownloadAlt,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const initIconLibrary = () => {
@@ -45,5 +47,7 @@ export const initIconLibrary = () => {
     faChevronLeft,
     faSignOutAlt,
     faUser,
+    faHouseUser,
+    faCloudDownloadAlt,
   );
 };
