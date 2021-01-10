@@ -20,7 +20,7 @@ const CartaoDeCredito = () => {
                 pattern={FIELDS.cep.pattern}
                 inputMode="numeric"
                 name="cep"
-                required={true}
+                required
               />
             )}
           </InputMask>
@@ -28,7 +28,7 @@ const CartaoDeCredito = () => {
         </Form.Group>
         <Form.Group controlId="uf">
           <Form.Label>UF</Form.Label>
-          <Form.Control as="select" name="uf" required={true}>
+          <Form.Control as="select" name="uf" required>
             <option value="">(Selecione)</option>
             {UFS_BRASIL.map((uf) => (
               <option value={uf} key={uf}>
@@ -39,15 +39,15 @@ const CartaoDeCredito = () => {
         </Form.Group>
         <Form.Group controlId="cidade">
           <Form.Label>Cidade</Form.Label>
-          <Form.Control type="text" name="cidade" required={true} />
+          <Form.Control type="text" name="cidade" required />
         </Form.Group>
         <Form.Group controlId="logradouro">
           <Form.Label>Logradouro</Form.Label>
-          <Form.Control type="text" name="logradouro" required={true} />
+          <Form.Control type="text" name="logradouro" required />
         </Form.Group>
         <Form.Group controlId="endereco_numero">
           <Form.Label>Número</Form.Label>
-          <Form.Control type="text" name="endereco_numero" required={true} />
+          <Form.Control type="text" name="endereco_numero" required />
         </Form.Group>
         <Form.Group controlId="complemento">
           <Form.Label>Complemento</Form.Label>
@@ -55,7 +55,7 @@ const CartaoDeCredito = () => {
         </Form.Group>
         <Form.Group controlId="estado_civil">
           <Form.Label>Estado Civil</Form.Label>
-          <Form.Control as="select" name="estado_civil" required={true}>
+          <Form.Control as="select" name="estado_civil" required>
             <option value="">(Selecione)</option>
             <option value="solteiro">Solteiro(a)</option>
             <option value="casado">Casado(a) ou União Estável</option>
@@ -65,7 +65,7 @@ const CartaoDeCredito = () => {
         </Form.Group>
         <Form.Group controlId="ocupacao">
           <Form.Label>Ocupação</Form.Label>
-          <Form.Control as="select" name="ocupacao" required={true}>
+          <Form.Control as="select" name="ocupacao" required>
             <option value="">(Selecione)</option>
             <option value="assalariado">Assalariado</option>
             <option value="empresario">Empresario</option>
@@ -76,11 +76,11 @@ const CartaoDeCredito = () => {
         </Form.Group>
         <Form.Group controlId="nome_mae">
           <Form.Label>Nome da Mãe</Form.Label>
-          <Form.Control type="text" name="nome_mae" required={true} />
+          <Form.Control type="text" name="nome_mae" required />
         </Form.Group>
         <Form.Group controlId="data_vencimento">
           <Form.Label>Data de Vencimento</Form.Label>
-          <Form.Control as="select" name="data_vencimento" required={true}>
+          <Form.Control as="select" name="data_vencimento" required>
             <option value="">(Selecione)</option>
             <option value="dia_5">5</option>
             <option value="dia_10">10</option>

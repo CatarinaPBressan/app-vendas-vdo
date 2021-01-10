@@ -11,10 +11,16 @@ export const PRODUTOS = {
     id: "seguro-vida",
     ordem: 2,
   },
-  'seguro-residencial': {
+  "seguro-residencial": {
     nome: "Seguro Residencial",
     icone: "house-user",
     id: "seguro-residencial",
     ordem: 3,
-  }
+  },
+  "seguro-automotivo": {
+    nome: "Seguro Automotivo",
+    icone: "car",
+    id: "seguro-automotivo",
+    ordem: 4,
+  },
 };

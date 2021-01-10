@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Form, Card, Col, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Form, Card, Col } from "react-bootstrap";
 
-import PedidoAPI from "../../../api/pedidoAPI";
+import { FileDownloadButton } from "../FileDownloadButton";
 
 const SeguroResidencial = (props) => {
   return (
@@ -33,25 +32,10 @@ const SeguroResidencial = (props) => {
               <Form.Group controlId="apolice_atual" as={Col}>
                 <Form.Label>Apólice atual</Form.Label>
                 <br />
-                <a
-                  href={props.data.apolice_atual.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => {
-                    e.preventDefault();
-
-                    PedidoAPI.getPedidoArquivo(
-                      props.data.apolice_atual.url,
-                      props.usuario,
-                      props.data.apolice_atual.nome_arquivo,
-                    );
-                  }}
-                >
-                  <Button variant="outline-primary">
-                    {props.data.apolice_atual.nome_arquivo}{" "}
-                    <FontAwesomeIcon icon="cloud-download-alt" />
-                  </Button>
-                </a>
+                <FileDownloadButton
+                  usuario={props.usuario}
+                  fileData={props.data.apolice_atual}
+                />
               </Form.Group>
             </Form.Row>
           )}

@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import SeguroVida from "./produtos/SeguroVida";
 import SeguroResidencial from "./produtos/SeguroResidencial";
+import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
+
 import PedidoActionButtons from "./PedidoActionButtons";
 
 import { fetchPedidoProduto } from "../../actions/pedido";
@@ -36,6 +38,7 @@ const PedidoDisplay = ({
         "cartao-de-credito": CartaoDeCredito,
         "seguro-vida": SeguroVida,
         "seguro-residencial": SeguroResidencial,
+        "seguro-automotivo": SeguroAutomotivo,
       }[_pedido.produto_slug];
       setPedido(_pedido);
       setProdutoDisplay(() => produtoDisplay);
@@ -47,7 +50,22 @@ const PedidoDisplay = ({
   }, [pedidos, pedidoEid, fetchPedidoProduto, usuario]);
 
   if (!pedido) {
-    return <div> Carregando pedido... </div>;
+    return (
+      <div className="pedido-display">
+        <Button
+          as={Link}
+          to="/pedidos"
+          className="backbutton"
+          variant="outline-secondary"
+          size="lg"
+          block
+        >
+          <FontAwesomeIcon icon="chevron-left" />
+          <span className="label">Voltar</span>
+        </Button>
+        <div> Carregando pedido... </div>
+      </div>
+    );
   }
   return (
     <div className="pedido-display">
