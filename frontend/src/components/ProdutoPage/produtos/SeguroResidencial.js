@@ -30,7 +30,7 @@ const SeguroResidencial = () => {
               name="novo_ou_renovacao"
               value="novo"
               label="Novo"
-              defaultChecked={true}
+              defaultChecked
               onChange={onIsRenovacaoChange}
             />
             <Form.Check
@@ -63,11 +63,11 @@ const SeguroResidencial = () => {
         <Card.Body>
           <Form.Group controlId="rg">
             <Form.Label>RG</Form.Label>
-            <Form.Control type="text" name="rg" required={true} />
+            <Form.Control type="text" name="rg" required />
           </Form.Group>
           <Form.Group controlId="rg_expedidor">
             <Form.Label>Órgão Expedidor</Form.Label>
-            <Form.Control type="text" name="rg_expedidor" required={true} />
+            <Form.Control type="text" name="rg_expedidor" required />
           </Form.Group>
           <Form.Group controlId="rg_data_expedicao">
             <Form.Label>Data Expedição</Form.Label>
@@ -79,7 +79,7 @@ const SeguroResidencial = () => {
                   pattern={FIELDS.data.pattern}
                   inputMode="numeric"
                   name="rg_data_expedicao"
-                  required={true}
+                  required
                 />
               )}
             </InputMask>
@@ -87,7 +87,7 @@ const SeguroResidencial = () => {
           <hr />
           <Form.Group controlId="estado_civil">
             <Form.Label>Estado Civil</Form.Label>
-            <Form.Control as="select" name="estado_civil" required={true}>
+            <Form.Control as="select" name="estado_civil" required>
               <option value="">(Selecione)</option>
               <option value="solteiro">Solteiro(a)</option>
               <option value="casado">Casado(a) ou União Estável</option>
@@ -97,7 +97,7 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="profissao">
             <Form.Label>Profissão</Form.Label>
-            <Form.Control type="text" name="profissao" required={true} />
+            <Form.Control type="text" name="profissao" required />
           </Form.Group>
           <Form.Group controlId="renda">
             <Form.Label>Renda</Form.Label>
@@ -105,7 +105,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="renda" required={true} />
+              <Form.Control type="text" name="renda" required />
             </InputGroup>
           </Form.Group>
           <Form.Group controlId="valor_em_risco">
@@ -114,16 +114,12 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="valor_em_risco" required={true} />
+              <Form.Control type="text" name="valor_em_risco" required />
             </InputGroup>
           </Form.Group>
           <Form.Group controlId="exposta_politicamente">
             <Form.Label>Pessoa exposta politicamente?</Form.Label>
-            <Form.Control
-              as="select"
-              name="exposta_politicamente"
-              required={true}
-            >
+            <Form.Control as="select" name="exposta_politicamente" required>
               <option value="">(Selecione)</option>
               <option value="sim">Sim</option>
               <option value="nao">Não</option>
@@ -144,7 +140,7 @@ const SeguroResidencial = () => {
                   pattern={FIELDS.cep.pattern}
                   inputMode="numeric"
                   name="cep"
-                  required={true}
+                  required
                 />
               )}
             </InputMask>
@@ -152,7 +148,7 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="uf">
             <Form.Label>UF</Form.Label>
-            <Form.Control as="select" name="uf" required={true}>
+            <Form.Control as="select" name="uf" required>
               <option value="">(Selecione)</option>
               {UFS_BRASIL.map((uf) => (
                 <option value={uf} key={uf}>
@@ -163,15 +159,15 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="cidade">
             <Form.Label>Cidade</Form.Label>
-            <Form.Control type="text" name="cidade" required={true} />
+            <Form.Control type="text" name="cidade" required />
           </Form.Group>
           <Form.Group controlId="logradouro">
             <Form.Label>Logradouro</Form.Label>
-            <Form.Control type="text" name="logradouro" required={true} />
+            <Form.Control type="text" name="logradouro" required />
           </Form.Group>
           <Form.Group controlId="endereco_numero">
             <Form.Label>Número</Form.Label>
-            <Form.Control type="text" name="endereco_numero" required={true} />
+            <Form.Control type="text" name="endereco_numero" required />
           </Form.Group>
           <Form.Group controlId="complemento">
             <Form.Label>Complemento</Form.Label>
@@ -187,7 +183,7 @@ const SeguroResidencial = () => {
             <Form.Control
               as="select"
               name="atividade_profissional_no_local"
-              required={true}
+              required
             >
               <option value="">(Selecione)</option>
               <option value="sim">Sim</option>
@@ -196,7 +192,7 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="construcao">
             <Form.Label>Construção</Form.Label>
-            <Form.Control as="select" name="construcao" required={true}>
+            <Form.Control as="select" name="construcao" required>
               <option value="">(Selecione)</option>
               <option value="alvenaria">Alvenaria</option>
               <option value="madeira">Madeira</option>
@@ -204,7 +200,7 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="objeto_segurado">
             <Form.Label>Objeto Segurado</Form.Label>
-            <Form.Control as="select" name="objeto_segurado" required={true}>
+            <Form.Control as="select" name="objeto_segurado" required>
               <option value="">(Selecione)</option>
               <option value="predio">Prédio</option>
               <option value="conteudo">Conteúdo</option>
@@ -213,7 +209,7 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="tipo">
             <Form.Label>Tipo</Form.Label>
-            <Form.Control as="select" name="tipo" required={true}>
+            <Form.Control as="select" name="tipo" required>
               <option value="">(Selecione)</option>
               <option value="casa">Casa</option>
               <option value="casa_condominio_fechado">
@@ -224,7 +220,7 @@ const SeguroResidencial = () => {
           </Form.Group>
           <Form.Group controlId="uso">
             <Form.Label>Uso</Form.Label>
-            <Form.Control as="select" name="uso" required={true}>
+            <Form.Control as="select" name="uso" required>
               <option value="">(Selecione)</option>
               <option value="habitual">Habitual</option>
               <option value="veraneio">Veraneio</option>

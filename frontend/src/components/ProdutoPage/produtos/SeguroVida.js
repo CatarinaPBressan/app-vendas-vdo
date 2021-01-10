@@ -37,7 +37,7 @@ const SeguroVida = () => {
         <Card.Body>
           <Form.Group controlId="genero">
             <Form.Label>Genero</Form.Label>
-            <Form.Control as="select" name="genero" required={true}>
+            <Form.Control as="select" name="genero" required>
               <option value="">(Selecione)</option>
               <option value="masculino">Masculino</option>
               <option value="feminino">Feminino</option>
@@ -53,14 +53,14 @@ const SeguroVida = () => {
                   pattern={FIELDS.data.pattern}
                   inputMode="numeric"
                   name="data_nascimento"
-                  required={true}
+                  required
                 />
               )}
             </InputMask>
           </Form.Group>
           <Form.Group controlId="estado_civil">
             <Form.Label>Estado Civil</Form.Label>
-            <Form.Control as="select" name="estado_civil" required={true}>
+            <Form.Control as="select" name="estado_civil" required>
               <option value="">(Selecione)</option>
               <option value="solteiro">Solteiro(a)</option>
               <option value="casado">Casado(a) ou União Estável</option>
@@ -70,7 +70,7 @@ const SeguroVida = () => {
           </Form.Group>
           <Form.Group controlId="fumante">
             <Form.Label>Fumante</Form.Label>
-            <Form.Control as="select" name="fumante" required={true}>
+            <Form.Control as="select" name="fumante" required>
               <option value="">(Selecione)</option>
               <option value="sim">Sim</option>
               <option value="nao">Não</option>
@@ -85,7 +85,7 @@ const SeguroVida = () => {
               name="regime_de_trabalho"
               value="clt"
               label="CLT"
-              required={true}
+              required
               onChange={onRegimeChange}
             />
             <Form.Group controlId="nome_empresa_clt">
@@ -103,7 +103,7 @@ const SeguroVida = () => {
               name="regime_de_trabalho"
               value="profissional_liberal"
               label="Profissional Liberal"
-              required={true}
+              required
               onChange={onRegimeChange}
             />
             <Form.Group controlId="ramo_empresa_pl">
@@ -118,7 +118,7 @@ const SeguroVida = () => {
           </Form.Group>
           <Form.Group controlId="profissao">
             <Form.Label>Profissão</Form.Label>
-            <Form.Control type="text" name="profissao" required={true} />
+            <Form.Control type="text" name="profissao" required />
           </Form.Group>
           <Form.Group controlId="renda">
             <Form.Label>Renda</Form.Label>
@@ -126,17 +126,17 @@ const SeguroVida = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="renda" required={true} />
+              <Form.Control type="text" name="renda" required />
             </InputGroup>
           </Form.Group>
           <hr />
           <Form.Group controlId="rg">
             <Form.Label>RG</Form.Label>
-            <Form.Control type="text" name="rg" required={true} />
+            <Form.Control type="text" name="rg" required />
           </Form.Group>
           <Form.Group controlId="rg_expedidor">
             <Form.Label>Órgão Expedidor</Form.Label>
-            <Form.Control type="text" name="rg_expedidor" required={true} />
+            <Form.Control type="text" name="rg_expedidor" required />
           </Form.Group>
           <Form.Group controlId="rg_data_expedicao">
             <Form.Label>Data Expedição</Form.Label>
@@ -148,7 +148,7 @@ const SeguroVida = () => {
                   pattern={FIELDS.data.pattern}
                   inputMode="numeric"
                   name="rg_data_expedicao"
-                  required={true}
+                  required
                 />
               )}
             </InputMask>
@@ -166,7 +166,7 @@ const SeguroVida = () => {
               name="inserir_conjugue"
               value="nao"
               label="Não"
-              defaultChecked={true}
+              defaultChecked
               onChange={onInserirConjugueChange}
             />
             <Form.Check
@@ -275,7 +275,7 @@ const SeguroVida = () => {
                   pattern={FIELDS.cep.pattern}
                   inputMode="numeric"
                   name="cep"
-                  required={true}
+                  required
                 />
               )}
             </InputMask>
@@ -283,7 +283,7 @@ const SeguroVida = () => {
           </Form.Group>
           <Form.Group controlId="uf">
             <Form.Label>UF</Form.Label>
-            <Form.Control as="select" name="uf" required={true}>
+            <Form.Control as="select" name="uf" required>
               <option value="">(Selecione)</option>
               {UFS_BRASIL.map((uf) => (
                 <option value={uf} key={uf}>
@@ -294,15 +294,15 @@ const SeguroVida = () => {
           </Form.Group>
           <Form.Group controlId="cidade">
             <Form.Label>Cidade</Form.Label>
-            <Form.Control type="text" name="cidade" required={true} />
+            <Form.Control type="text" name="cidade" required />
           </Form.Group>
           <Form.Group controlId="logradouro">
             <Form.Label>Logradouro</Form.Label>
-            <Form.Control type="text" name="logradouro" required={true} />
+            <Form.Control type="text" name="logradouro" required />
           </Form.Group>
           <Form.Group controlId="endereco_numero">
             <Form.Label>Número</Form.Label>
-            <Form.Control type="text" name="endereco_numero" required={true} />
+            <Form.Control type="text" name="endereco_numero" required />
           </Form.Group>
           <Form.Group controlId="complemento">
             <Form.Label>Complemento</Form.Label>
@@ -324,7 +324,7 @@ const SeguroVida = () => {
               value="nao"
               label="Não"
               onChange={onPossuiEnderecoComercialChange}
-              defaultChecked={true}
+              defaultChecked
             />
             <Form.Check
               type="radio"

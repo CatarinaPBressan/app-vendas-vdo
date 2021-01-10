@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import SeguroVida from "./produtos/SeguroVida";
 import SeguroResidencial from "./produtos/SeguroResidencial";
+import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
 
 import { PRODUTOS } from "../../constants/produtos";
 import { PEDIDO_FIELDS, FIELDS } from "../../constants/fields";
@@ -54,7 +55,16 @@ const ProdutoPage = (props: any) => {
                 nome_arquivo,
               };
             }
-          } else if (type !== "radio" || element.checked) {
+          } else if (type === "checkbox") {
+            if (!produto_data[name]) {
+              produto_data[name] = [];
+            }
+            if (element.checked) {
+              produto_data[name].push(value);
+            }
+          } else if (type === "radio" && element.checked) {
+            produto_data[name] = value;
+          } else {
             produto_data[name] = value;
           }
         }
@@ -111,11 +121,25 @@ const ProdutoPage = (props: any) => {
         setIsSubmitting(false);
       });
   };
+
   const ProductForm = {
     "cartao-de-credito": CartaoDeCredito,
     "seguro-vida": SeguroVida,
     "seguro-residencial": SeguroResidencial,
+    "seguro-automotivo": SeguroAutomotivo,
   }[produto.id];
+
+  ///
+  const [nomeCompleto, setNomeCompleto] = useState("");
+  const onNomeCompletoChange = (e) => {
+    setNomeCompleto(e.target.value);
+  };
+  //
+  const [cpf, setCpf] = useState("");
+  const onCpfChange = (e) => {
+    setCpf(e.target.value);
+  };
+  ///
 
   return (
     <div className="produto-page">
@@ -126,11 +150,21 @@ const ProdutoPage = (props: any) => {
           <Card.Body>
             <Form.Group controlId="nome_completo">
               <Form.Label>Nome Completo</Form.Label>
-              <Form.Control name="nome_completo" type="text" required />
+              <Form.Control
+                name="nome_completo"
+                type="text"
+                required
+                value={nomeCompleto}
+                onChange={onNomeCompletoChange}
+              />
             </Form.Group>
             <Form.Group controlId="cpf">
               <Form.Label>CPF</Form.Label>
-              <InputMask mask={FIELDS.cpf.mask}>
+              <InputMask
+                mask={FIELDS.cpf.mask}
+                value={cpf}
+                onChange={onCpfChange}
+              >
                 {() => (
                   <Form.Control
                     name="cpf"
@@ -138,7 +172,7 @@ const ProdutoPage = (props: any) => {
                     placeholder={FIELDS.cpf.placeholder}
                     inputMode="numeric"
                     pattern={FIELDS.cpf.pattern}
-                    required={true}
+                    required
                   />
                 )}
               </InputMask>
@@ -146,7 +180,7 @@ const ProdutoPage = (props: any) => {
             </Form.Group>
             <Form.Group controlId="email">
               <Form.Label>Email</Form.Label>
-              <Form.Control name="email" type="email" required={true} />
+              <Form.Control name="email" type="email" required />
             </Form.Group>
             <Form.Group controlId="telefone_celular">
               <Form.Label>Telefone Celular</Form.Label>
@@ -158,7 +192,7 @@ const ProdutoPage = (props: any) => {
                     placeholder={FIELDS.telefone_celular.placeholder}
                     inputMode="numeric"
                     pattern={FIELDS.telefone_celular.pattern}
-                    required={true}
+                    required
                   />
                 )}
               </InputMask>
@@ -166,7 +200,7 @@ const ProdutoPage = (props: any) => {
             </Form.Group>
           </Card.Body>
         </Card>
-        <ProductForm />
+        <ProductForm nomeCompleto={nomeCompleto} cpf={cpf} />
         <Card>
           <Card.Header>Observações</Card.Header>
           <Card.Body>
