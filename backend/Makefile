@@ -18,3 +18,6 @@ backoffice-container:
 
 requirements:
 	pipenv run pip freeze > requirements.txt
+
+ssh:
+	ssh app-vendas@appvendasvidadeouro.com.br
