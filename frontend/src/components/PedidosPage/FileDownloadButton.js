@@ -6,6 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PedidoAPI from "../../api/pedidoAPI";
 
 export const FileDownloadButton = ({ usuario, fileData }) => {
+  if (!fileData) {
+    return (
+      <Button disabled variant="outline-dark">
+        Upload de arquivos pela tela de pedidos não disponível
+      </Button>
+    );
+  }
   return (
     <a
       href={fileData.url}
