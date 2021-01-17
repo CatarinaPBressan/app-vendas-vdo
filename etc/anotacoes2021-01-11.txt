@@ -1,0 +1,45 @@
+------------------------------------
+- Corrigir bug de apolice_atual: tratar quando o arquivo for opcional
+- Corrigir bug do iOS: Notification x
+- Corrigir layout mobile Android (muito pequeno) x
+------------------------------------
+- Limites nos campos de datas x
+- Trocar link do pedido para o ID sequencial x
+- Adicionar Log de pedido
+    - Logs privados
+    - Logs publicos (vendedor)
+    - Logs automaticos
+      - Pedido criado
+      - Pedido mudou de status
+- Adicionar dados de usuario
+  - Telefone
+  - Estado
+  - Cidade de Atuação
+- Novos status
+  - Trilha de Status: depende do tipo de produto
+  - Status cancelados: não tem diferenciação
+  - Trilha de Status: Cartão: Analise de Credito -> Aguardando resposta
+- Filtro de pedidos
+  - por status
+  - por ID
+- Upload de arquivos
+  - Não ser obrigatorio
+  - Fazer upload pela tela de pedidos
+- Seguro Automovel / Vida
+  - Esconder campos se não precisar preencher
+  - Adicionar cotação (upload pelo backoffice para o vendedor)
+- Status Completado
+  - Abrir caixinha para:
+      - preeencher:
+        - Prêmio liquido (valor da cotação)
+        - Comissão da filial (%)
+          - Limites por produto
+      - Mostrar:
+        - Comissão (R$) (Premio liquido * comissao_filial)
+-----------
+- Dashboard
+  - Estatisticas de pedidos
+    - Realizados
+    - Cancelados
+
+- Adicionar valor do pedido (AKA Comissão?)
