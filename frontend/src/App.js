@@ -14,7 +14,7 @@ import ProdutosPage from "./components/ProdutosPage/ProdutosPage";
 import ProdutoPage from "./components/ProdutoPage/ProdutoPage";
 import PedidosPage from "./components/PedidosPage/PedidosPage";
 import AppNavbar from "./components/common/AppNavbar";
-import NovoPedidoNotifier from "./components/common/NotificationManager";
+import { NovoPedidoNotifier } from "./components/common/NotificationManager";
 import PusherManager from "./components/common/PusherManager";
 
 import "./styles/main.scss";
