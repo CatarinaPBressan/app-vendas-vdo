@@ -46,24 +46,26 @@ const ProdutoPage = (props: any) => {
         if (PEDIDO_FIELDS.includes(name)) {
           pedido_data[name] = value;
         } else {
-          if (type === "file") {
-            const file = element.files[0];
-            if (file) {
-              const nome_arquivo = getFileNameFromPath(value);
-              files.push({ nome_arquivo, file, produto_key: name });
-              produto_data[`${name}__file__`] = {
-                nome_arquivo,
-              };
+          if (["file", "checkbox", "radio"].includes(type)) {
+            if (type === "file") {
+              const file = element.files[0];
+              if (file) {
+                const nome_arquivo = getFileNameFromPath(value);
+                files.push({ nome_arquivo, file, produto_key: name });
+                produto_data[`${name}__file__`] = {
+                  nome_arquivo,
+                };
+              }
+            } else if (type === "checkbox") {
+              if (!produto_data[name]) {
+                produto_data[name] = [];
+              }
+              if (element.checked) {
+                produto_data[name].push(value);
+              }
+            } else if (type === "radio" && element.checked) {
+              produto_data[name] = value;
             }
-          } else if (type === "checkbox") {
-            if (!produto_data[name]) {
-              produto_data[name] = [];
-            }
-            if (element.checked) {
-              produto_data[name].push(value);
-            }
-          } else if (type === "radio" && element.checked) {
-            produto_data[name] = value;
           } else {
             produto_data[name] = value;
           }

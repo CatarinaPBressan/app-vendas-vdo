@@ -27,18 +27,16 @@ const SeguroResidencial = (props) => {
               />
             </Form.Group>
           </Form.Row>
-          {props.data.novo_ou_renovacao === "renovacao" && (
-            <Form.Row>
-              <Form.Group controlId="apolice_atual" as={Col}>
-                <Form.Label>Apólice atual</Form.Label>
-                <br />
-                <FileDownloadButton
-                  usuario={props.usuario}
-                  fileData={props.data.apolice_atual}
-                />
-              </Form.Group>
-            </Form.Row>
-          )}
+          <Form.Row>
+            <Form.Group controlId="apolice_atual" as={Col}>
+              <Form.Label>Apólice atual</Form.Label>
+              <br />
+              <FileDownloadButton
+                usuario={props.usuario}
+                fileData={props.data.apolice_atual}
+              />
+            </Form.Group>
+          </Form.Row>
         </Card.Body>
       </Card>
       <Card>
