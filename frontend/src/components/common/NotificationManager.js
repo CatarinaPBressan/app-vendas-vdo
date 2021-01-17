@@ -8,7 +8,7 @@ import { PRODUTOS } from "../../constants/produtos";
 
 import notificationAudio from "../../static/sound/notification.wav";
 
-const NovoPedidoNotifier = ({
+export const NovoPedidoNotifier = ({
   usuario,
   notificationPedido,
   setNotificationPedido,
@@ -19,8 +19,14 @@ const NovoPedidoNotifier = ({
   const usuarioIsBackoffice = (usuario) =>
     usuario?.permissoes.includes("backoffice");
 
+  const isNotificationEnabled = "Notification" in window;
+
   const playNotification = useCallback(
     (pedido) => {
+      if (!isNotificationEnabled) {
+        return;
+      }
+
       if (
         usuarioIsBackoffice(usuario) &&
         Notification.permission === NOTIFICATION_STATUS.GRANTED
@@ -36,10 +42,14 @@ const NovoPedidoNotifier = ({
         };
       }
     },
-    [history, notificationFx, usuario],
+    [history, notificationFx, usuario, isNotificationEnabled],
   );
 
   useEffect(() => {
+    if (!isNotificationEnabled) {
+      return;
+    }
+
     if (
       usuarioIsBackoffice(usuario) &&
       Notification.permission !== NOTIFICATION_STATUS.GRANTED
@@ -49,6 +59,10 @@ const NovoPedidoNotifier = ({
   });
 
   useEffect(() => {
+    if (!isNotificationEnabled) {
+      return;
+    }
+
     if (
       notificationPedido &&
       usuarioIsBackoffice(usuario) &&
@@ -57,9 +71,13 @@ const NovoPedidoNotifier = ({
       playNotification(notificationPedido);
       setNotificationPedido(null);
     }
-  }, [notificationPedido, playNotification, setNotificationPedido, usuario]);
+  }, [
+    notificationPedido,
+    playNotification,
+    setNotificationPedido,
+    usuario,
+    isNotificationEnabled,
+  ]);
 
   return null;
 };
-
-export default NovoPedidoNotifier;
