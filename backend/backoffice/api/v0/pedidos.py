@@ -119,7 +119,7 @@ class ArquivoProdutoAPI(Resource):
             return self._corsify_response(
                 flask.make_response(
                     flask.send_from_directory(
-                        f"{flask.current_app.instance_path}/pedidos/{pedido.eid}/{produto_key}",
+                        pedido.get_diretorio_arquivo(produto_key),
                         nome_arquivo,
                         as_attachment=True,
                     )
@@ -137,7 +137,7 @@ class ArquivoProdutoAPI(Resource):
             abort(409)
         return "Uploaded", 201
 
-    def _validar_rota(self, pedido_eid, produto_key, nome_arquivo):
+    def _validar_rota(self, pedido_eid, produto_key, nome_arquivo) -> pedidos.Pedido:
         usuario = g.usuario
         pedido = Pedido.query.filter_by(eid=pedido_eid).first()
 

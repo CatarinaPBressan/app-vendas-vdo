@@ -14,7 +14,7 @@ from backoffice import (
 
 
 def create_app(extra_config=None):
-    app = Flask(__name__)
+    app = Flask("backoffice")
 
     settings.init_app(app, extra_config)
     logging.init_app(app)
