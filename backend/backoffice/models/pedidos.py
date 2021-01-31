@@ -1,4 +1,7 @@
 import enum
+from os import path
+
+import flask
 
 import sqlalchemy
 from transitions import Machine
@@ -75,3 +78,7 @@ class Pedido(db.Model, BaseTable, Machine):
     email = db.Column(db.String(255))
     telefone_celular = db.Column(db.String(14))
     observacoes = db.Column(db.Text)
+
+    def get_diretorio_arquivo(self, produto_key: str) -> str:
+        absolute_instance_path = path.abspath(flask.current_app.instance_path)
+        return f"{absolute_instance_path}/pedidos/{self.eid}/{produto_key}"
