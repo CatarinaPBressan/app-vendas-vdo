@@ -1,5 +1,3 @@
-import fileDownload from "js-file-download";
-
 import { v0Api } from "./utils";
 
 const PedidoAPI = {
@@ -47,14 +45,6 @@ const PedidoAPI = {
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
-  },
-
-  getPedidoArquivo: (url, usuario, nome_arquivo) => {
-    v0Api(usuario.token)
-      .get(url)
-      .then((response) => {
-        fileDownload(response.data, nome_arquivo);
-      });
   },
 };
 
