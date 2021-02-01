@@ -252,7 +252,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                     "arquivo": {
                         "nome_arquivo": "nome_arquivo.txt",
                         "url": url_for(
-                            "api_v0.arquivoprodutoapi",
+                            "api_v0.uploadarquivoprodutoapi",
                             pedido_eid=pedido.eid,
                             produto_key="arquivo",
                             nome_arquivo="nome_arquivo.txt",
@@ -277,7 +277,7 @@ class TestPedidosAPIPost(APIV0TestClient):
             "arquivo": {
                 "nome_arquivo": "nome_arquivo.txt",
                 "url": url_for(
-                    "api_v0.arquivoprodutoapi",
+                    "api_v0.uploadarquivoprodutoapi",
                     pedido_eid=pedido.eid,
                     produto_key="arquivo",
                     nome_arquivo="nome_arquivo.txt",
@@ -533,7 +533,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
 
 
 class TestArquivoProdutoAPIGet(APIV0TestClient):
-    endpoint = "arquivoprodutoapi"
+    endpoint = "downloadarquivoprodutoapi"
 
     nome_arquivo = "nome_arquivo.txt"
     produto_key = "produto_key"
@@ -541,6 +541,16 @@ class TestArquivoProdutoAPIGet(APIV0TestClient):
     def _create_pedido(self):
         return _create_pedido(
             dados_produto={self.produto_key: {"nome_arquivo": self.nome_arquivo}}
+        )
+
+    def get(self, client, usuario: Usuario, **kwargs):
+        return client.get(
+            url_for(
+                f"api_v0.{self.endpoint}",
+                token=usuario.generate_auth_token(),
+                _external=True,
+                **kwargs,
+            )
         )
 
     def test_get_arquivo(self, client, app):
@@ -688,7 +698,7 @@ class TestArquivoProdutoAPIGet(APIV0TestClient):
 
 
 class TestArquivoProdutoAPIPost(APIV0TestClient):
-    endpoint = "arquivoprodutoapi"
+    endpoint = "uploadarquivoprodutoapi"
 
     nome_arquivo = "nome_arquivo.txt"
     produto_key = "produto_key"

@@ -1,12 +1,12 @@
 import werkzeug
 import flask
-from flask import g, request
+from flask import g, request, views
 
 from marshmallow import ValidationError, Schema, fields, validate
 from flask_restful import Resource, abort
 from transitions import MachineError
 
-from backoffice import utils
+from backoffice import utils, auth
 from backoffice.auth import token_auth
 from backoffice.models import db, Pedido, PedidoProduto, pedidos
 from backoffice.base import pusher_client
@@ -98,10 +98,7 @@ class PedidoAPI(Resource):
         return {"pedido": pedido_schema.dump(pedido)}
 
 
-class ArquivoProdutoAPI(Resource):
-
-    decorators = [token_auth.login_required]
-
+class ArquivoProdutoAPIMixin(views.MethodView):
     def _corsify_response(self, response):
         response.headers.add("Access-Control-Allow-Origin", "*")
         response.headers.add("Access-Control-Allow-Headers", "Authorization")
@@ -111,31 +108,6 @@ class ArquivoProdutoAPI(Resource):
 
     def options(self, *args, **kwargs):
         return self._corsify_response(flask.make_response())
-
-    def get(self, pedido_eid, produto_key, nome_arquivo):
-        pedido = self._validar_rota(pedido_eid, produto_key, nome_arquivo)
-
-        try:
-            return self._corsify_response(
-                flask.make_response(
-                    flask.send_from_directory(
-                        pedido.get_diretorio_arquivo(produto_key),
-                        nome_arquivo,
-                        as_attachment=True,
-                    )
-                )
-            )
-        except werkzeug.exceptions.NotFound:
-            abort(404, message="Arquivo não encontrado")
-
-    def post(self, pedido_eid, produto_key, nome_arquivo):
-        pedido = self._validar_rota(pedido_eid, produto_key, nome_arquivo)
-
-        file = request.files["file"]
-        result = pedido.produto.save_file(produto_key, nome_arquivo, file)
-        if not result:
-            abort(409)
-        return "Uploaded", 201
 
     def _validar_rota(self, pedido_eid, produto_key, nome_arquivo) -> pedidos.Pedido:
         usuario = g.usuario
@@ -151,3 +123,34 @@ class ArquivoProdutoAPI(Resource):
             abort(400)
 
         return pedido
+
+
+class UploadArquivoProdutoAPI(ArquivoProdutoAPIMixin):
+
+    decorators = [token_auth.login_required]
+
+    def post(self, pedido_eid, produto_key, nome_arquivo):
+        pedido = self._validar_rota(pedido_eid, produto_key, nome_arquivo)
+
+        file = request.files["file"]
+        result = pedido.produto.save_file(produto_key, nome_arquivo, file)
+        if not result:
+            abort(409)
+        return "Uploaded", 201
+
+
+class DownloadArquivoProdutoAPI(ArquivoProdutoAPIMixin):
+    def get(self, pedido_eid, produto_key, nome_arquivo):
+        if not auth.verify_token(request.args["token"]):
+            abort(401)
+
+        pedido = self._validar_rota(pedido_eid, produto_key, nome_arquivo)
+
+        try:
+            return flask.send_from_directory(
+                pedido.get_diretorio_arquivo(produto_key),
+                nome_arquivo,
+                as_attachment=True,
+            )
+        except werkzeug.exceptions.NotFound:
+            abort(404, message="Arquivo não encontrado")

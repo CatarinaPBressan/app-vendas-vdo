@@ -5,7 +5,7 @@ import flask
 
 class APIV0TestClient:
     @property
-    def endpoint(self):
+    def endpoint(_):
         raise NotImplementedError()
 
     def _do_request(self, method, client, usuario=None, json: dict = None, **kwargs):
@@ -20,7 +20,7 @@ class APIV0TestClient:
         if usuario:
             headers.append(("Authorization", f"Bearer {usuario.generate_auth_token()}"))
 
-        return getattr(client, method)(url, headers=headers, json=json,)
+        return getattr(client, method)(url, headers=headers, json=json)
 
     def get(self, client, usuario, **kwargs):
         return self._do_request("get", client, usuario, **kwargs)

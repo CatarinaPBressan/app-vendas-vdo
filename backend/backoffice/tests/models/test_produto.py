@@ -49,7 +49,7 @@ def test_from_api_com_arquivo(app):
         "teste2": {
             "nome_arquivo": "nome_arquivo.txt",
             "url": url_for(
-                "api_v0.arquivoprodutoapi",
+                "api_v0.uploadarquivoprodutoapi",
                 pedido_eid=produto.pedido.eid,
                 produto_key="teste2",
                 nome_arquivo="nome_arquivo.txt",
@@ -100,7 +100,7 @@ def test_add_file(app):
     assert produto.dados_produto["arquivo"] == {
         "nome_arquivo": "nome_arquivo.txt",
         "url": url_for(
-            "api_v0.arquivoprodutoapi",
+            "api_v0.uploadarquivoprodutoapi",
             pedido_eid="xxx",
             produto_key="arquivo",
             nome_arquivo="nome_arquivo.txt",

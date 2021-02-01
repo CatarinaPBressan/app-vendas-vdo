@@ -37,7 +37,7 @@ class PedidoProduto(db.Model, BaseTable):
         self.dados_produto[cleaned_key] = {
             "nome_arquivo": nome_arquivo,
             "url": url_for(
-                "api_v0.arquivoprodutoapi",
+                "api_v0.uploadarquivoprodutoapi",
                 pedido_eid=self.pedido.eid,
                 produto_key=cleaned_key,
                 nome_arquivo=nome_arquivo,

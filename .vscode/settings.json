@@ -4,6 +4,7 @@
     "editor.rulers": [88],
     "editor.formatOnPaste": false
   },
+  "python.analysis.extraPaths": ["./backend"],
   "python.linting.pylintArgs": ["--load-plugins", "pylint_flask_sqlalchemy"],
   "python.formatting.provider": "black",
   "python.linting.flake8Enabled": false,
