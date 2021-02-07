@@ -376,21 +376,33 @@ class TestPedidoAPIPatch(APIV0TestClient):
             ),
             (
                 "cartao-de-credito",
-                status.TRANSICOES.APROVAR,
+                status.TRANSICOES.APROVAR_ANALISE,
                 status.ESTADOS.ANALISE_CREDITO,
-                status.ESTADOS.EM_ANDAMENTO,
-            ),
-            (
-                "cartao-de-credito",
-                status.TRANSICOES.COMPLETAR,
-                status.ESTADOS.EM_ANDAMENTO,
                 status.ESTADOS.COMPLETO,
             ),
             (
                 "cartao-de-credito",
-                status.TRANSICOES.REPROVAR,
+                status.TRANSICOES.REPROVAR_ANALISE,
                 status.ESTADOS.ANALISE_CREDITO,
-                status.ESTADOS.REPROVADO,
+                status.ESTADOS.CANCELADO,
+            ),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.AGUARDAR_ANALISE,
+                status.ESTADOS.ANALISE_CREDITO,
+                status.ESTADOS.AGUARDANDO_ANALISE,
+            ),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.APROVAR_ANALISE,
+                status.ESTADOS.AGUARDANDO_ANALISE,
+                status.ESTADOS.COMPLETO,
+            ),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.REPROVAR_ANALISE,
+                status.ESTADOS.AGUARDANDO_ANALISE,
+                status.ESTADOS.CANCELADO,
             ),
             (
                 "seguro-vida",

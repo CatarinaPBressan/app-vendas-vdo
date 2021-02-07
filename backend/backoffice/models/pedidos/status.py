@@ -9,12 +9,11 @@ class ESTADOS(str, enum.Enum):
     # Compartilhado entre todos os tipos de produtos
     NOVO = "novo"
     CANCELADO = "cancelado"
+    COMPLETO = "completo"
 
     # Cartão de crédito
-    COMPLETO = "completo"
     ANALISE_CREDITO = "analise_credito"
-    REPROVADO = "reprovado"
-    EM_ANDAMENTO = "em_andamento"
+    AGUARDANDO_ANALISE = "aguardando_analise"
 
     # Seguro
     COTACAO = "cotacao"
@@ -29,9 +28,9 @@ class TRANSICOES(str, enum.Enum):
     CANCELAR = "cancelar"
 
     # Cartão de crédito
-    APROVAR = "aprovar"
-    COMPLETAR = "completar"
-    REPROVAR = "reprovar"
+    APROVAR_ANALISE = "aprovar"
+    AGUARDAR_ANALISE = "aguardar_analise"
+    REPROVAR_ANALISE = "reprovar"
 
     # Seguro
     ENVIAR_COTACAO = "enviar_cotacao"
@@ -46,6 +45,39 @@ class Transicao(typing.TypedDict):
     dest: ESTADOS
 
 
+mapa_estados: typing.Dict[produtos.TipoProduto, typing.List[ESTADOS]] = {
+    produtos.TipoProduto.CARTAO_DE_CREDITO: [
+        ESTADOS.ANALISE_CREDITO,
+        ESTADOS.AGUARDANDO_ANALISE,
+    ],
+    produtos.TipoProduto.SEGURO: [
+        ESTADOS.COTACAO,
+        ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+        ESTADOS.EMITIR_PROPOSTA,
+        ESTADOS.VISTORIA,
+    ],
+}
+
+
+def get_estados_produto(produto: produtos.Produto) -> typing.List[ESTADOS]:
+    """
+    Pega a lista de estados para o produto.
+
+    Retorna a lista de estados definidas no mapa_estados para cada tipo de
+    pedido (ref: models.produtos), mais os estados NOVO, COMPLETO e CANCELADO.
+
+    produto_slug pode ser None para facilitar criar pedidos de teste. Nesse caso essa
+    função retorna somente os estados NOVO, COMPLETO e CANCELADO.
+    """
+
+    estados: typing.List[ESTADOS] = [ESTADOS.NOVO, ESTADOS.COMPLETO, ESTADOS.CANCELADO]
+
+    if produto is not None:
+        estados.extend(mapa_estados[produto.tipo_produto])
+
+    return estados
+
+
 mapa_transicoes: typing.Dict[produtos.TipoProduto, typing.List[Transicao]] = {
     produtos.TipoProduto.CARTAO_DE_CREDITO: [
         {
@@ -53,20 +85,32 @@ mapa_transicoes: typing.Dict[produtos.TipoProduto, typing.List[Transicao]] = {
             "trigger": TRANSICOES.INICIAR.value,
             "dest": ESTADOS.ANALISE_CREDITO.value,
         },
+        ###
         {
             "source": ESTADOS.ANALISE_CREDITO.value,
-            "trigger": TRANSICOES.APROVAR.value,
-            "dest": ESTADOS.EM_ANDAMENTO.value,
-        },
-        {
-            "source": ESTADOS.EM_ANDAMENTO.value,
-            "trigger": TRANSICOES.COMPLETAR.value,
+            "trigger": TRANSICOES.APROVAR_ANALISE.value,
             "dest": ESTADOS.COMPLETO.value,
         },
         {
             "source": ESTADOS.ANALISE_CREDITO.value,
-            "trigger": TRANSICOES.REPROVAR.value,
-            "dest": ESTADOS.REPROVADO.value,
+            "trigger": TRANSICOES.REPROVAR_ANALISE.value,
+            "dest": ESTADOS.CANCELADO.value,
+        },
+        {
+            "source": ESTADOS.ANALISE_CREDITO.value,
+            "trigger": TRANSICOES.AGUARDAR_ANALISE.value,
+            "dest": ESTADOS.AGUARDANDO_ANALISE.value,
+        },
+        ###
+        {
+            "source": ESTADOS.AGUARDANDO_ANALISE.value,
+            "trigger": TRANSICOES.APROVAR_ANALISE.value,
+            "dest": ESTADOS.COMPLETO.value,
+        },
+        {
+            "source": ESTADOS.AGUARDANDO_ANALISE.value,
+            "trigger": TRANSICOES.REPROVAR_ANALISE.value,
+            "dest": ESTADOS.CANCELADO.value,
         },
     ],
     produtos.TipoProduto.SEGURO: [
@@ -105,11 +149,11 @@ TRANSICAO_CANCELAMENTO: Transicao = {
 }
 
 
-def get_maquina_estados_produto(
+def get_transicoes_produto(
     produto: typing.Optional[produtos.Produto] = None,
 ) -> typing.List[Transicao]:
     """
-    Pega a lista de transições para o produto_slug.
+    Pega a lista de transições para o produto.
 
     Retorna a lista de transições definidas no mapa_transicoes para cada tipo de
     pedido (ref: models.produtos), mais a transição de cancelamento.
