@@ -5,20 +5,18 @@ import pytest
 import werkzeug
 from flask import url_for
 
-from backoffice.models import (
-    db,
-    Usuario,
-    Pedido,
-    PedidoProduto,
-    Permissao,
-)
-from backoffice.models.pedidos import ESTADOS, TRANSICOES
+from backoffice.models import db, Usuario, Pedido, PedidoProduto, Permissao, produtos
+
+from backoffice.models.pedidos import status
 
 from backoffice.tests.api.v0 import APIV0TestClient
 
 
 def _create_pedido(
-    usuario: Usuario = None, status: ESTADOS = ESTADOS.NOVO, dados_produto: dict = None
+    usuario: Usuario = None,
+    produto_slug: str = "cartao-de-credito",
+    status: status.ESTADOS = status.ESTADOS.NOVO,
+    dados_produto: dict = None,
 ):
     if not usuario:
         usuario = Usuario(cpf="789.123.456-79", nome="Fulano de Tal")
@@ -43,7 +41,7 @@ def _create_pedido(
     pedido = Pedido(
         usuario=usuario,
         produto=pedido_produto,
-        produto_slug="cartao-de-credito",
+        produto_slug=produto_slug,
         nome_completo="Arthur Bressan",
         cpf="123.567.890-10",
         email="eu@arthurbressan.org",
@@ -368,18 +366,128 @@ class TestPedidoAPIPatch(APIV0TestClient):
     endpoint = "pedidoapi"
 
     @pytest.mark.parametrize(
-        "transicao,status_inicial,status_final",
+        "produto_slug,transicao,status_inicial,status_final",
         [
-            (TRANSICOES.INICIAR, ESTADOS.NOVO, ESTADOS.ANALISE_CREDITO,),
-            (TRANSICOES.APROVAR, ESTADOS.ANALISE_CREDITO, ESTADOS.EM_ANDAMENTO,),
-            (TRANSICOES.COMPLETAR, ESTADOS.EM_ANDAMENTO, ESTADOS.COMPLETO,),
-            (TRANSICOES.REPROVAR, ESTADOS.ANALISE_CREDITO, ESTADOS.REPROVADO,),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.INICIAR,
+                status.ESTADOS.NOVO,
+                status.ESTADOS.ANALISE_CREDITO,
+            ),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.APROVAR,
+                status.ESTADOS.ANALISE_CREDITO,
+                status.ESTADOS.EM_ANDAMENTO,
+            ),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.COMPLETAR,
+                status.ESTADOS.EM_ANDAMENTO,
+                status.ESTADOS.COMPLETO,
+            ),
+            (
+                "cartao-de-credito",
+                status.TRANSICOES.REPROVAR,
+                status.ESTADOS.ANALISE_CREDITO,
+                status.ESTADOS.REPROVADO,
+            ),
+            (
+                "seguro-vida",
+                status.TRANSICOES.INICIAR,
+                status.ESTADOS.NOVO,
+                status.ESTADOS.COTACAO,
+            ),
+            (
+                "seguro-vida",
+                status.TRANSICOES.ENVIAR_COTACAO,
+                status.ESTADOS.COTACAO,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+            ),
+            (
+                "seguro-vida",
+                status.TRANSICOES.COTACAO_APROVADA,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+                status.ESTADOS.EMITIR_PROPOSTA,
+            ),
+            (
+                "seguro-vida",
+                status.TRANSICOES.PROPOSTA_EMITIDA,
+                status.ESTADOS.EMITIR_PROPOSTA,
+                status.ESTADOS.VISTORIA,
+            ),
+            (
+                "seguro-vida",
+                status.TRANSICOES.APROVADO_VISTORIA,
+                status.ESTADOS.VISTORIA,
+                status.ESTADOS.COMPLETO,
+            ),
+            (
+                "seguro-residencial",
+                status.TRANSICOES.INICIAR,
+                status.ESTADOS.NOVO,
+                status.ESTADOS.COTACAO,
+            ),
+            (
+                "seguro-residencial",
+                status.TRANSICOES.ENVIAR_COTACAO,
+                status.ESTADOS.COTACAO,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+            ),
+            (
+                "seguro-residencial",
+                status.TRANSICOES.COTACAO_APROVADA,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+                status.ESTADOS.EMITIR_PROPOSTA,
+            ),
+            (
+                "seguro-residencial",
+                status.TRANSICOES.PROPOSTA_EMITIDA,
+                status.ESTADOS.EMITIR_PROPOSTA,
+                status.ESTADOS.VISTORIA,
+            ),
+            (
+                "seguro-residencial",
+                status.TRANSICOES.APROVADO_VISTORIA,
+                status.ESTADOS.VISTORIA,
+                status.ESTADOS.COMPLETO,
+            ),
+            (
+                "seguro-automotivo",
+                status.TRANSICOES.INICIAR,
+                status.ESTADOS.NOVO,
+                status.ESTADOS.COTACAO,
+            ),
+            (
+                "seguro-automotivo",
+                status.TRANSICOES.ENVIAR_COTACAO,
+                status.ESTADOS.COTACAO,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+            ),
+            (
+                "seguro-automotivo",
+                status.TRANSICOES.COTACAO_APROVADA,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+                status.ESTADOS.EMITIR_PROPOSTA,
+            ),
+            (
+                "seguro-automotivo",
+                status.TRANSICOES.PROPOSTA_EMITIDA,
+                status.ESTADOS.EMITIR_PROPOSTA,
+                status.ESTADOS.VISTORIA,
+            ),
+            (
+                "seguro-automotivo",
+                status.TRANSICOES.APROVADO_VISTORIA,
+                status.ESTADOS.VISTORIA,
+                status.ESTADOS.COMPLETO,
+            ),
         ],
     )
     def test_patch_pedidos_transicoes(
-        self, client, transicao, status_inicial, status_final
+        self, client, produto_slug, transicao, status_inicial, status_final
     ):
-        pedido = _create_pedido(status=status_inicial)
+        pedido = _create_pedido(produto_slug=produto_slug, status=status_inicial)
 
         backoffice = Usuario(permissoes=[Permissao("backoffice")])
         db.session.add(backoffice)
@@ -393,7 +501,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
         assert response.json == {
             "pedido": {
                 "eid": pedido.eid,
-                "produto_slug": "cartao-de-credito",
+                "produto_slug": produto_slug,
                 "nome_completo": "Arthur Bressan",
                 "cpf": "123.567.890-10",
                 "email": "eu@arthurbressan.org",
@@ -438,7 +546,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
         assert "message" in response.json
         assert "transicao" in response.json["message"]
         message = response.json["message"]["transicao"][0]
-        for transicao in TRANSICOES:
+        for transicao in status.TRANSICOES:
             assert transicao.value in message
 
     def test_patch_pedidos_usuario_nao_permitido(self, client):
@@ -465,15 +573,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
         assert response.status_code == 400
 
     @pytest.mark.parametrize(
-        "status_inicial",
-        [
-            ESTADOS.NOVO,
-            ESTADOS.CANCELADO,
-            ESTADOS.COMPLETO,
-            ESTADOS.ANALISE_CREDITO,
-            ESTADOS.REPROVADO,
-            ESTADOS.EM_ANDAMENTO,
-        ],
+        "status_inicial", [_status for _status in status.ESTADOS],
     )
     def test_patch_pedidos_cancelamento(self, client, status_inicial):
         pedido = _create_pedido(status=status_inicial)
@@ -510,7 +610,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                 },
                 "created_at": pedido.created_at.isoformat(),
                 "updated_at": pedido.updated_at.isoformat(),
-                "status": ESTADOS.CANCELADO.value,
+                "status": status.ESTADOS.CANCELADO.value,
                 "usuario": {
                     "eid": pedido.usuario.eid,
                     "cpf": "789.123.456-79",

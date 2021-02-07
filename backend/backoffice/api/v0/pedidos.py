@@ -9,6 +9,7 @@ from transitions import MachineError
 from backoffice import utils, auth
 from backoffice.auth import token_auth
 from backoffice.models import db, Pedido, PedidoProduto, pedidos
+from backoffice.models.pedidos import status
 from backoffice.base import pusher_client
 from backoffice.api.v0.schemas import (
     pedidos_schema,
@@ -48,15 +49,6 @@ class PedidosAPI(Resource):
         return {"pedido": pedido_schema.dump(pedido)}, 201
 
 
-class PatchPedidoSchema(Schema):
-    transicao = fields.String(
-        validate=validate.OneOf([transicao.value for transicao in pedidos.TRANSICOES])
-    )
-
-
-_patch_pedido_schema = PatchPedidoSchema()
-
-
 class PedidoAPI(Resource):
     decorators = [token_auth.login_required]
 
@@ -72,6 +64,13 @@ class PedidoAPI(Resource):
 
         return {"pedido": pedido_schema.dump(pedido)}
 
+    class PatchPedidoSchema(Schema):
+        transicao = fields.String(
+            validate=validate.OneOf(
+                [transicao.value for transicao in status.TRANSICOES]
+            )
+        )
+
     def patch(self, pedido_eid):
         usuario = g.usuario
         if not usuario.has_permission("backoffice"):
@@ -83,7 +82,7 @@ class PedidoAPI(Resource):
             abort(404)
 
         try:
-            parsed = _patch_pedido_schema.load(request.json)
+            parsed = self.PatchPedidoSchema().load(request.json)
         except ValidationError as validation_errors:
             abort(400, message=validation_errors.messages)
 
@@ -147,10 +146,12 @@ class DownloadArquivoProdutoAPI(ArquivoProdutoAPIMixin):
         pedido = self._validar_rota(pedido_eid, produto_key, nome_arquivo)
 
         try:
-            return flask.send_from_directory(
-                pedido.get_diretorio_arquivo(produto_key),
-                nome_arquivo,
-                as_attachment=True,
+            return flask.make_response(
+                flask.send_from_directory(
+                    pedido.get_diretorio_arquivo(produto_key),
+                    nome_arquivo,
+                    as_attachment=True,
+                )
             )
         except werkzeug.exceptions.NotFound:
             abort(404, message="Arquivo não encontrado")
