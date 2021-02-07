@@ -3,10 +3,15 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 
-import { PEDIDO_STATUS, PEDIDO_TRANSICOES } from "../../constants/pedidos";
+import {
+  PEDIDO_STATUS,
+  PEDIDO_TRANSICOES,
+  MAPA_PRODUTO_TRANSICOES,
+} from "../../constants/pedidos";
 import { updatePedidoStatus } from "../../actions/pedido";
 
 import "./PedidoActionButtons.scss";
+import { PRODUTOS } from "../../constants/produtos";
 
 export const PedidoActionButtons = ({
   pedido,
@@ -15,6 +20,9 @@ export const PedidoActionButtons = ({
 }) => {
   const _updatePedidoStatus = (transicao) => () =>
     updatePedidoStatus(pedido, usuario, transicao);
+  const produto = PRODUTOS[pedido.produto_slug];
+  const transicoes_estado =
+    MAPA_PRODUTO_TRANSICOES[produto.tipo_produto][pedido.status];
 
   return (
     <div className="pedido-action-button-container">
@@ -27,39 +35,23 @@ export const PedidoActionButtons = ({
           Iniciar
         </Button>
       )}
-      {pedido.status === PEDIDO_STATUS.ANALISE_CREDITO && (
-        <div>
-          <Button
-            size="md"
-            variant="success"
-            className="aprovar-analise-btn"
-            onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.APROVAR)}
-          >
-            Aprovar
-          </Button>
-          <Button
-            size="md"
-            variant="danger"
-            onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.REPROVAR)}
-          >
-            Reprovar
-          </Button>
-        </div>
-      )}
-      {pedido.status === PEDIDO_STATUS.EM_ANDAMENTO && (
-        <Button
-          size="md"
-          variant="success"
-          onClick={_updatePedidoStatus(PEDIDO_TRANSICOES.COMPLETAR)}
-        >
-          Completar
-        </Button>
-      )}
-      {![
-        PEDIDO_STATUS.COMPLETO,
-        PEDIDO_STATUS.CANCELADO,
-        PEDIDO_STATUS.REPROVADO,
-      ].includes(pedido.status) && (
+      <div>
+        {transicoes_estado &&
+          transicoes_estado.map(({ label, variant, transicao }) => (
+            <Button
+              size="md"
+              variant={variant}
+              onClick={_updatePedidoStatus(transicao)}
+              className="pedido-status-btn"
+              key={transicao}
+            >
+              {label}
+            </Button>
+          ))}
+      </div>
+      {![PEDIDO_STATUS.CANCELADO, PEDIDO_STATUS.COMPLETO].includes(
+        pedido.status,
+      ) && (
         <Button
           size="md"
           variant="outline-danger"

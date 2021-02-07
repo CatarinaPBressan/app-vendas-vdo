@@ -1,4 +1,4 @@
-from os import path
+from os import path, stat
 
 import flask
 
@@ -16,13 +16,14 @@ class Pedido(db.Model, BaseTable, transitions.Machine):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        produto_slug = kwargs.get("produto_slug")
-        transicoes = status.get_maquina_estados_produto(
-            produtos.PRODUTOS.get(produto_slug)
-        )
+        produto_slug = self.produto_slug or kwargs.get("produto_slug")
+        produto = produtos.PRODUTOS.get(produto_slug)
+        transicoes = status.get_transicoes_produto(produto)
+        estados = [estado.value for estado in status.get_estados_produto(produto)]
+
         transitions.Machine.__init__(
             self,
-            states=[estado.value for estado in status.ESTADOS],
+            states=estados,
             transitions=transicoes,
             initial=self.status or status.ESTADOS.NOVO.value,
             model_attribute="status",

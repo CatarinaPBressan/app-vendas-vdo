@@ -88,7 +88,7 @@ class PedidoAPI(Resource):
 
         try:
             pedido.trigger(parsed["transicao"])
-        except MachineError as machine_error:
+        except (MachineError, AttributeError) as machine_error:
             abort(400, message=str(machine_error))
 
         db.session.add(pedido)
