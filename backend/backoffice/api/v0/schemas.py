@@ -38,6 +38,7 @@ class PedidoSchema(Schema):
     created_at = fields.DateTime(format="iso", dump_only=True)
     updated_at = fields.DateTime(format="iso", dump_only=True)
     usuario = fields.Nested(UsuarioSchema, dump_only=True)
+    arquivo_cotacao_url = fields.String(dump_only=True)
 
 
 _excluded_usuario_fields = [

@@ -184,6 +184,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                         "nome": None,
                         "permissoes": [],
                     },
+                    "arquivo_cotacao_url": None,
                 }
             }
 
@@ -208,6 +209,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                             "nome": None,
                             "permissoes": [],
                         },
+                        "arquivo_cotacao_url": None,
                     }
                 },
             )
@@ -266,6 +268,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                     "nome": None,
                     "permissoes": [],
                 },
+                "arquivo_cotacao_url": None,
             }
         }
 
@@ -324,6 +327,7 @@ class TestPedidoAPIGet(APIV0TestClient):
                     "nome": "Fulano de Tal",
                     "permissoes": [],
                 },
+                "arquivo_cotacao_url": None,
             }
         }
 
@@ -540,6 +544,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "nome": "Fulano de Tal",
                     "permissoes": [],
                 },
+                "arquivo_cotacao_url": None,
             }
         }
 
@@ -629,6 +634,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "nome": "Fulano de Tal",
                     "permissoes": [],
                 },
+                "arquivo_cotacao_url": None,
             }
         }
 
@@ -817,7 +823,18 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
 
     def _create_pedido(self):
         return _create_pedido(
-            dados_produto={self.produto_key: {"nome_arquivo": self.nome_arquivo}}
+            dados_produto={
+                self.produto_key: {
+                    "nome_arquivo": self.nome_arquivo,
+                    "url": url_for(
+                        "api_v0.uploadarquivoprodutoapi",
+                        pedido_eid="xxx",
+                        produto_key="arquivo",
+                        nome_arquivo="nome_arquivo.txt",
+                        _external=True,
+                    ),
+                }
+            }
         )
 
     def test_post_arquivo(self, client, app):
@@ -837,6 +854,39 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
             save_mock.assert_called_once_with(
                 f"{app.instance_path}/pedidos/{pedido.eid}/{self.produto_key}/{self.nome_arquivo}"
             )
+            assert response.json == {
+                "pedido": {
+                    "eid": pedido.eid,
+                    "produto_slug": "cartao-de-credito",
+                    "nome_completo": "Arthur Bressan",
+                    "cpf": "123.567.890-10",
+                    "email": "eu@arthurbressan.org",
+                    "telefone_celular": "(12)99123-2413",
+                    "observacoes": "Obs.",
+                    "produto": {
+                        "produto_key": {
+                            "nome_arquivo": "nome_arquivo.txt",
+                            "url": url_for(
+                                "api_v0.uploadarquivoprodutoapi",
+                                pedido_eid="xxx",
+                                produto_key="arquivo",
+                                nome_arquivo="nome_arquivo.txt",
+                                _external=True,
+                            ),
+                        }
+                    },
+                    "created_at": pedido.created_at.isoformat(),
+                    "updated_at": pedido.updated_at.isoformat(),
+                    "status": "novo",
+                    "usuario": {
+                        "eid": pedido.usuario.eid,
+                        "cpf": "789.123.456-79",
+                        "nome": "Fulano de Tal",
+                        "permissoes": [],
+                    },
+                    "arquivo_cotacao_url": None,
+                }
+            }
 
     def test_post_pedido_outro_usuario(self, client, app):
         pedido = self._create_pedido()

@@ -45,3 +45,21 @@ export const updatePedidoStatus = (pedido, usuario, transicao) => async (
   dispatch(addPedido(_pedido));
   return _pedido;
 };
+
+export const uploadPedidoArquivo = (
+  pedido,
+  usuario,
+  produto_key,
+  nome_arquivo,
+  file,
+) => async (dispatch) => {
+  const _pedido = await PedidoAPI.sendPedidoArquivo(
+    pedido,
+    usuario,
+    produto_key,
+    nome_arquivo,
+    file,
+  );
+  dispatch(addPedido(_pedido));
+  return _pedido;
+};

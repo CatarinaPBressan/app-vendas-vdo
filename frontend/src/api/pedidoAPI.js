@@ -38,13 +38,22 @@ const PedidoAPI = {
   ) => {
     const formData = new FormData();
     formData.append("file", file);
-    return await v0Api(
+
+    const response = await v0Api(
       usuario.token,
     ).post(
       `pedidos/${pedido.eid}/arquivos/${produto_key}/${nome_arquivo}`,
       formData,
       { headers: { "Content-Type": "multipart/form-data" } },
     );
+
+    if (response.status !== 201) {
+      throw new Error(
+        `erro upload de arquivo ${pedido.eid}, ${produto_key}, ${nome_arquivo}: ${response.status}`,
+      );
+    }
+
+    return response.data.pedido;
   },
 };
 

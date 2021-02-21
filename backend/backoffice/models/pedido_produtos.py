@@ -1,4 +1,5 @@
 import os
+import typing
 
 from werkzeug import datastructures
 from werkzeug.utils import secure_filename
@@ -31,18 +32,21 @@ class PedidoProduto(db.Model, BaseTable):
 
         return produto
 
+    def _url_arquivo(self, key, nome_arquivo):
+        return url_for(
+            "api_v0.downloadarquivoprodutoapi",
+            pedido_eid=self.pedido.eid,
+            produto_key=key,
+            nome_arquivo=nome_arquivo,
+            _external=True,
+        )
+
     def add_file(self, key, file_data) -> None:
         cleaned_key = key.replace(self.__file_marker, "")
         nome_arquivo = secure_filename(file_data["nome_arquivo"])
         self.dados_produto[cleaned_key] = {
             "nome_arquivo": nome_arquivo,
-            "url": url_for(
-                "api_v0.uploadarquivoprodutoapi",
-                pedido_eid=self.pedido.eid,
-                produto_key=cleaned_key,
-                nome_arquivo=nome_arquivo,
-                _external=True,
-            ),
+            "url": self._url_arquivo(cleaned_key, nome_arquivo),
         }
 
     def validar_dados_arquivo(self, produto_key: str, nome_arquivo: str) -> bool:
@@ -57,7 +61,7 @@ class PedidoProduto(db.Model, BaseTable):
 
     def save_file(
         self, produto_key: str, nome_arquivo: str, file: datastructures.FileStorage
-    ) -> bool:
+    ) -> typing.Optional[str]:
         nome_arquivo = secure_filename(nome_arquivo)
         file_dir = os.path.join(
             current_app.instance_path, "pedidos", self.pedido.eid, produto_key
@@ -65,10 +69,10 @@ class PedidoProduto(db.Model, BaseTable):
         file_path = os.path.join(file_dir, nome_arquivo)
 
         if os.path.exists(file_path):
-            return False
+            return None
 
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
 
         file.save(file_path)
-        return True
+        return self._url_arquivo(produto_key, nome_arquivo)

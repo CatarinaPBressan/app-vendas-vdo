@@ -6,15 +6,17 @@ import { Form, Card, Col, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
+import { FileDownloadButton } from "./FileDownloadButton";
+import { UploadCotacaoButton } from "./UploadCotacaoButton";
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
-import SeguroVida from "./produtos/SeguroVida";
-import SeguroResidencial from "./produtos/SeguroResidencial";
-import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
-
 import PedidoActionButtons from "./PedidoActionButtons";
+import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
+import SeguroResidencial from "./produtos/SeguroResidencial";
+import SeguroVida from "./produtos/SeguroVida";
 
 import { fetchPedidoProduto } from "../../actions/pedido";
 import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
+import { PRODUTOS, TIPOS_PRODUTO } from "../../constants/produtos";
 
 import "./PedidoDisplay.scss";
 
@@ -140,10 +142,34 @@ const PedidoDisplay = ({
         </Card.Body>
       </Card>
       {pedido.produto ? (
-        <ProdutoDisplay data={pedido.produto} usuario={usuario} />
+        <>
+          <ProdutoDisplay data={pedido.produto} usuario={usuario} />
+          {PRODUTOS[pedido.produto_slug].tipo_produto ===
+            TIPOS_PRODUTO.seguro && (
+            <Card>
+              <Card.Header>Cotação</Card.Header>
+              <Card.Body>
+                {pedido.arquivo_cotacao_url ? (
+                  <div>
+                    <FileDownloadButton
+                      usuario={usuario}
+                      fileURL={pedido.arquivo_cotacao_url}
+                      label="Download cotação"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <UploadCotacaoButton pedido={pedido} usuario={usuario} />
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          )}
+        </>
       ) : (
         <div>Carregando dados</div>
       )}
+
       <Card>
         <Card.Header>Observações</Card.Header>
         <Card.Body>

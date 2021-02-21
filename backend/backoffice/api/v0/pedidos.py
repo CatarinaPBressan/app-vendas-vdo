@@ -8,7 +8,7 @@ from transitions import MachineError
 
 from backoffice import utils, auth
 from backoffice.auth import token_auth
-from backoffice.models import db, Pedido, PedidoProduto, pedidos
+from backoffice.models import db, Pedido, PedidoProduto
 from backoffice.models.pedidos import status
 from backoffice.base import pusher_client
 from backoffice.api.v0.schemas import (
@@ -94,6 +94,8 @@ class PedidoAPI(Resource):
         db.session.add(pedido)
         db.session.commit()
 
+        # TODO: Trigger pusher aqui com o pedido atualizado...
+
         return {"pedido": pedido_schema.dump(pedido)}
 
 
@@ -108,9 +110,9 @@ class ArquivoProdutoAPIMixin(views.MethodView):
     def options(self, *args, **kwargs):
         return self._corsify_response(flask.make_response())
 
-    def _validar_rota(self, pedido_eid, produto_key, nome_arquivo) -> pedidos.Pedido:
+    def _validar_rota(self, pedido_eid, produto_key, nome_arquivo) -> Pedido:
         usuario = g.usuario
-        pedido = Pedido.query.filter_by(eid=pedido_eid).first()
+        pedido: Pedido = Pedido.query.filter_by(eid=pedido_eid).first()
 
         if not pedido:
             abort(404)
@@ -118,10 +120,13 @@ class ArquivoProdutoAPIMixin(views.MethodView):
         if not usuario.has_permission("backoffice") and pedido.usuario_id != usuario.id:
             abort(403, message="Pedido de outro usuário")
 
-        if not pedido.produto.validar_dados_arquivo(produto_key, nome_arquivo):
-            abort(400)
+        pedido_produto: PedidoProduto = pedido.produto
+        if pedido.validar_dados_cotacao(
+            produto_key
+        ) or pedido_produto.validar_dados_arquivo(produto_key, nome_arquivo):
+            return pedido
 
-        return pedido
+        abort(400)
 
 
 class UploadArquivoProdutoAPI(ArquivoProdutoAPIMixin):
@@ -132,10 +137,19 @@ class UploadArquivoProdutoAPI(ArquivoProdutoAPIMixin):
         pedido = self._validar_rota(pedido_eid, produto_key, nome_arquivo)
 
         file = request.files["file"]
-        result = pedido.produto.save_file(produto_key, nome_arquivo, file)
-        if not result:
-            abort(409)
-        return "Uploaded", 201
+
+        if pedido.validar_dados_cotacao(produto_key):
+            url_arquivo = pedido.salvar_cotacao(file)
+            if not url_arquivo:
+                abort(409)
+        else:
+            url_arquivo = pedido.produto.save_file(produto_key, nome_arquivo, file)
+            if not url_arquivo:
+                abort(409)
+
+        # TODO: Trigger pusher aqui com o pedido atualizado...
+
+        return {"pedido": pedido_schema.dump(pedido)}, 201
 
 
 class DownloadArquivoProdutoAPI(ArquivoProdutoAPIMixin):

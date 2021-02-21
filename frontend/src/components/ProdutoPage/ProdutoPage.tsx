@@ -75,18 +75,13 @@ const ProdutoPage = (props: any) => {
 
     const uploadFiles = (pedido) => {
       files.forEach(async (file_data) => {
-        const response = await PedidoAPI.sendPedidoArquivo(
+        await PedidoAPI.sendPedidoArquivo(
           pedido,
           props.usuario,
           file_data.produto_key,
           file_data.nome_arquivo,
           file_data.file,
         );
-        if (response.status !== 201) {
-          throw new Error(
-            `erro upload de arquivo ${pedido.eid}, ${file_data.produto_key}, ${file_data.nome_arquivo}: ${response.status}`,
-          );
-        }
       });
 
       return pedido;
