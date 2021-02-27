@@ -1,6 +1,6 @@
 import werkzeug
 import flask
-from flask import g, request, views, abort
+from flask import g, request, views
 
 import flask_restful
 from marshmallow import ValidationError, Schema, fields, validate
