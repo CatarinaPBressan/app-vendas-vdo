@@ -778,7 +778,19 @@ const SeguroAutomotivo = ({ nomeCompleto, cpf }) => {
               </Form.Group>
               <Form.Group controlId="cep_pernoite">
                 <Form.Label>CEP Pernoite</Form.Label>
-                <Form.Control type="text" name="cep_pernoite" required />
+                <InputMask mask={FIELDS.cep.mask}>
+                  {() => (
+                    <Form.Control
+                      type="text"
+                      placeholder={FIELDS.cep.placeholder}
+                      pattern={FIELDS.cep.pattern}
+                      inputMode="numeric"
+                      name="cep_pernoite"
+                      required
+                    />
+                  )}
+                </InputMask>
+                <Form.Text className="text-muted">Somente números</Form.Text>
               </Form.Group>
               <Form.Group controlId="roubo_furto_dois_anos">
                 <Form.Label>
