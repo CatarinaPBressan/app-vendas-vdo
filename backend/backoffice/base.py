@@ -44,8 +44,8 @@ class BaseTable(object):
         db.String(26), index=True, unique=True, default=utils.create_eid, nullable=False
     )
 
-    created_at = db.Column(db.DateTime, default=utils.datetime_now, nullable=False)
-    updated_at = db.Column(
+    criado_em = db.Column(db.DateTime, default=utils.datetime_now, nullable=False)
+    atualizado_em = db.Column(
         db.DateTime,
         default=utils.datetime_now,
         onupdate=utils.datetime_now,

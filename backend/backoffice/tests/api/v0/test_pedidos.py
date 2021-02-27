@@ -17,7 +17,7 @@ def _create_pedido(
     produto_slug: str = "cartao-de-credito",
     status: status.ESTADOS = status.ESTADOS.NOVO,
     dados_produto: dict = None,
-):
+) -> Pedido:
     if not usuario:
         usuario = Usuario(cpf="789.123.456-79", nome="Fulano de Tal")
 
@@ -176,8 +176,8 @@ class TestPedidosAPIPost(APIV0TestClient):
                         "ocupacao": "assalariado",
                         "data_vencimento": "dia_10",
                     },
-                    "created_at": pedido.created_at.isoformat(),
-                    "updated_at": pedido.updated_at.isoformat(),
+                    "criado_em": pedido.criado_em.isoformat(),
+                    "atualizado_em": pedido.atualizado_em.isoformat(),
                     "usuario": {
                         "eid": usuario.eid,
                         "cpf": None,
@@ -201,8 +201,8 @@ class TestPedidosAPIPost(APIV0TestClient):
                         "email": "eu@arthurbressan.org",
                         "telefone_celular": "(12)99123-2413",
                         "observacoes": "Obs.",
-                        "created_at": pedido.created_at.isoformat(),
-                        "updated_at": pedido.updated_at.isoformat(),
+                        "criado_em": pedido.criado_em.isoformat(),
+                        "atualizado_em": pedido.atualizado_em.isoformat(),
                         "usuario": {
                             "eid": usuario.eid,
                             "cpf": None,
@@ -260,8 +260,8 @@ class TestPedidosAPIPost(APIV0TestClient):
                         ),
                     },
                 },
-                "created_at": pedido.created_at.isoformat(),
-                "updated_at": pedido.updated_at.isoformat(),
+                "criado_em": pedido.criado_em.isoformat(),
+                "atualizado_em": pedido.atualizado_em.isoformat(),
                 "usuario": {
                     "eid": usuario.eid,
                     "cpf": None,
@@ -318,8 +318,8 @@ class TestPedidoAPIGet(APIV0TestClient):
                     "ocupacao": "assalariado",
                     "data_vencimento": "dia_10",
                 },
-                "created_at": pedido.created_at.isoformat(),
-                "updated_at": pedido.updated_at.isoformat(),
+                "criado_em": pedido.criado_em.isoformat(),
+                "atualizado_em": pedido.atualizado_em.isoformat(),
                 "status": "novo",
                 "usuario": {
                     "eid": usuario.eid,
@@ -535,8 +535,8 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "ocupacao": "assalariado",
                     "data_vencimento": "dia_10",
                 },
-                "created_at": pedido.created_at.isoformat(),
-                "updated_at": pedido.updated_at.isoformat(),
+                "criado_em": pedido.criado_em.isoformat(),
+                "atualizado_em": pedido.atualizado_em.isoformat(),
                 "status": status_final.value,
                 "usuario": {
                     "eid": pedido.usuario.eid,
@@ -625,8 +625,8 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "ocupacao": "assalariado",
                     "data_vencimento": "dia_10",
                 },
-                "created_at": pedido.created_at.isoformat(),
-                "updated_at": pedido.updated_at.isoformat(),
+                "criado_em": pedido.criado_em.isoformat(),
+                "atualizado_em": pedido.atualizado_em.isoformat(),
                 "status": status.ESTADOS.CANCELADO.value,
                 "usuario": {
                     "eid": pedido.usuario.eid,
@@ -875,8 +875,8 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
                             ),
                         }
                     },
-                    "created_at": pedido.created_at.isoformat(),
-                    "updated_at": pedido.updated_at.isoformat(),
+                    "criado_em": pedido.criado_em.isoformat(),
+                    "atualizado_em": pedido.atualizado_em.isoformat(),
                     "status": "novo",
                     "usuario": {
                         "eid": pedido.usuario.eid,

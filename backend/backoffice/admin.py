@@ -19,8 +19,8 @@ from backoffice.models import (
 column_searchable_list_base = ["eid"]
 column_labels_base = {
     "eid": "EID",
-    "created_at": "Criado em",
-    "updated_at": "Atualizado em",
+    "criado_em": "Criado em",
+    "atualizado_em": "Atualizado em",
     "cpf": "CPF",
 }
 
@@ -33,7 +33,7 @@ column_type_formatters_base = {
     **typefmt.BASE_FORMATTERS,
     **{datetime: _format_datetime},
 }
-form_excluded_columns_base = ["created_at", "updated_at", "eid"]
+form_excluded_columns_base = ["criado_em", "atualizado_em", "eid"]
 column_type_formatters_detail_base = {
     **typefmt.DETAIL_FORMATTERS,
     **{datetime: _format_datetime},
@@ -125,8 +125,8 @@ class UsuarioModelView(_BaseModelView):
         "cpf",
         "username",
         "franquia.nome",
-        "created_at",
-        "updated_at",
+        "criado_em",
+        "atualizado_em",
         "permissoes",
     ]
     column_list = _view_columns
@@ -163,8 +163,8 @@ class PedidoProdutoModelView(_BaseModelView):
         "eid",
         "pedido.eid",
         "pedido.produto_slug",
-        "created_at",
-        "updated_at",
+        "criado_em",
+        "atualizado_em",
     ]
 
     column_searchable_list = column_searchable_list_base + ["pedido.eid"]
@@ -191,7 +191,6 @@ def init_app(app):
         name="backoffice",
         template_mode="bootstrap3",
         index_view=BackofficeIndexView(),
-        base_template="admin/index.html",
     )
     admin.add_views(
         PermissaoModelView(Permissao, db.session),

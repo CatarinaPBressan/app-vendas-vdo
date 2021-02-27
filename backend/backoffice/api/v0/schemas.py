@@ -35,8 +35,8 @@ class PedidoSchema(Schema):
     telefone_celular = fields.String(required=True)
     observacoes = fields.String(required=True)
     produto = fields.Nested(PedidoProdutoSchema, required=True)
-    created_at = fields.DateTime(format="iso", dump_only=True)
-    updated_at = fields.DateTime(format="iso", dump_only=True)
+    criado_em = fields.DateTime(format="iso", dump_only=True)
+    atualizado_em = fields.DateTime(format="iso", dump_only=True)
     usuario = fields.Nested(UsuarioSchema, dump_only=True)
     arquivo_cotacao_url = fields.String(dump_only=True)
 
