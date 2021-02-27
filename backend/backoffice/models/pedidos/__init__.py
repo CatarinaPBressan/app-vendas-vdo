@@ -1,3 +1,4 @@
+from __future__ import annotations
 import os
 import typing
 
@@ -6,11 +7,12 @@ import flask
 import sqlalchemy
 import transitions
 from werkzeug import datastructures, utils as werk_utils
+from backoffice import models
 
 from backoffice.base import db, BaseTable
 
 from backoffice.models.pedidos import status
-from backoffice.models import produtos
+from backoffice.models import produtos, pedido_log
 
 
 class Pedido(db.Model, BaseTable, transitions.Machine):
@@ -83,3 +85,14 @@ class Pedido(db.Model, BaseTable, transitions.Machine):
             nome_arquivo=nome_arquivo,
             _external=True,
         )
+
+    def log(
+        self, usuario: models.Usuario, mensagem: str, publico: bool
+    ) -> pedido_log.PedidoLog:
+        _pedido_log = pedido_log.PedidoLog(
+            pedido=self, usuario=usuario, mensagem=mensagem, publico=publico
+        )
+        db.session.add(_pedido_log)
+        db.session.commit()
+
+        return _pedido_log

@@ -8,3 +8,6 @@ class PedidoLog(db.Model, base.BaseTable):
 
     pedido_id = db.Column(db.ForeignKey("pedido.id"))
     pedido = db.relationship("Pedido", backref="logs")
+
+    usuario_id = db.Column(db.ForeignKey("usuario.id"))
+    usuario = db.relationship("Usuario")

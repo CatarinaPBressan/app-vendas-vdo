@@ -25,6 +25,15 @@ class PedidoProdutoSchema(Schema):
         return dumped["dados_produto"]
 
 
+class PedidoLogSchema(Schema):
+    eid = fields.String(dump_only=True)
+
+    mensagem = fields.String(required=True)
+    publico = fields.Boolean(required=True)
+
+    usuario = fields.Nested(UsuarioSchema, dump_only=True)
+
+
 class PedidoSchema(Schema):
     eid = fields.String(dump_only=True)
     produto_slug = fields.String(required=True)
@@ -39,6 +48,7 @@ class PedidoSchema(Schema):
     atualizado_em = fields.DateTime(format="iso", dump_only=True)
     usuario = fields.Nested(UsuarioSchema, dump_only=True)
     arquivo_cotacao_url = fields.String(dump_only=True)
+    logs = fields.Nested(PedidoLogSchema, dump_only=True, many=True)
 
 
 _excluded_usuario_fields = [
@@ -47,7 +57,20 @@ _excluded_usuario_fields = [
     "usuario.pusher_cluster",
 ]
 
-pedido_pusher_schema = PedidoSchema(exclude=["produto"] + _excluded_usuario_fields)
-pedido_schema = PedidoSchema(exclude=_excluded_usuario_fields)
-pedidos_schema = PedidoSchema(many=True, exclude=_excluded_usuario_fields)
+_excluded_logs_usuario_fields = [
+    "logs.usuario.token",
+    "logs.usuario.pusher_key",
+    "logs.usuario.pusher_cluster",
+]
+
+pedido_pusher_schema = PedidoSchema(
+    exclude=["produto", "logs"] + _excluded_usuario_fields
+)
+pedido_schema = PedidoSchema(
+    exclude=_excluded_usuario_fields + _excluded_logs_usuario_fields
+)
+pedidos_schema = PedidoSchema(
+    many=True, exclude=_excluded_usuario_fields + _excluded_logs_usuario_fields
+)
 usuario_schema = UsuarioSchema()
+pedido_log_schema = PedidoLogSchema(exclude=_excluded_usuario_fields)
