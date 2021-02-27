@@ -16,7 +16,7 @@ from backoffice.tests.api.v0 import APIV0TestClient
 def _create_pedido(
     usuario: Usuario = None,
     produto_slug: str = "cartao-de-credito",
-    status: status.ESTADOS = status.ESTADOS.NOVO,
+    status_inicial: status.ESTADOS = status.ESTADOS.NOVO,
     dados_produto: dict = None,
 ) -> Pedido:
     if usuario is None:
@@ -48,7 +48,7 @@ def _create_pedido(
         email="eu@arthurbressan.org",
         telefone_celular="(12)99123-2413",
         observacoes="Obs.",
-        status=status.value,
+        status=status_inicial.value,
     )
     db.session.add(pedido)
     db.session.commit()
@@ -76,14 +76,14 @@ class TestPedidosAPIGet(APIV0TestClient):
             ), "Deve mostrar todos os pedidos do usuário"
 
     def test_pedidos_de_outros_usuarios(self, client):
-        u1 = Usuario()
-        u2 = Usuario()
+        usuario_1 = Usuario()
+        usuario_2 = Usuario()
         for _ in range(5):
-            _create_pedido(u1)
+            _create_pedido(usuario_1)
         for _ in range(5):
-            _create_pedido(u2)
+            _create_pedido(usuario_2)
 
-        response = self.get(client, u1)
+        response = self.get(client, usuario_1)
 
         assert response.status_code == 200
         assert "pedidos" in response.json
@@ -91,17 +91,17 @@ class TestPedidosAPIGet(APIV0TestClient):
         assert len(pedidos) == 5
         for pedido in pedidos:
             assert (
-                pedido["usuario"]["eid"] == u1.eid
+                pedido["usuario"]["eid"] == usuario_1.eid
             ), "Deve mostrar somente pedidos do usuário"
 
     def test_pedidos_usuario_backoffice(self, client):
-        u1 = Usuario()
-        u2 = Usuario()
+        usuario_1 = Usuario()
+        usuario_2 = Usuario()
         backoffice = Usuario(permissoes=[Permissao("backoffice")])
         for _ in range(5):
-            _create_pedido(u1)
+            _create_pedido(usuario_1)
         for _ in range(5):
-            _create_pedido(u2)
+            _create_pedido(usuario_2)
         for _ in range(5):
             _create_pedido(backoffice)
 
@@ -113,8 +113,8 @@ class TestPedidosAPIGet(APIV0TestClient):
         assert len(pedidos) == 15
         usuarios_eids = {pedido["usuario"]["eid"] for pedido in pedidos}
         assert len(usuarios_eids) == 3
-        assert u1.eid in usuarios_eids
-        assert u2.eid in usuarios_eids
+        assert usuario_1.eid in usuarios_eids
+        assert usuario_2.eid in usuarios_eids
         assert backoffice.eid in usuarios_eids
 
 
@@ -560,7 +560,9 @@ class TestPedidoAPIPatch(APIV0TestClient):
     def test_patch_pedidos_transicoes(
         self, client, produto_slug, transicao, status_inicial, status_final
     ):
-        pedido = _create_pedido(produto_slug=produto_slug, status=status_inicial)
+        pedido = _create_pedido(
+            produto_slug=produto_slug, status_inicial=status_inicial
+        )
 
         backoffice = Usuario(permissoes=[Permissao("backoffice")])
         db.session.add(backoffice)
@@ -651,7 +653,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
         "status_inicial", [_status for _status in status.ESTADOS],
     )
     def test_patch_pedidos_cancelamento(self, client, status_inicial):
-        pedido = _create_pedido(status=status_inicial)
+        pedido = _create_pedido(status_inicial=status_inicial)
 
         backoffice = Usuario(permissoes=[Permissao("backoffice")])
         db.session.add(backoffice)
@@ -1055,7 +1057,7 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
             assert response.status_code == 400
 
 
-class TestArquivoProdutoAPIPost(APIV0TestClient):
+class TestPedidoLogAPIPost(APIV0TestClient):
     endpoint = "pedidologapi"
 
     def test_post_log(self, client):
