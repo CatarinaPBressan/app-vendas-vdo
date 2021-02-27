@@ -7,10 +7,10 @@ import "./PedidosNav.scss";
 
 const PedidosNav = (props) => {
   const pedidos = Object.values(props.pedidos).sort((a, b) => {
-    if (a.created_at > b.created_at) {
+    if (a.criado_em > b.criado_em) {
       return -1;
     }
-    if (a.created_at < b.created_at) {
+    if (a.criado_em < b.criado_em) {
       return 1;
     }
     return 0;
