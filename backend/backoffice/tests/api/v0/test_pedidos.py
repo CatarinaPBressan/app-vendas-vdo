@@ -5,7 +5,8 @@ import pytest
 import werkzeug
 from flask import url_for
 
-from backoffice.models import db, Usuario, Pedido, PedidoProduto, Permissao, produtos
+from backoffice import models
+from backoffice.models import db, Usuario, Pedido, PedidoProduto, Permissao
 
 from backoffice.models.pedidos import status
 
@@ -18,7 +19,7 @@ def _create_pedido(
     status: status.ESTADOS = status.ESTADOS.NOVO,
     dados_produto: dict = None,
 ) -> Pedido:
-    if not usuario:
+    if usuario is None:
         usuario = Usuario(cpf="789.123.456-79", nome="Fulano de Tal")
 
     default_produto = {
@@ -34,7 +35,7 @@ def _create_pedido(
         "data_vencimento": "dia_10",
     }
 
-    if not dados_produto:
+    if dados_produto is None:
         dados_produto = default_produto
 
     pedido_produto = PedidoProduto(dados_produto=dados_produto)
@@ -185,6 +186,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                         "permissoes": [],
                     },
                     "arquivo_cotacao_url": None,
+                    "logs": [],
                 }
             }
 
@@ -269,6 +271,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
+                "logs": [],
             }
         }
 
@@ -328,6 +331,60 @@ class TestPedidoAPIGet(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
+                "logs": [],
+            }
+        }
+
+    def test_get_pedido_com_log(self, client):
+        pedido = _create_pedido()
+        pedido_log: models.PedidoLog = pedido.log(pedido.usuario, "LOG TESTE", True)
+
+        response = self.get(client, pedido.usuario, pedido_eid=pedido.eid)
+        assert response.status_code == 200
+        assert response.json == {
+            "pedido": {
+                "eid": pedido.eid,
+                "produto_slug": "cartao-de-credito",
+                "nome_completo": "Arthur Bressan",
+                "cpf": "123.567.890-10",
+                "email": "eu@arthurbressan.org",
+                "telefone_celular": "(12)99123-2413",
+                "observacoes": "Obs.",
+                "produto": {
+                    "cep": "12240-310",
+                    "uf": "SP",
+                    "cidade": "SJC",
+                    "logradouro": "Rua Presidente Epitácio",
+                    "endereco_numero": "97",
+                    "complemento": "casa",
+                    "nome_mae": "Nome mae",
+                    "estado_civil": "solteiro",
+                    "ocupacao": "assalariado",
+                    "data_vencimento": "dia_10",
+                },
+                "criado_em": pedido.criado_em.isoformat(),
+                "atualizado_em": pedido.atualizado_em.isoformat(),
+                "status": "novo",
+                "usuario": {
+                    "eid": pedido.usuario.eid,
+                    "cpf": "789.123.456-79",
+                    "nome": "Fulano de Tal",
+                    "permissoes": [],
+                },
+                "arquivo_cotacao_url": None,
+                "logs": [
+                    {
+                        "eid": pedido_log.eid,
+                        "mensagem": "LOG TESTE",
+                        "publico": True,
+                        "usuario": {
+                            "eid": pedido.usuario.eid,
+                            "cpf": "789.123.456-79",
+                            "nome": "Fulano de Tal",
+                            "permissoes": [],
+                        },
+                    }
+                ],
             }
         }
 
@@ -545,6 +602,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
+                "logs": [],
             }
         }
 
@@ -635,6 +693,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
+                "logs": [],
             }
         }
 
@@ -885,6 +944,7 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
                         "permissoes": [],
                     },
                     "arquivo_cotacao_url": None,
+                    "logs": [],
                 }
             }
 
@@ -993,3 +1053,129 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
 
             save_mock.assert_not_called()
             assert response.status_code == 400
+
+
+class TestArquivoProdutoAPIPost(APIV0TestClient):
+    endpoint = "pedidologapi"
+
+    def test_post_log(self, client):
+        pedido = _create_pedido()
+        usuario = pedido.usuario
+
+        response = self.post(
+            client,
+            usuario,
+            pedido_eid=pedido.eid,
+            json={"mensagem": "Mensagem do Log", "publico": True},
+        )
+        assert response.status_code == 201
+
+        pedido_log = models.PedidoLog.query.one()
+
+        assert response.json == {
+            "pedido_log": {
+                "eid": pedido_log.eid,
+                "mensagem": "Mensagem do Log",
+                "publico": True,
+                "usuario": {
+                    "eid": usuario.eid,
+                    "cpf": "789.123.456-79",
+                    "nome": "Fulano de Tal",
+                    "permissoes": [],
+                },
+            }
+        }
+
+    def test_post_log_usuario_nao_backoffice_nao_pode_enviar_log_nao_publico(
+        self, client
+    ):
+        pedido = _create_pedido()
+        usuario = pedido.usuario
+
+        response = self.post(
+            client,
+            usuario,
+            pedido_eid=pedido.eid,
+            json={"mensagem": "Mensagem do Log", "publico": False},
+        )
+
+        assert response.status_code == 400
+        assert models.PedidoLog.query.first() is None
+
+    def test_post_log_usuario_backoffice_pode_enviar_log_nao_publico(self, client):
+        pedido = _create_pedido()
+
+        backoffice = Usuario(permissoes=[Permissao("backoffice")])
+        db.session.add(backoffice)
+        db.session.commit()
+
+        response = self.post(
+            client,
+            backoffice,
+            pedido_eid=pedido.eid,
+            json={"mensagem": "Mensagem do Log", "publico": False},
+        )
+
+        assert response.status_code == 201
+        pedido_log = models.PedidoLog.query.one()
+
+        assert response.json == {
+            "pedido_log": {
+                "eid": pedido_log.eid,
+                "mensagem": "Mensagem do Log",
+                "publico": False,
+                "usuario": {
+                    "eid": backoffice.eid,
+                    "cpf": None,
+                    "nome": None,
+                    "permissoes": ["backoffice"],
+                },
+            }
+        }
+
+    def test_post_pedido_log_outro_usuario(self, client):
+        pedido = _create_pedido()
+
+        outro_usuario = Usuario()
+        db.session.add(outro_usuario)
+        db.session.commit()
+
+        response = self.post(
+            client,
+            outro_usuario,
+            pedido_eid=pedido.eid,
+            json={"mensagem": "Mensagem do Log", "publico": True},
+        )
+
+        assert response.status_code == 403
+        assert response.json == {"message": "Pedido de outro usuário"}
+
+    def test_post_pedido_log_usuario_backoffice(self, client):
+        pedido = _create_pedido()
+
+        backoffice = Usuario(permissoes=[Permissao("backoffice")])
+        db.session.add(backoffice)
+        db.session.commit()
+
+        response = self.post(
+            client,
+            backoffice,
+            pedido_eid=pedido.eid,
+            json={"mensagem": "Mensagem do Log", "publico": True},
+        )
+
+        assert response.status_code == 201
+
+    def test_post_pedido_log_pedido_nao_existe(self, client):
+        backoffice = Usuario(permissoes=[Permissao("backoffice")])
+        db.session.add(backoffice)
+        db.session.commit()
+
+        response = self.post(
+            client,
+            backoffice,
+            pedido_eid="zzz",
+            json={"mensagem": "Mensagem do Log", "publico": True},
+        )
+
+        assert response.status_code == 404
