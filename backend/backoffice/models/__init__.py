@@ -8,7 +8,7 @@ from backoffice import utils
 from backoffice.base import db, BaseTable
 from backoffice.models.pedidos import Pedido
 from backoffice.models.pedido_produtos import PedidoProduto
-from backoffice.models.pedido_log import PedidoLog
+from backoffice.models.pedido_logs import PedidoLog
 
 usuario_permissao = db.Table(
     "usuario_permissao",

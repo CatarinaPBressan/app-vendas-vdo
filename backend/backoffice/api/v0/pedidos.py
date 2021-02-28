@@ -123,7 +123,7 @@ class PedidoLogAPI(views.MethodView):
         if not usuario.has_permission("backoffice") and parsed["publico"] is False:
             flask_restful.abort(400)
 
-        pedido_log = pedido.log(usuario, parsed["mensagem"], parsed["publico"])
+        pedido_log = pedido.log(parsed["mensagem"], parsed["publico"], usuario)
 
         # TODO: Trigger pusher aqui com o pedido atualizado...
 

@@ -32,6 +32,7 @@ class PedidoLogSchema(Schema):
     publico = fields.Boolean(required=True)
 
     usuario = fields.Nested(UsuarioSchema, dump_only=True)
+    criado_em = fields.DateTime(format="iso", dump_only=True)
 
 
 class PedidoSchema(Schema):

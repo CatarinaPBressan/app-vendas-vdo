@@ -16,6 +16,9 @@ test:
 backoffice-container:
 	docker-compose exec backoffice bash
 
+psql-container:
+	docker exec -it backoffice_db psql -d app_vendas -U postgres
+
 requirements:
 	pipenv run pip freeze > requirements.txt
 
