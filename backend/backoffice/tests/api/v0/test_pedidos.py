@@ -6,9 +6,17 @@ import werkzeug
 from flask import url_for
 
 from backoffice import models
-from backoffice.models import db, Usuario, Pedido, PedidoProduto, Permissao
-
+from backoffice.models import (
+    db,
+    Usuario,
+    Pedido,
+    PedidoProduto,
+    Permissao,
+    pedidos,
+)
 from backoffice.models.pedidos import status
+
+from backoffice.api.v0 import schemas
 
 from backoffice.tests.api.v0 import APIV0TestClient
 
@@ -54,6 +62,10 @@ def _create_pedido(
     db.session.commit()
 
     return pedido
+
+
+def _dump_pedido_logs(pedido: pedidos.Pedido):
+    return [schemas.pedido_log_schema.dump(pedido_log) for pedido_log in pedido.logs]
 
 
 class TestPedidosAPIGet(APIV0TestClient):
@@ -186,7 +198,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                         "permissoes": [],
                     },
                     "arquivo_cotacao_url": None,
-                    "logs": [],
+                    "logs": _dump_pedido_logs(pedido),
                 }
             }
 
@@ -271,7 +283,7 @@ class TestPedidosAPIPost(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
-                "logs": [],
+                "logs": _dump_pedido_logs(pedido),
             }
         }
 
@@ -304,6 +316,7 @@ class TestPedidoAPIGet(APIV0TestClient):
             "pedido": {
                 "eid": pedido.eid,
                 "produto_slug": "cartao-de-credito",
+                "status": "novo",
                 "nome_completo": "Arthur Bressan",
                 "cpf": "123.567.890-10",
                 "email": "eu@arthurbressan.org",
@@ -323,7 +336,6 @@ class TestPedidoAPIGet(APIV0TestClient):
                 },
                 "criado_em": pedido.criado_em.isoformat(),
                 "atualizado_em": pedido.atualizado_em.isoformat(),
-                "status": "novo",
                 "usuario": {
                     "eid": usuario.eid,
                     "cpf": "789.123.456-79",
@@ -331,13 +343,21 @@ class TestPedidoAPIGet(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
-                "logs": [],
+                "logs": [
+                    {
+                        "criado_em": pedido.logs[0].criado_em.isoformat(),
+                        "eid": pedido.logs[0].eid,
+                        "mensagem": "Pedido criado.",
+                        "publico": True,
+                        "usuario": None,
+                    }
+                ],
             }
         }
 
-    def test_get_pedido_com_log(self, client):
+    def test_get_pedido_com_log_de_usuario(self, client):
         pedido = _create_pedido()
-        pedido_log: models.PedidoLog = pedido.log(pedido.usuario, "LOG TESTE", True)
+        pedido_log: models.PedidoLog = pedido.log("LOG TESTE", True, pedido.usuario)
 
         response = self.get(client, pedido.usuario, pedido_eid=pedido.eid)
         assert response.status_code == 200
@@ -374,6 +394,14 @@ class TestPedidoAPIGet(APIV0TestClient):
                 "arquivo_cotacao_url": None,
                 "logs": [
                     {
+                        "criado_em": pedido.logs[0].criado_em.isoformat(),
+                        "eid": pedido.logs[0].eid,
+                        "mensagem": "Pedido criado.",
+                        "publico": True,
+                        "usuario": None,
+                    },
+                    {
+                        "criado_em": pedido_log.criado_em.isoformat(),
                         "eid": pedido_log.eid,
                         "mensagem": "LOG TESTE",
                         "publico": True,
@@ -383,7 +411,7 @@ class TestPedidoAPIGet(APIV0TestClient):
                             "nome": "Fulano de Tal",
                             "permissoes": [],
                         },
-                    }
+                    },
                 ],
             }
         }
@@ -604,7 +632,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
-                "logs": [],
+                "logs": _dump_pedido_logs(pedido),
             }
         }
 
@@ -695,7 +723,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
                     "permissoes": [],
                 },
                 "arquivo_cotacao_url": None,
-                "logs": [],
+                "logs": _dump_pedido_logs(pedido),
             }
         }
 
@@ -946,7 +974,7 @@ class TestArquivoProdutoAPIPost(APIV0TestClient):
                         "permissoes": [],
                     },
                     "arquivo_cotacao_url": None,
-                    "logs": [],
+                    "logs": _dump_pedido_logs(pedido),
                 }
             }
 
@@ -1072,10 +1100,13 @@ class TestPedidoLogAPIPost(APIV0TestClient):
         )
         assert response.status_code == 201
 
-        pedido_log = models.PedidoLog.query.one()
+        pedido_log: models.PedidoLog = models.PedidoLog.query.filter_by(
+            eid=response.json["pedido_log"]["eid"]
+        ).one()
 
         assert response.json == {
             "pedido_log": {
+                "criado_em": pedido_log.criado_em.isoformat(),
                 "eid": pedido_log.eid,
                 "mensagem": "Mensagem do Log",
                 "publico": True,
@@ -1102,7 +1133,7 @@ class TestPedidoLogAPIPost(APIV0TestClient):
         )
 
         assert response.status_code == 400
-        assert models.PedidoLog.query.first() is None
+        assert models.PedidoLog.query.count() == 1
 
     def test_post_log_usuario_backoffice_pode_enviar_log_nao_publico(self, client):
         pedido = _create_pedido()
@@ -1119,10 +1150,13 @@ class TestPedidoLogAPIPost(APIV0TestClient):
         )
 
         assert response.status_code == 201
-        pedido_log = models.PedidoLog.query.one()
+        pedido_log: models.PedidoLog = models.PedidoLog.query.filter_by(
+            eid=response.json["pedido_log"]["eid"]
+        ).one()
 
         assert response.json == {
             "pedido_log": {
+                "criado_em": pedido_log.criado_em.isoformat(),
                 "eid": pedido_log.eid,
                 "mensagem": "Mensagem do Log",
                 "publico": False,

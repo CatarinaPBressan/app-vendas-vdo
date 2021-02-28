@@ -39,6 +39,21 @@ class TRANSICOES(str, enum.Enum):
     APROVADO_VISTORIA = "aprovado_vistoria"
 
 
+ESTADOS_LABELS: typing.Dict[str, str] = {
+    ESTADOS.NOVO.value: "Novo",
+    ESTADOS.CANCELADO.value: "Cancelado",
+    ESTADOS.COMPLETO.value: "Completo",
+    # Cartão de Crédito
+    ESTADOS.ANALISE_CREDITO.value: "Análise de Crédito",
+    ESTADOS.AGUARDANDO_ANALISE.value: "Aguardando Análise",
+    # Seguro
+    ESTADOS.COTACAO.value: "Em Cotação",
+    ESTADOS.AGUARDANDO_RESPOSTA_COTACAO.value: "Aguardando Resposta do Cliente",
+    ESTADOS.EMITIR_PROPOSTA.value: "Emitir Proposta",
+    ESTADOS.VISTORIA.value: "Em Vistoria",
+}
+
+
 class Transicao(typing.TypedDict):
     trigger: TRANSICOES
     source: ESTADOS

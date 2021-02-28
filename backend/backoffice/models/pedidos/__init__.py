@@ -6,21 +6,38 @@ import flask
 
 import sqlalchemy
 import transitions
-from werkzeug import datastructures, utils as werk_utils
+from werkzeug import datastructures, utils as werkzeug_utils
 from backoffice import models
 
 from backoffice.base import db, BaseTable
 
 from backoffice.models.pedidos import status
-from backoffice.models import produtos, pedido_log
+from backoffice.models import produtos, pedido_logs
 
 
 class Pedido(db.Model, BaseTable, transitions.Machine):
-    @sqlalchemy.orm.reconstructor
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        status_inicial = kwargs.get("status", status.ESTADOS.NOVO.value)
 
-        produto_slug = self.produto_slug or kwargs.get("produto_slug")
+        self._carregar_maquina_de_estado(kwargs.get("produto_slug"), status_inicial)
+
+        # Cria o log inicial somente se tiver o contexto da aplicação, para facilitar testes.
+        if flask.current_app:
+            self.log("Pedido criado.")
+
+    @sqlalchemy.orm.reconstructor
+    def _carregar_maquina_de_estado(
+        self,
+        produto_slug: typing.Optional[str] = None,
+        status_inicial: typing.Optional[str] = None,
+    ):
+        if produto_slug is None:
+            produto_slug = self.produto_slug
+
+        if status_inicial is None:
+            status_inicial = self.status
+
         # produto_slug pode ser None para facilitar testes
         produto = produtos.PRODUTOS.get(produto_slug)
         transicoes = status.get_transicoes_produto(produto)
@@ -30,8 +47,9 @@ class Pedido(db.Model, BaseTable, transitions.Machine):
             self,
             states=estados,
             transitions=transicoes,
-            initial=self.status or status.ESTADOS.NOVO.value,
+            initial=status_inicial,
             model_attribute="status",
+            after_state_change="log_mudanca_de_estado",
         )
 
     usuario_id = db.Column(db.ForeignKey("usuario.id"))
@@ -60,7 +78,7 @@ class Pedido(db.Model, BaseTable, transitions.Machine):
         )
 
     def salvar_cotacao(self, file: datastructures.FileStorage) -> typing.Optional[str]:
-        nome_arquivo = werk_utils.secure_filename(file.filename)
+        nome_arquivo = werkzeug_utils.secure_filename(file.filename)
         dir_arquivo = self.get_diretorio_arquivo("cotacao")
         caminho_arquivo = os.path.join(dir_arquivo, nome_arquivo)
 
@@ -87,12 +105,20 @@ class Pedido(db.Model, BaseTable, transitions.Machine):
         )
 
     def log(
-        self, usuario: models.Usuario, mensagem: str, publico: bool
-    ) -> pedido_log.PedidoLog:
-        _pedido_log = pedido_log.PedidoLog(
+        self,
+        mensagem: str,
+        publico: bool = True,
+        usuario: typing.Optional[models.Usuario] = None,
+    ) -> pedido_logs.PedidoLog:
+        pedido_log = pedido_logs.PedidoLog(
             pedido=self, usuario=usuario, mensagem=mensagem, publico=publico
         )
-        db.session.add(_pedido_log)
+        db.session.add(pedido_log)
         db.session.commit()
 
-        return _pedido_log
+        return pedido_log
+
+    def log_mudanca_de_estado(self) -> None:
+        # Cria o log de transição somente se tiver o contexto da aplicação, para facilitar testes.
+        if flask.current_app:
+            self.log(f"Novo estado: {status.ESTADOS_LABELS[self.status]}")
