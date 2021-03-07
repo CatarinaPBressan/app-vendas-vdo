@@ -6,7 +6,7 @@ import {
   PUSHER_EVENTS,
 } from "../../services/pusher";
 
-const PusherManager = ({ usuario, addPedido, setNotificationPedido }) => {
+const PusherManager = ({ usuario, addPedido, setDadosNotificacao }) => {
   const [pusher, setPusher] = useState();
 
   useEffect(() => {
@@ -16,15 +16,28 @@ const PusherManager = ({ usuario, addPedido, setNotificationPedido }) => {
     const _pusher = setUpPusher(usuario);
     setPusher(_pusher);
 
+    const novoOuAtualizaPedido = (pedido, tipoNotificacao) => {
+      addPedido(pedido);
+      setDadosNotificacao({ pedido, tipoNotificacao });
+    };
+
     if (usuario.permissoes.includes("backoffice")) {
-      const pedidosChannel = _pusher.subscribe(PUSHER_CHANNELS.PEDIDOS);
-      pedidosChannel.bind(PUSHER_EVENTS.NOVO_PEDIDO, (data) => {
-        const pedido = data.pedido;
-        addPedido(pedido);
-        setNotificationPedido(pedido);
+      const backofficeChannel = _pusher.subscribe(PUSHER_CHANNELS.BACKOFFICE);
+      backofficeChannel.bind(PUSHER_EVENTS.PEDIDO_NOVO, (data) => {
+        novoOuAtualizaPedido(data.pedido, PUSHER_EVENTS.PEDIDO_NOVO);
+      });
+      backofficeChannel.bind(PUSHER_EVENTS.PEDIDO_ATUALIZADO, (data) => {
+        novoOuAtualizaPedido(data.pedido, PUSHER_EVENTS.PEDIDO_ATUALIZADO);
+      });
+    } else {
+      const vendedorChannel = _pusher.subscribe(
+        `${PUSHER_CHANNELS.VENDEDOR}-${usuario.eid}`,
+      );
+      vendedorChannel.bind(PUSHER_EVENTS.PEDIDO_ATUALIZADO, (data) => {
+        novoOuAtualizaPedido(data.pedido, PUSHER_EVENTS.PEDIDO_ATUALIZADO);
       });
     }
-  }, [usuario, pusher, addPedido, setNotificationPedido]);
+  }, [usuario, pusher, addPedido, setDadosNotificacao]);
 
   useEffect(() => {
     if (usuario || !pusher) {

@@ -203,8 +203,8 @@ class TestPedidosAPIPost(APIV0TestClient):
             }
 
             trigger_mock.assert_called_once_with(
-                "pedidos",
-                "novo-pedido",
+                "backoffice",
+                "pedido-novo",
                 {
                     "pedido": {
                         "eid": pedido.eid,
@@ -596,13 +596,15 @@ class TestPedidoAPIPatch(APIV0TestClient):
         db.session.add(backoffice)
         db.session.commit()
 
-        response = self.patch(
-            client, backoffice, pedido_eid=pedido.eid, json={"transicao": transicao}
-        )
+        with mock.patch(
+            "backoffice.api.v0.pedidos.pusher_client.trigger"
+        ) as trigger_mock:
 
-        assert response.status_code == 200
-        assert response.json == {
-            "pedido": {
+            response = self.patch(
+                client, backoffice, pedido_eid=pedido.eid, json={"transicao": transicao}
+            )
+
+            _pedido_json = {
                 "eid": pedido.eid,
                 "produto_slug": produto_slug,
                 "nome_completo": "Arthur Bressan",
@@ -634,7 +636,23 @@ class TestPedidoAPIPatch(APIV0TestClient):
                 "arquivo_cotacao_url": None,
                 "logs": _dump_pedido_logs(pedido),
             }
-        }
+
+            assert response.status_code == 200
+            assert response.json == {"pedido": _pedido_json}
+
+            assert trigger_mock.call_count == 2
+            trigger_mock.assert_has_calls(
+                [
+                    mock.call(
+                        "backoffice", "pedido-atualizado", {"pedido": _pedido_json}
+                    ),
+                    mock.call(
+                        f"vendedor-{pedido.usuario.eid}",
+                        "pedido-atualizado",
+                        {"pedido": _pedido_json},
+                    ),
+                ]
+            )
 
     def test_patch_pedidos_transicoes_nao_permitidas(self, client):
         pedido = _create_pedido()
@@ -643,16 +661,22 @@ class TestPedidoAPIPatch(APIV0TestClient):
         db.session.add(backoffice)
         db.session.commit()
 
-        response = self.patch(
-            client, backoffice, pedido_eid=pedido.eid, json={"transicao": "blah"}
-        )
+        with mock.patch(
+            "backoffice.api.v0.pedidos.pusher_client.trigger"
+        ) as trigger_mock:
 
-        assert response.status_code == 400
-        assert "message" in response.json
-        assert "transicao" in response.json["message"]
-        message = response.json["message"]["transicao"][0]
-        for transicao in status.TRANSICOES:
-            assert transicao.value in message
+            response = self.patch(
+                client, backoffice, pedido_eid=pedido.eid, json={"transicao": "blah"}
+            )
+
+            assert response.status_code == 400
+            assert "message" in response.json
+            assert "transicao" in response.json["message"]
+            message = response.json["message"]["transicao"][0]
+            for transicao in status.TRANSICOES:
+                assert transicao.value in message
+
+            trigger_mock.assert_not_called()
 
     def test_patch_pedidos_usuario_nao_permitido(self, client):
         pedido = _create_pedido()
@@ -1092,32 +1116,83 @@ class TestPedidoLogAPIPost(APIV0TestClient):
         pedido = _create_pedido()
         usuario = pedido.usuario
 
-        response = self.post(
-            client,
-            usuario,
-            pedido_eid=pedido.eid,
-            json={"mensagem": "Mensagem do Log", "publico": True},
-        )
-        assert response.status_code == 201
+        with mock.patch(
+            "backoffice.api.v0.pedidos.pusher_client.trigger"
+        ) as trigger_mock:
 
-        pedido_log: models.PedidoLog = models.PedidoLog.query.filter_by(
-            eid=response.json["pedido_log"]["eid"]
-        ).one()
+            response = self.post(
+                client,
+                usuario,
+                pedido_eid=pedido.eid,
+                json={"mensagem": "Mensagem do Log", "publico": True},
+            )
+            assert response.status_code == 201
 
-        assert response.json == {
-            "pedido_log": {
-                "criado_em": pedido_log.criado_em.isoformat(),
-                "eid": pedido_log.eid,
-                "mensagem": "Mensagem do Log",
-                "publico": True,
+            pedido_log: models.PedidoLog = models.PedidoLog.query.filter_by(
+                eid=response.json["pedido_log"]["eid"]
+            ).one()
+
+            assert response.json == {
+                "pedido_log": {
+                    "criado_em": pedido_log.criado_em.isoformat(),
+                    "eid": pedido_log.eid,
+                    "mensagem": "Mensagem do Log",
+                    "publico": True,
+                    "usuario": {
+                        "eid": usuario.eid,
+                        "cpf": "789.123.456-79",
+                        "nome": "Fulano de Tal",
+                        "permissoes": [],
+                    },
+                }
+            }
+
+            _pedido_json = {
+                "eid": pedido.eid,
+                "produto_slug": pedido.produto_slug,
+                "nome_completo": "Arthur Bressan",
+                "cpf": "123.567.890-10",
+                "email": "eu@arthurbressan.org",
+                "telefone_celular": "(12)99123-2413",
+                "observacoes": "Obs.",
+                "produto": {
+                    "cep": "12240-310",
+                    "uf": "SP",
+                    "cidade": "SJC",
+                    "logradouro": "Rua Presidente Epitácio",
+                    "endereco_numero": "97",
+                    "complemento": "casa",
+                    "nome_mae": "Nome mae",
+                    "estado_civil": "solteiro",
+                    "ocupacao": "assalariado",
+                    "data_vencimento": "dia_10",
+                },
+                "criado_em": pedido.criado_em.isoformat(),
+                "atualizado_em": pedido.atualizado_em.isoformat(),
+                "status": pedido.status,
                 "usuario": {
-                    "eid": usuario.eid,
+                    "eid": pedido.usuario.eid,
                     "cpf": "789.123.456-79",
                     "nome": "Fulano de Tal",
                     "permissoes": [],
                 },
+                "arquivo_cotacao_url": None,
+                "logs": _dump_pedido_logs(pedido),
             }
-        }
+
+            assert trigger_mock.call_count == 2
+            trigger_mock.assert_has_calls(
+                [
+                    mock.call(
+                        "backoffice", "pedido-atualizado", {"pedido": _pedido_json}
+                    ),
+                    mock.call(
+                        f"vendedor-{pedido.usuario.eid}",
+                        "pedido-atualizado",
+                        {"pedido": _pedido_json},
+                    ),
+                ]
+            )
 
     def test_post_log_usuario_nao_backoffice_nao_pode_enviar_log_nao_publico(
         self, client
@@ -1125,15 +1200,20 @@ class TestPedidoLogAPIPost(APIV0TestClient):
         pedido = _create_pedido()
         usuario = pedido.usuario
 
-        response = self.post(
-            client,
-            usuario,
-            pedido_eid=pedido.eid,
-            json={"mensagem": "Mensagem do Log", "publico": False},
-        )
+        with mock.patch(
+            "backoffice.api.v0.pedidos.pusher_client.trigger"
+        ) as trigger_mock:
 
-        assert response.status_code == 400
-        assert models.PedidoLog.query.count() == 1
+            response = self.post(
+                client,
+                usuario,
+                pedido_eid=pedido.eid,
+                json={"mensagem": "Mensagem do Log", "publico": False},
+            )
+
+            assert response.status_code == 400
+            assert models.PedidoLog.query.count() == 1
+            trigger_mock.assert_not_called()
 
     def test_post_log_usuario_backoffice_pode_enviar_log_nao_publico(self, client):
         pedido = _create_pedido()
@@ -1142,32 +1222,76 @@ class TestPedidoLogAPIPost(APIV0TestClient):
         db.session.add(backoffice)
         db.session.commit()
 
-        response = self.post(
-            client,
-            backoffice,
-            pedido_eid=pedido.eid,
-            json={"mensagem": "Mensagem do Log", "publico": False},
-        )
+        with mock.patch(
+            "backoffice.api.v0.pedidos.pusher_client.trigger"
+        ) as trigger_mock:
 
-        assert response.status_code == 201
-        pedido_log: models.PedidoLog = models.PedidoLog.query.filter_by(
-            eid=response.json["pedido_log"]["eid"]
-        ).one()
+            response = self.post(
+                client,
+                backoffice,
+                pedido_eid=pedido.eid,
+                json={"mensagem": "Mensagem do Log", "publico": False},
+            )
 
-        assert response.json == {
-            "pedido_log": {
-                "criado_em": pedido_log.criado_em.isoformat(),
-                "eid": pedido_log.eid,
-                "mensagem": "Mensagem do Log",
-                "publico": False,
-                "usuario": {
-                    "eid": backoffice.eid,
-                    "cpf": None,
-                    "nome": None,
-                    "permissoes": ["backoffice"],
-                },
+            assert response.status_code == 201
+            pedido_log: models.PedidoLog = models.PedidoLog.query.filter_by(
+                eid=response.json["pedido_log"]["eid"]
+            ).one()
+
+            assert response.json == {
+                "pedido_log": {
+                    "criado_em": pedido_log.criado_em.isoformat(),
+                    "eid": pedido_log.eid,
+                    "mensagem": "Mensagem do Log",
+                    "publico": False,
+                    "usuario": {
+                        "eid": backoffice.eid,
+                        "cpf": None,
+                        "nome": None,
+                        "permissoes": ["backoffice"],
+                    },
+                }
             }
-        }
+
+            # Logs não publicos não envia para o vendedor
+            trigger_mock.assert_called_once_with(
+                "backoffice",
+                "pedido-atualizado",
+                {
+                    "pedido": {
+                        "eid": pedido.eid,
+                        "produto_slug": pedido.produto_slug,
+                        "nome_completo": "Arthur Bressan",
+                        "cpf": "123.567.890-10",
+                        "email": "eu@arthurbressan.org",
+                        "telefone_celular": "(12)99123-2413",
+                        "observacoes": "Obs.",
+                        "produto": {
+                            "cep": "12240-310",
+                            "uf": "SP",
+                            "cidade": "SJC",
+                            "logradouro": "Rua Presidente Epitácio",
+                            "endereco_numero": "97",
+                            "complemento": "casa",
+                            "nome_mae": "Nome mae",
+                            "estado_civil": "solteiro",
+                            "ocupacao": "assalariado",
+                            "data_vencimento": "dia_10",
+                        },
+                        "criado_em": pedido.criado_em.isoformat(),
+                        "atualizado_em": pedido.atualizado_em.isoformat(),
+                        "status": pedido.status,
+                        "usuario": {
+                            "eid": pedido.usuario.eid,
+                            "cpf": "789.123.456-79",
+                            "nome": "Fulano de Tal",
+                            "permissoes": [],
+                        },
+                        "arquivo_cotacao_url": None,
+                        "logs": _dump_pedido_logs(pedido),
+                    }
+                },
+            )
 
     def test_post_pedido_log_outro_usuario(self, client):
         pedido = _create_pedido()
