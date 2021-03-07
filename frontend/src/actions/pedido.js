@@ -5,6 +5,7 @@ import PedidoAPI from "../api/pedidoAPI";
 export const addPedido = createAction("pedido/pedido/append");
 export const setPedidos = createAction("pedido/pedidos/set");
 export const clearPedidos = createAction("pedido/pedidos/clear");
+export const appendPedidoLog = createAction("pedido/pedidos/logs/append");
 
 export const createPedido = (
   produto,
@@ -28,8 +29,8 @@ export const fetchPedidos = (usuario) => async (dispatch) => {
   return pedidos;
 };
 
-export const fetchPedidoProduto = (pedido, usuario) => async (dispatch) => {
-  const _pedido = await PedidoAPI.fetchPedidoProduto(pedido, usuario);
+export const fetchPedido = (pedido, usuario) => async (dispatch) => {
+  const _pedido = await PedidoAPI.fetchPedido(pedido, usuario);
   dispatch(addPedido(_pedido));
   return _pedido;
 };
@@ -62,4 +63,17 @@ export const uploadPedidoArquivo = (
   );
   dispatch(addPedido(_pedido));
   return _pedido;
+};
+
+export const createPedidoLog = (pedido, usuario, mensagem, publico) => async (
+  dispatch,
+) => {
+  const pedidoLog = await PedidoAPI.createPedidoLog(
+    pedido,
+    usuario,
+    mensagem,
+    publico,
+  );
+  dispatch(appendPedidoLog({ pedido, pedidoLog }));
+  return pedidoLog;
 };

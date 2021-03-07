@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 import { connect } from "react-redux";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
 
 import { uploadPedidoArquivo } from "../../actions/pedido";
 import { getFileNameFromPath } from "../../utils/utils";
@@ -20,7 +20,6 @@ const _UploadCotacaoButton = ({ pedido, usuario, uploadPedidoArquivo }) => {
   return (
     <>
       {usuario.permissoes.includes("backoffice") ? (
-        // Criar componente de upload
         <Form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -31,7 +30,6 @@ const _UploadCotacaoButton = ({ pedido, usuario, uploadPedidoArquivo }) => {
             setIsUploadingCotacao(true);
 
             const file = e.target.elements.upload_cotacao.files[0];
-            console.log(file);
             if (file) {
               const fileName = getFileNameFromPath(
                 e.target.elements.upload_cotacao.value,
@@ -47,27 +45,35 @@ const _UploadCotacaoButton = ({ pedido, usuario, uploadPedidoArquivo }) => {
             setIsUploadingCotacao(false);
           }}
         >
-          <Form.Group controlId="upload_cotacao">
-            <Form.Label>Cotação</Form.Label>
-            <Form.File
-              name="upload_cotacao"
-              custom
-              onChange={onCotacaoFileChange}
-              label={cotacaoUploadLabel}
-            />
-          </Form.Group>
-          <Button
-            variant="primary"
-            type="submit"
-            block
-            size="lg"
-            className="btn-criar-pedido"
-            disabled={isUploadingCotacao || !hasFileChanged}
-          >
-            {isUploadingCotacao
-              ? "Fazendo upload da cotação..."
-              : "Fazer upload da cotação"}
-          </Button>
+          <Form.Row>
+            <Form.Group controlId="upload_cotacao" as={Col}>
+              <Form.Label>Cotação</Form.Label>
+              <Form.File
+                name="upload_cotacao"
+                custom
+                onChange={onCotacaoFileChange}
+                label={cotacaoUploadLabel}
+                data-browse="Selecionar Arquivo..."
+              />
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Col lg={8}></Col>
+            <Col lg={4}>
+              <Button
+                variant="primary"
+                type="submit"
+                size="md"
+                className="btn-criar-pedido"
+                disabled={isUploadingCotacao || !hasFileChanged}
+                block
+              >
+                {isUploadingCotacao
+                  ? "Fazendo upload da cotação..."
+                  : "Fazer upload da cotação"}
+              </Button>
+            </Col>
+          </Form.Row>
         </Form>
       ) : (
         <div>Cotação indisponível</div>

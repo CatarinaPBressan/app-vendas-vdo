@@ -13,6 +13,7 @@ import {
   faSignOutAlt,
   faHouseUser,
   faCloudDownloadAlt,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const initIconLibrary = () => {
@@ -29,5 +30,6 @@ export const initIconLibrary = () => {
     faSignOutAlt,
     faHouseUser,
     faCloudDownloadAlt,
+    faEye,
   );
 };

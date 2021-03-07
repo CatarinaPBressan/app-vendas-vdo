@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
 import { FileDownloadButton } from "./FileDownloadButton";
+import { PedidoLogCard } from "./PedidoLogCard";
 import { UploadCotacaoButton } from "./UploadCotacaoButton";
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import PedidoActionButtons from "./PedidoActionButtons";
@@ -14,7 +15,7 @@ import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
 import SeguroResidencial from "./produtos/SeguroResidencial";
 import SeguroVida from "./produtos/SeguroVida";
 
-import { fetchPedidoProduto } from "../../actions/pedido";
+import { fetchPedido, createPedidoLog } from "../../actions/pedido";
 import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
 import { PRODUTOS, TIPOS_PRODUTO } from "../../constants/produtos";
 
@@ -25,8 +26,9 @@ const PedidoDisplay = ({
   match: {
     params: { pedidoEid },
   },
-  fetchPedidoProduto,
   usuario,
+  fetchPedido,
+  createPedidoLog,
 }) => {
   const [pedido, setPedido] = useState();
   const [ProdutoDisplay, setProdutoDisplay] = useState();
@@ -45,11 +47,11 @@ const PedidoDisplay = ({
       setPedido(_pedido);
       setProdutoDisplay(() => produtoDisplay);
       if (!_pedido.produto) {
-        await fetchPedidoProduto(_pedido, usuario);
+        await fetchPedido(_pedido, usuario);
       }
     };
     loadPedido();
-  }, [pedidos, pedidoEid, fetchPedidoProduto, usuario]);
+  }, [pedidos, pedidoEid, fetchPedido, usuario]);
 
   if (!pedido) {
     return (
@@ -69,6 +71,7 @@ const PedidoDisplay = ({
       </div>
     );
   }
+
   return (
     <div className="pedido-display">
       <Button
@@ -96,6 +99,7 @@ const PedidoDisplay = ({
           </Card.Body>
         </Card>
       )}
+
       <Card>
         <Card.Header>Dados do Vendedor</Card.Header>
         <Card.Body>
@@ -141,6 +145,7 @@ const PedidoDisplay = ({
           </Form.Row>
         </Card.Body>
       </Card>
+
       {pedido.produto ? (
         <>
           <ProdutoDisplay data={pedido.produto} usuario={usuario} />
@@ -183,6 +188,16 @@ const PedidoDisplay = ({
           </Form.Group>
         </Card.Body>
       </Card>
+
+      {pedido.logs && pedido.logs.length ? (
+        <PedidoLogCard
+          pedido={pedido}
+          usuario={usuario}
+          createPedidoLog={createPedidoLog}
+        />
+      ) : (
+        <div>Carregando dados </div>
+      )}
       <Button
         as={Link}
         to="/pedidos"
@@ -204,7 +219,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
-  fetchPedidoProduto,
+  fetchPedido,
+  createPedidoLog,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PedidoDisplay);

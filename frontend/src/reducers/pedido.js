@@ -1,6 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-import { addPedido, setPedidos, clearPedidos } from "../actions/pedido";
+import {
+  addPedido,
+  setPedidos,
+  clearPedidos,
+  appendPedidoLog,
+} from "../actions/pedido";
 
 const initialState = {
   pedidos: {},
@@ -23,5 +28,11 @@ export default createReducer(initialState, {
 
   [clearPedidos]: (state, { payload }) => {
     state.pedidos = {};
+  },
+
+  [appendPedidoLog]: (state, { payload }) => {
+    let { pedido, pedidoLog } = payload;
+
+    state.pedidos[pedido.eid].logs = [...pedido.logs, pedidoLog];
   },
 });
