@@ -16,7 +16,7 @@ const PedidoAPI = {
     return response.data.pedidos;
   },
 
-  fetchPedidoProduto: async (pedido, usuario) => {
+  fetchPedido: async (pedido, usuario) => {
     const response = await v0Api(usuario.token).get(`pedidos/${pedido.eid}/`);
     return response.data.pedido;
   },
@@ -54,6 +54,20 @@ const PedidoAPI = {
     }
 
     return response.data.pedido;
+  },
+
+  createPedidoLog: async (pedido, usuario, mensagem, publico) => {
+    let _publico = publico;
+
+    if (!publico && !usuario.permissoes.includes("backoffice")) {
+      _publico = true;
+    }
+
+    const response = await v0Api(
+      usuario.token,
+    ).post(`pedidos/${pedido.eid}/logs`, { mensagem, publico: _publico });
+
+    return response.data.pedido_log;
   },
 };
 
