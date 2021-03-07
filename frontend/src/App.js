@@ -14,8 +14,10 @@ import ProdutosPage from "./components/ProdutosPage/ProdutosPage";
 import ProdutoPage from "./components/ProdutoPage/ProdutoPage";
 import PedidosPage from "./components/PedidosPage/PedidosPage";
 import AppNavbar from "./components/common/AppNavbar";
-import { NovoPedidoNotifier } from "./components/common/NotificationManager";
+import { Notificacoes } from "./components/common/Notificacoes";
 import PusherManager from "./components/common/PusherManager";
+
+import { NOTIFICACAO_DEFAULT } from "./constants/notifications";
 
 import "./styles/main.scss";
 
@@ -27,7 +29,7 @@ const App = ({
   addPedido,
 }) => {
   const [loading, setLoading] = useState(true);
-  const [notificationPedido, setNotificationPedido] = useState(null);
+  const [dadosNotificacao, setDadosNotificacao] = useState(NOTIFICACAO_DEFAULT);
 
   useEffect(() => {
     if (usuario) {
@@ -65,12 +67,12 @@ const App = ({
       <PusherManager
         usuario={usuario}
         addPedido={addPedido}
-        setNotificationPedido={setNotificationPedido}
+        setDadosNotificacao={setDadosNotificacao}
       />
-      <NovoPedidoNotifier
+      <Notificacoes
         usuario={usuario}
-        notificationPedido={notificationPedido}
-        setNotificationPedido={setNotificationPedido}
+        dadosNotificacao={dadosNotificacao}
+        setDadosNotificacao={setDadosNotificacao}
       />
       <AppNavbar />
       <Container>

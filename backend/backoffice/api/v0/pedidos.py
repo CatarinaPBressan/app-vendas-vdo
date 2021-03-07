@@ -46,7 +46,7 @@ class PedidosAPI(views.MethodView):
         db.session.commit()
 
         pusher_client.trigger(
-            "pedidos", "novo-pedido", {"pedido": pedido_pusher_schema.dump(pedido)}
+            "backoffice", "pedido-novo", {"pedido": pedido_pusher_schema.dump(pedido)}
         )
 
         return {"pedido": pedido_schema.dump(pedido)}, 201
@@ -97,7 +97,14 @@ class PedidoAPI(views.MethodView):
         db.session.add(pedido)
         db.session.commit()
 
-        # TODO: Trigger pusher aqui com o pedido atualizado...
+        pusher_client.trigger(
+            "backoffice", "pedido-atualizado", {"pedido": pedido_schema.dump(pedido)}
+        )
+        pusher_client.trigger(
+            f"vendedor-{pedido.usuario.eid}",
+            "pedido-atualizado",
+            {"pedido": pedido_schema.dump(pedido)},
+        )
 
         return {"pedido": pedido_schema.dump(pedido)}
 
@@ -125,7 +132,15 @@ class PedidoLogAPI(views.MethodView):
 
         pedido_log = pedido.log(parsed["mensagem"], parsed["publico"], usuario)
 
-        # TODO: Trigger pusher aqui com o pedido atualizado...
+        pusher_client.trigger(
+            "backoffice", "pedido-atualizado", {"pedido": pedido_schema.dump(pedido)}
+        )
+        if pedido_log.publico:
+            pusher_client.trigger(
+                f"vendedor-{pedido.usuario.eid}",
+                "pedido-atualizado",
+                {"pedido": pedido_schema.dump(pedido)},
+            )
 
         return {"pedido_log": schemas.pedido_log_schema.dump(pedido_log)}, 201
 
@@ -178,7 +193,8 @@ class UploadArquivoProdutoAPI(ArquivoProdutoAPIMixin):
             if not url_arquivo:
                 flask_restful.abort(409)
 
-        # TODO: Trigger pusher aqui com o pedido atualizado...
+        # TODO: Quando fizer o upload de arquivos pela tela de pedido, fazer trigger
+        # pusher aqui com o pedido atualizado...
 
         return {"pedido": pedido_schema.dump(pedido)}, 201
 

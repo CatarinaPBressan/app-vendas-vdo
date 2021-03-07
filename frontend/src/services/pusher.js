@@ -12,9 +12,11 @@ export const setUpPusher = (usuario) => {
 };
 
 export const PUSHER_CHANNELS = {
-  PEDIDOS: "pedidos",
+  BACKOFFICE: "backoffice",
+  VENDEDOR: "vendedor",
 };
 
 export const PUSHER_EVENTS = {
-  NOVO_PEDIDO: "novo-pedido",
+  PEDIDO_NOVO: "pedido-novo",
+  PEDIDO_ATUALIZADO: "pedido-atualizado",
 };
