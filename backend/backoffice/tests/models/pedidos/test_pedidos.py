@@ -41,9 +41,9 @@ def test_validar_dados_cotacao_tipos_produto(
 ):
     pedido = pedidos.Pedido(produto_slug=produto_slug)
 
-    # Pedidos de seguro devem aceitar a cotação
     assert pedido.validar_dados_cotacao("cotacao") == (
-        produto.tipo_produto == produtos.TipoProduto.SEGURO
+        produto.tipo_produto
+        in [produtos.TIPO_PRODUTO.SEGURO, produtos.TIPO_PRODUTO.CONSORCIO]
     )
 
 
@@ -233,6 +233,24 @@ def test_logs_automaticos_pedido_sem_produto(app):
             "seguro-automotivo",
             status.TRANSICOES.APROVADO_VISTORIA,
             status.ESTADOS.VISTORIA,
+            status.ESTADOS.COMPLETO,
+        ),
+        (
+            "consorcio",
+            status.TRANSICOES.INICIAR,
+            status.ESTADOS.NOVO,
+            status.ESTADOS.COTACAO,
+        ),
+        (
+            "consorcio",
+            status.TRANSICOES.ENVIAR_COTACAO,
+            status.ESTADOS.COTACAO,
+            status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+        ),
+        (
+            "consorcio",
+            status.TRANSICOES.COTACAO_APROVADA,
+            status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
             status.ESTADOS.COMPLETO,
         ),
     ],

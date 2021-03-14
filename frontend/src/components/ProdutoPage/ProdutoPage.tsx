@@ -12,6 +12,7 @@ import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import SeguroVida from "./produtos/SeguroVida";
 import SeguroResidencial from "./produtos/SeguroResidencial";
 import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
+import { Consorcio } from "./produtos/Consorcio";
 
 import { PRODUTOS } from "../../constants/produtos";
 import { PEDIDO_FIELDS, FIELDS } from "../../constants/fields";
@@ -124,6 +125,7 @@ const ProdutoPage = (props: any) => {
     "seguro-vida": SeguroVida,
     "seguro-residencial": SeguroResidencial,
     "seguro-automotivo": SeguroAutomotivo,
+    consorcio: Consorcio,
   }[produto.id];
 
   ///

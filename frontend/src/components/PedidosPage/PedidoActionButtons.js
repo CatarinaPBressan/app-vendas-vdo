@@ -7,7 +7,7 @@ import {
   PEDIDO_STATUS,
   PEDIDO_TRANSICOES,
   MAPA_PRODUTO_TRANSICOES,
-} from "../../constants/pedidos";
+} from "../../constants/pedidoStatus";
 import { updatePedidoStatus } from "../../actions/pedido";
 
 import "./PedidoActionButtons.scss";

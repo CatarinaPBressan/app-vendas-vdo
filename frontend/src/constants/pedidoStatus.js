@@ -126,4 +126,20 @@ export const MAPA_PRODUTO_TRANSICOES = {
       },
     ],
   },
+  [TIPOS_PRODUTO.consorcio]: {
+    [PEDIDO_STATUS.COTACAO]: [
+      {
+        label: PEDIDO_TRANSICOES_LABELS[PEDIDO_TRANSICOES.ENVIAR_COTACAO],
+        variant: "success",
+        transicao: PEDIDO_TRANSICOES.ENVIAR_COTACAO,
+      },
+    ],
+    [PEDIDO_STATUS.AGUARDANDO_RESPOSTA_COTACAO]: [
+      {
+        label: PEDIDO_TRANSICOES_LABELS[PEDIDO_TRANSICOES.COTACAO_APROVADA],
+        variant: "success",
+        transicao: PEDIDO_TRANSICOES.COTACAO_APROVADA,
+      },
+    ],
+  },
 };

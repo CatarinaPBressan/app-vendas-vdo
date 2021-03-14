@@ -2,7 +2,7 @@ import React from "react";
 
 import { connect } from "react-redux";
 
-import ProdutoCard from "./ProdutoCard";
+import { ProdutoCard } from "./ProdutoCard";
 
 import { PRODUTOS } from "../../constants/produtos";
 
