@@ -9,14 +9,16 @@ import { Link } from "react-router-dom";
 import { FileDownloadButton } from "./FileDownloadButton";
 import { PedidoLogCard } from "./PedidoLogCard";
 import { UploadCotacaoButton } from "./UploadCotacaoButton";
+
 import CartaoDeCredito from "./produtos/CartaoDeCredito";
 import PedidoActionButtons from "./PedidoActionButtons";
 import SeguroAutomotivo from "./produtos/SeguroAutomotivo";
 import SeguroResidencial from "./produtos/SeguroResidencial";
 import SeguroVida from "./produtos/SeguroVida";
+import { Consorcio } from "./produtos/Consorcio";
 
 import { fetchPedido, createPedidoLog } from "../../actions/pedido";
-import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
+import { PEDIDO_STATUS_LABELS } from "../../constants/pedidoStatus";
 import { PRODUTOS, TIPOS_PRODUTO } from "../../constants/produtos";
 
 import "./PedidoDisplay.scss";
@@ -43,6 +45,7 @@ const PedidoDisplay = ({
         "seguro-vida": SeguroVida,
         "seguro-residencial": SeguroResidencial,
         "seguro-automotivo": SeguroAutomotivo,
+        consorcio: Consorcio,
       }[_pedido.produto_slug];
       setPedido(_pedido);
       setProdutoDisplay(() => produtoDisplay);
@@ -149,8 +152,9 @@ const PedidoDisplay = ({
       {pedido.produto ? (
         <>
           <ProdutoDisplay data={pedido.produto} usuario={usuario} />
-          {PRODUTOS[pedido.produto_slug].tipo_produto ===
-            TIPOS_PRODUTO.seguro && (
+          {[TIPOS_PRODUTO.seguro, TIPOS_PRODUTO.consorcio].includes(
+            PRODUTOS[pedido.produto_slug].tipo_produto,
+          ) && (
             <Card>
               <Card.Header>Cotação</Card.Header>
               <Card.Body>

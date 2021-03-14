@@ -3,7 +3,7 @@ import enum
 import dataclasses
 
 
-class TipoProduto(str, enum.Enum):
+class TIPO_PRODUTO(str, enum.Enum):
     """
     Enum que controla o tipo do produto.
 
@@ -12,23 +12,25 @@ class TipoProduto(str, enum.Enum):
 
     CARTAO_DE_CREDITO = "cartao-de-credito"
     SEGURO = "seguro"
+    CONSORCIO = "consorcio"
 
 
 @dataclasses.dataclass(frozen=True)
 class Produto:
-    tipo_produto: TipoProduto
+    tipo_produto: TIPO_PRODUTO
     nome: str
 
 
 PRODUTOS = {
     "cartao-de-credito": Produto(
-        nome="Cartão de Crédito", tipo_produto=TipoProduto.CARTAO_DE_CREDITO
+        nome="Cartão de Crédito", tipo_produto=TIPO_PRODUTO.CARTAO_DE_CREDITO
     ),
-    "seguro-vida": Produto(nome="Seguro de Vida", tipo_produto=TipoProduto.SEGURO),
+    "seguro-vida": Produto(nome="Seguro de Vida", tipo_produto=TIPO_PRODUTO.SEGURO),
     "seguro-residencial": Produto(
-        nome="Seguro Residencial", tipo_produto=TipoProduto.SEGURO
+        nome="Seguro Residencial", tipo_produto=TIPO_PRODUTO.SEGURO
     ),
     "seguro-automotivo": Produto(
-        nome="Seguro Automotivo", tipo_produto=TipoProduto.SEGURO
+        nome="Seguro Automotivo", tipo_produto=TIPO_PRODUTO.SEGURO
     ),
+    "consorcio": Produto(nome="Consórcio", tipo_produto=TIPO_PRODUTO.CONSORCIO),
 }

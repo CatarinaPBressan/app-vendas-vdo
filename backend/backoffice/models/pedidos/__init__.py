@@ -73,7 +73,8 @@ class Pedido(db.Model, BaseTable, transitions.Machine):
     def validar_dados_cotacao(self, produto_key: str) -> bool:
         produto = produtos.PRODUTOS[self.produto_slug]
         return (
-            produto.tipo_produto == produtos.TipoProduto.SEGURO
+            produto.tipo_produto
+            in [produtos.TIPO_PRODUTO.SEGURO, produtos.TIPO_PRODUTO.CONSORCIO]
             and produto_key == "cotacao"
         )
 

@@ -4,7 +4,7 @@ import { Form, Card, Col } from "react-bootstrap";
 
 import { FileDownloadButton } from "../FileDownloadButton";
 
-const SeguroResidencial = (props) => {
+const SeguroResidencial = ({ data, usuario }) => {
   return (
     <>
       <Card>
@@ -16,13 +16,13 @@ const SeguroResidencial = (props) => {
               <Form.Check
                 type="radio"
                 label="Novo"
-                defaultChecked={props.data.novo_ou_renovacao === "novo"}
+                defaultChecked={data.novo_ou_renovacao === "novo"}
                 disabled
               />
               <Form.Check
                 type="radio"
                 label="Renovação"
-                defaultChecked={props.data.novo_ou_renovacao === "renovacao"}
+                defaultChecked={data.novo_ou_renovacao === "renovacao"}
                 disabled
               />
             </Form.Group>
@@ -32,8 +32,8 @@ const SeguroResidencial = (props) => {
               <Form.Label>Apólice atual</Form.Label>
               <br />
               <FileDownloadButton
-                usuario={props.usuario}
-                fileData={props.data.apolice_atual}
+                usuario={usuario}
+                fileData={data.apolice_atual}
               />
             </Form.Group>
           </Form.Row>
@@ -45,49 +45,33 @@ const SeguroResidencial = (props) => {
           <Form.Row>
             <Form.Group controlId="rg" as={Col} lg={4}>
               <Form.Label>RG</Form.Label>
-              <Form.Control readOnly plaintext value={props.data.rg} />
+              <Form.Control readOnly plaintext value={data.rg} />
             </Form.Group>
             <Form.Group controlId="rg_expedidor" as={Col} lg={4}>
               <Form.Label>Órgão Expedidor</Form.Label>
-              <Form.Control
-                readOnly
-                plaintext
-                value={props.data.rg_expedidor}
-              />
+              <Form.Control readOnly plaintext value={data.rg_expedidor} />
             </Form.Group>
             <Form.Group controlId="rg_data_expedicao" as={Col} lg={4}>
               <Form.Label>Data Expedição</Form.Label>
-              <Form.Control
-                readOnly
-                plaintext
-                value={props.data.rg_data_expedicao}
-              />
+              <Form.Control readOnly plaintext value={data.rg_data_expedicao} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="estado_civil" as={Col} lg={2}>
               <Form.Label>Estado Civil</Form.Label>
-              <Form.Control
-                readOnly
-                plaintext
-                value={props.data.estado_civil}
-              />
+              <Form.Control readOnly plaintext value={data.estado_civil} />
             </Form.Group>
             <Form.Group controlId="profissao" as={Col} lg={4}>
               <Form.Label>Profissão</Form.Label>
-              <Form.Control readOnly plaintext value={props.data.profissao} />
+              <Form.Control readOnly plaintext value={data.profissao} />
             </Form.Group>
-            <Form.Group controlId="renda" as={Col} lg={3}>
+            <Form.Group controlId="renda_mensal" as={Col} lg={3}>
               <Form.Label>Renda (R$)</Form.Label>
-              <Form.Control readOnly plaintext value={props.data.renda} />
+              <Form.Control readOnly plaintext value={data.renda_mensal} />
             </Form.Group>
             <Form.Group controlId="valor_em_risco" as={Col} lg={3}>
               <Form.Label>Valor em risco (R$)</Form.Label>
-              <Form.Control
-                readOnly
-                plaintext
-                value={props.data.valor_em_risco}
-              />
+              <Form.Control readOnly plaintext value={data.valor_em_risco} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -96,9 +80,7 @@ const SeguroResidencial = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={
-                  props.data.exposta_politicamente === "sim" ? "Sim" : "Não"
-                }
+                value={data.exposta_politicamente === "sim" ? "Sim" : "Não"}
               />
             </Form.Group>
           </Form.Row>
@@ -110,35 +92,31 @@ const SeguroResidencial = (props) => {
           <Form.Row>
             <Form.Group controlId="cep" as={Col} lg={4}>
               <Form.Label>CEP</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.cep} />
+              <Form.Control plaintext readOnly value={data.cep} />
             </Form.Group>
             <Form.Group controlId="uf" as={Col} lg={4}>
               <Form.Label>UF</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.uf} />
+              <Form.Control plaintext readOnly value={data.uf} />
             </Form.Group>
             <Form.Group controlId="cidade" as={Col} lg={4}>
               <Form.Label>Cidade</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.cidade} />
+              <Form.Control plaintext readOnly value={data.cidade} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="logradouro" as={Col}>
               <Form.Label>Logradouro</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.logradouro} />
+              <Form.Control plaintext readOnly value={data.logradouro} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="endereco_numero" as={Col} lg={3}>
               <Form.Label>Número</Form.Label>
-              <Form.Control
-                plaintext
-                readOnly
-                value={props.data.endereco_numero}
-              />
+              <Form.Control plaintext readOnly value={data.endereco_numero} />
             </Form.Group>
             <Form.Group controlId="complemento" as={Col} lg={9}>
               <Form.Label>Complemento</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.complemento} />
+              <Form.Control plaintext readOnly value={data.complemento} />
             </Form.Group>
           </Form.Row>
         </Card.Body>
@@ -152,9 +130,7 @@ const SeguroResidencial = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={
-                  props.data.atividade_profissional === "sim" ? "Sim" : "Não"
-                }
+                value={data.atividade_profissional === "sim" ? "Sim" : "Não"}
               />
             </Form.Group>
             <Form.Group controlId="construcao" as={Col} lg={6}>
@@ -164,7 +140,7 @@ const SeguroResidencial = (props) => {
                 readOnly
                 value={
                   { alvenaria: "Alvenaria", madeira: "Madeira" }[
-                    props.data.construcao
+                    data.construcao
                   ]
                 }
               />
@@ -181,7 +157,7 @@ const SeguroResidencial = (props) => {
                     predio: "Prédio",
                     conteudo: "Conteúdo",
                     predio_conteudo: "Prédio e Conteúdo",
-                  }[props.data.objeto_segurado]
+                  }[data.objeto_segurado]
                 }
               />
             </Form.Group>
@@ -196,7 +172,7 @@ const SeguroResidencial = (props) => {
                     casa: "Casa",
                     casa_condominio_fechado: "Casa em condomínio fechado",
                     apartamento: "Apartamento",
-                  }[props.data.tipo]
+                  }[data.tipo]
                 }
               />
             </Form.Group>
@@ -210,7 +186,7 @@ const SeguroResidencial = (props) => {
                     habitual: "Habitual",
                     veraneio: "Veraneio",
                     desocupado: "Desocupado",
-                  }[props.data.uso]
+                  }[data.uso]
                 }
               />
             </Form.Group>

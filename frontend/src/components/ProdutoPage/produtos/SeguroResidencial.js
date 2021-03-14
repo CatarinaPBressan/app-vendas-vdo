@@ -99,13 +99,13 @@ const SeguroResidencial = () => {
             <Form.Label>Profissão</Form.Label>
             <Form.Control type="text" name="profissao" required />
           </Form.Group>
-          <Form.Group controlId="renda">
+          <Form.Group controlId="renda_mensal">
             <Form.Label>Renda</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="renda" required />
+              <Form.Control type="text" name="renda_mensal" required />
             </InputGroup>
           </Form.Group>
           <Form.Group controlId="valor_em_risco">

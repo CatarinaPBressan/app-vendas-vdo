@@ -583,6 +583,24 @@ class TestPedidoAPIPatch(APIV0TestClient):
                 status.ESTADOS.VISTORIA,
                 status.ESTADOS.COMPLETO,
             ),
+            (
+                "consorcio",
+                status.TRANSICOES.INICIAR,
+                status.ESTADOS.NOVO,
+                status.ESTADOS.COTACAO,
+            ),
+            (
+                "consorcio",
+                status.TRANSICOES.ENVIAR_COTACAO,
+                status.ESTADOS.COTACAO,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+            ),
+            (
+                "consorcio",
+                status.TRANSICOES.COTACAO_APROVADA,
+                status.ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
+                status.ESTADOS.COMPLETO,
+            ),
         ],
     )
     def test_patch_pedidos_transicoes(
@@ -688,7 +706,7 @@ class TestPedidoAPIPatch(APIV0TestClient):
 
         assert response.status_code == 403
 
-    def test_patch_pedidos_transicao_errada(self, client):
+    def test_patch_pedidos_transicao_existente_errada(self, client):
         pedido = _create_pedido()
 
         backoffice = Usuario(permissoes=[Permissao("backoffice")])

@@ -15,7 +15,7 @@ class ESTADOS(str, enum.Enum):
     ANALISE_CREDITO = "analise_credito"
     AGUARDANDO_ANALISE = "aguardando_analise"
 
-    # Seguro
+    # Seguro/Consorcio
     COTACAO = "cotacao"
     AGUARDANDO_RESPOSTA_COTACAO = "aguardando_resposta_cliente"
     EMITIR_PROPOSTA = "emitir_proposta"
@@ -32,7 +32,7 @@ class TRANSICOES(str, enum.Enum):
     AGUARDAR_ANALISE = "aguardar_analise"
     REPROVAR_ANALISE = "reprovar"
 
-    # Seguro
+    # Seguro/Consorcio
     ENVIAR_COTACAO = "enviar_cotacao"
     COTACAO_APROVADA = "cotacao_aprovada"
     PROPOSTA_EMITIDA = "proposta_emitida"
@@ -46,7 +46,7 @@ ESTADOS_LABELS: typing.Dict[str, str] = {
     # Cartão de Crédito
     ESTADOS.ANALISE_CREDITO.value: "Análise de Crédito",
     ESTADOS.AGUARDANDO_ANALISE.value: "Aguardando Análise",
-    # Seguro
+    # Seguro/Consorcio
     ESTADOS.COTACAO.value: "Em Cotação",
     ESTADOS.AGUARDANDO_RESPOSTA_COTACAO.value: "Aguardando Resposta do Cliente",
     ESTADOS.EMITIR_PROPOSTA.value: "Emitir Proposta",
@@ -60,16 +60,20 @@ class Transicao(typing.TypedDict):
     dest: ESTADOS
 
 
-mapa_estados: typing.Dict[produtos.TipoProduto, typing.List[ESTADOS]] = {
-    produtos.TipoProduto.CARTAO_DE_CREDITO: [
+mapa_estados: typing.Dict[produtos.TIPO_PRODUTO, typing.List[ESTADOS]] = {
+    produtos.TIPO_PRODUTO.CARTAO_DE_CREDITO: [
         ESTADOS.ANALISE_CREDITO,
         ESTADOS.AGUARDANDO_ANALISE,
     ],
-    produtos.TipoProduto.SEGURO: [
+    produtos.TIPO_PRODUTO.SEGURO: [
         ESTADOS.COTACAO,
         ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
         ESTADOS.EMITIR_PROPOSTA,
         ESTADOS.VISTORIA,
+    ],
+    produtos.TIPO_PRODUTO.CONSORCIO: [
+        ESTADOS.COTACAO,
+        ESTADOS.AGUARDANDO_RESPOSTA_COTACAO,
     ],
 }
 
@@ -93,8 +97,8 @@ def get_estados_produto(produto: produtos.Produto) -> typing.List[ESTADOS]:
     return estados
 
 
-mapa_transicoes: typing.Dict[produtos.TipoProduto, typing.List[Transicao]] = {
-    produtos.TipoProduto.CARTAO_DE_CREDITO: [
+mapa_transicoes: typing.Dict[produtos.TIPO_PRODUTO, typing.List[Transicao]] = {
+    produtos.TIPO_PRODUTO.CARTAO_DE_CREDITO: [
         {
             "source": ESTADOS.NOVO.value,
             "trigger": TRANSICOES.INICIAR.value,
@@ -128,7 +132,7 @@ mapa_transicoes: typing.Dict[produtos.TipoProduto, typing.List[Transicao]] = {
             "dest": ESTADOS.CANCELADO.value,
         },
     ],
-    produtos.TipoProduto.SEGURO: [
+    produtos.TIPO_PRODUTO.SEGURO: [
         {
             "source": ESTADOS.NOVO.value,
             "trigger": TRANSICOES.INICIAR.value,
@@ -152,6 +156,23 @@ mapa_transicoes: typing.Dict[produtos.TipoProduto, typing.List[Transicao]] = {
         {
             "source": ESTADOS.VISTORIA.value,
             "trigger": TRANSICOES.APROVADO_VISTORIA.value,
+            "dest": ESTADOS.COMPLETO.value,
+        },
+    ],
+    produtos.TIPO_PRODUTO.CONSORCIO: [
+        {
+            "source": ESTADOS.NOVO.value,
+            "trigger": TRANSICOES.INICIAR.value,
+            "dest": ESTADOS.COTACAO.value,
+        },
+        {
+            "source": ESTADOS.COTACAO.value,
+            "trigger": TRANSICOES.ENVIAR_COTACAO.value,
+            "dest": ESTADOS.AGUARDANDO_RESPOSTA_COTACAO.value,
+        },
+        {
+            "source": ESTADOS.AGUARDANDO_RESPOSTA_COTACAO.value,
+            "trigger": TRANSICOES.COTACAO_APROVADA.value,
             "dest": ESTADOS.COMPLETO.value,
         },
     ],

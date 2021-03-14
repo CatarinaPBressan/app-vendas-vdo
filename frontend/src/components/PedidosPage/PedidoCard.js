@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { PRODUTOS } from "../../constants/produtos";
-import { PEDIDO_STATUS_LABELS } from "../../constants/pedidos";
+import { PEDIDO_STATUS_LABELS } from "../../constants/pedidoStatus";
 
 import "./PedidoCard.scss";
 
