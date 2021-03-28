@@ -1,4 +1,10 @@
 .pedido-display {
+  height: 90vh;
+  width: 100%;
+  overflow-y: auto;
+
+
+
   .back-button {
     margin-top: 10px;
     &:last-child {
@@ -23,5 +29,10 @@
     .status-container {
       margin-bottom: 10px;
     }
+  }
+
+  .input-group > .form-control[readonly] {
+    // Esse estilo altera o BG dos input groups read only para melhorar a legibilidade.
+    background-color: inherit;
   }
 }

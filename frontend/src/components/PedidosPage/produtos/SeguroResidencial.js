@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Form, Card, Col } from "react-bootstrap";
+import { Form, Card, Col, InputGroup } from "react-bootstrap";
 
 import { FileDownloadButton } from "../FileDownloadButton";
 
@@ -66,12 +66,22 @@ const SeguroResidencial = ({ data, usuario }) => {
               <Form.Control readOnly plaintext value={data.profissao} />
             </Form.Group>
             <Form.Group controlId="renda_mensal" as={Col} lg={3}>
-              <Form.Label>Renda (R$)</Form.Label>
-              <Form.Control readOnly plaintext value={data.renda_mensal} />
+              <Form.Label>Renda</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.renda_mensal} />
+              </InputGroup>
             </Form.Group>
             <Form.Group controlId="valor_em_risco" as={Col} lg={3}>
-              <Form.Label>Valor em risco (R$)</Form.Label>
-              <Form.Control readOnly plaintext value={data.valor_em_risco} />
+              <Form.Label>Valor em Risco</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.valor_em_risco} />
+              </InputGroup>
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -161,7 +171,6 @@ const SeguroResidencial = ({ data, usuario }) => {
                 }
               />
             </Form.Group>
-
             <Form.Group controlId="tipo" as={Col} lg={4}>
               <Form.Label>Tipo</Form.Label>
               <Form.Control
@@ -189,6 +198,98 @@ const SeguroResidencial = ({ data, usuario }) => {
                   }[data.uso]
                 }
               />
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="alarme" as={Col} lg={6}>
+              <Form.Label>Alarme?</Form.Label>
+              <Form.Control
+                plaintext
+                readOnly
+                value={data.alarme === "sim" ? "Sim" : "Não"}
+              />
+            </Form.Group>
+            <Form.Group controlId="vigilancia_24_horas" as={Col} lg={6}>
+              <Form.Label>Vigilãncia 24 horas?</Form.Label>
+              <Form.Control
+                plaintext
+                readOnly
+                value={data.vigilancia_24_horas === "sim" ? "Sim" : "Não"}
+              />
+            </Form.Group>
+          </Form.Row>
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header>Dados do Serviço</Card.Header>
+        <Card.Body>
+          <Form.Row>
+            <Form.Group controlId="plano_servico" as={Col} lg={12}>
+              <Form.Label>Pacote</Form.Label>
+              <Form.Control
+                plaintext
+                readOnly
+                value={
+                  {
+                    plano_1: "1 - Plano",
+                    plano_2: "2 - Plano",
+                    plano_3: "3 - Plano",
+                    plano_4: "4 - Plano",
+                    personalizado: "Personalizado",
+                  }[data.plano_servico]
+                }
+              />
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="plano_incendio" as={Col} lg={6}>
+              <Form.Label>Incêndio/Queda de Raio/Explosão</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.plano_incendio} />
+              </InputGroup>
+            </Form.Group>
+            <Form.Group controlId="plano_vendaval" as={Col} lg={6}>
+              <Form.Label>Vendaval/Furacão/Granizo/Fumaça</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.plano_vendaval} />
+              </InputGroup>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="plano_roubo" as={Col} lg={6}>
+              <Form.Label>Roubo/Furto/Extorsão de Bens</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.plano_roubo} />
+              </InputGroup>
+            </Form.Group>
+            <Form.Group controlId="plano_danos_eletricos" as={Col} lg={6}>
+              <Form.Label>Danos Elétricos</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.plano_danos_eletricos} />
+              </InputGroup>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="plano_rc_familiar" as={Col} lg={12}>
+              <Form.Label>RC Familiar</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control readOnly value={data.plano_rc_familiar} />
+              </InputGroup>
             </Form.Group>
           </Form.Row>
         </Card.Body>
