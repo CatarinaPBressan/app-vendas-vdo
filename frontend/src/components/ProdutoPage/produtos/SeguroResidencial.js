@@ -17,6 +17,127 @@ const SeguroResidencial = () => {
     setApoliceAtualLabel(getFileNameFromPath(e.target.value));
   };
 
+  const pacotes = {
+    plano_1: {
+      planoIncendio: (valorImovel) => valorImovel,
+      planoDanosEletricos: 5000,
+      planoRcFamiliar: 20000,
+    },
+    plano_2: {
+      planoIncendio: (valorImovel) => valorImovel,
+      planoVendaval: (valorImovel) => valorImovel * 0.05,
+      planoRoubo: 5000,
+      planoDanosEletricos: 5000,
+      planoRcFamiliar: 10000,
+    },
+    plano_3: {
+      planoIncendio: (valorImovel) => valorImovel,
+      planoVendaval: (valorImovel) => valorImovel * 0.1,
+      planoRoubo: 10000,
+      planoDanosEletricos: 10000,
+      planoRcFamiliar: 20000,
+    },
+    plano_4: {
+      planoIncendio: (valorImovel) => valorImovel,
+      planoVendaval: (valorImovel) => valorImovel * 0.07,
+      planoRoubo: 8000,
+      planoDanosEletricos: 8000,
+      planoRcFamiliar: 10000,
+    },
+  };
+
+  const [pacote, setPacote] = useState("");
+  const [isPacotePersonalizado, setIsPacotePersonalizado] = useState(false);
+  const [planoIncendio, setPlanoIncendio] = useState("");
+  const [planoVendaval, setPlanoVendaval] = useState("");
+  const [planoRoubo, setPlanoRoubo] = useState("");
+  const [planoDanosEletricos, setPlanoDanosEletricos] = useState("");
+  const [planoRcFamiliar, setPlanoRcFamiliar] = useState("");
+  const onPlanoValorChange = (setStateFn) => {
+    return (e) => {
+      const valor = e.target.value;
+      if (valor === "" || valor === undefined || valor === null) {
+        setStateFn("");
+        return;
+      }
+
+      const ultimoDigito = valor[valor.length - 1];
+      if (
+        Number.isInteger(parseInt(ultimoDigito)) ||
+        [".", ","].includes(ultimoDigito)
+      ) {
+        setStateFn(valor);
+      }
+    };
+  };
+
+  const atualizarDadosPacote = (nomePacote, valorImovel) => {
+    if (!nomePacote || nomePacote === "personalizado") {
+      return;
+    }
+
+    const dadosPacote = pacotes[nomePacote];
+    [
+      [setPlanoIncendio, "planoIncendio"],
+      [setPlanoVendaval, "planoVendaval"],
+      [setPlanoRoubo, "planoRoubo"],
+      [setPlanoDanosEletricos, "planoDanosEletricos"],
+      [setPlanoRcFamiliar, "planoRcFamiliar"],
+    ].forEach(([setStateFn, pacoteAttr]) => {
+      let valorPacote = dadosPacote[pacoteAttr] || "";
+
+      if (valorPacote instanceof Function) {
+        valorPacote = valorPacote(valorImovel) || 0;
+      }
+      const x = new Intl.NumberFormat("pt-br", {
+        style: "currency",
+        currency: "BRL",
+      })
+        .format(valorPacote)
+        // Espaço especial
+        .replace("R$ ", "");
+      setStateFn(x);
+    });
+  };
+
+  const [valorImovel, setValorImovel] = useState(0);
+  const [valorImovelDisplay, setValorImovelDisplay] = useState("");
+  const onValorImovelChange = (e) => {
+    const valor = e.target.value;
+    if (valor === "" || valor === undefined || valor === null) {
+      setValorImovel(0);
+      setValorImovelDisplay("");
+      atualizarDadosPacote(pacote, 0);
+      return;
+    }
+    const ultimoDigito = valor[valor.length - 1];
+    if (Number.isInteger(parseInt(ultimoDigito))) {
+      const [parteInt, parteDec] = valor.replaceAll(".", "").split(",");
+      let valorFinal = parseInt(parteInt);
+      if (parteDec) {
+        valorFinal += parseFloat(`0.${parteDec}`);
+      }
+      setValorImovel(valorFinal);
+      atualizarDadosPacote(pacote, valorFinal);
+    }
+    setValorImovelDisplay(valor);
+  };
+
+  const onPacoteChange = (e) => {
+    const nomePacote = e.target.value;
+    setPacote(nomePacote);
+
+    if (nomePacote === "personalizado") {
+      setIsPacotePersonalizado(true);
+      return;
+    }
+    setIsPacotePersonalizado(false);
+    if (!nomePacote) {
+      return;
+    }
+    atualizarDadosPacote(nomePacote, valorImovel);
+  };
+
   return (
     <>
       <Card>
@@ -100,7 +221,7 @@ const SeguroResidencial = () => {
             <Form.Control type="text" name="profissao" required />
           </Form.Group>
           <Form.Group controlId="renda_mensal">
-            <Form.Label>Renda</Form.Label>
+            <Form.Label>Renda Mensal</Form.Label>
             <InputGroup>
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
@@ -114,7 +235,13 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="valor_em_risco" required />
+              <Form.Control
+                type="text"
+                name="valor_em_risco"
+                required
+                value={valorImovelDisplay}
+                onChange={onValorImovelChange}
+              />
             </InputGroup>
           </Form.Group>
           <Form.Group controlId="exposta_politicamente">
@@ -226,6 +353,125 @@ const SeguroResidencial = () => {
               <option value="veraneio">Veraneio</option>
               <option value="desocupado">Desocupado</option>
             </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="alarme">
+            <Form.Label>Alarme?</Form.Label>
+            <Form.Control as="select" name="alarme" required>
+              <option value="">(Selecione)</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="vigilancia_24_horas">
+            <Form.Label>Vigilãncia 24 horas?</Form.Label>
+            <Form.Control as="select" name="vigilancia_24_horas" required>
+              <option value="">(Selecione)</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </Form.Control>
+          </Form.Group>
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header>Dados do Serviço</Card.Header>
+        <Card.Body>
+          <Form.Group controlId="plano_servico">
+            <Form.Label>Pacote de Serviço</Form.Label>
+            <Form.Control
+              as="select"
+              name="plano_servico"
+              required
+              value={pacote}
+              onChange={onPacoteChange}
+            >
+              <option value="">(Selecione)</option>
+              <option value="plano_1">1 - Plano</option>
+              <option value="plano_2">2 - Plano</option>
+              <option value="plano_3">3 - Plano</option>
+              <option value="plano_4">4 - Plano</option>
+              <option value="personalizado">Personalizado</option>
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="plano_incendio">
+            <Form.Label>Incêndio/Queda de Raio/Explosão</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="plano_incendio"
+                required
+                disabled={!isPacotePersonalizado}
+                onChange={onPlanoValorChange(setPlanoIncendio)}
+                value={planoIncendio}
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="plano_vendaval">
+            <Form.Label>Vendaval/Furacão/Granizo/Fumaça</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="plano_vendaval"
+                required
+                disabled={!isPacotePersonalizado}
+                onChange={onPlanoValorChange(setPlanoVendaval)}
+                value={planoVendaval}
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="plano_roubo">
+            <Form.Label>Roubo/Furto/Extorsão de Bens</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="plano_roubo"
+                required
+                disabled={!isPacotePersonalizado}
+                onChange={onPlanoValorChange(setPlanoRoubo)}
+                value={planoRoubo}
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="plano_danos_eletricos">
+            <Form.Label>Danos Elétricos</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="plano_danos_eletricos"
+                required
+                disabled={!isPacotePersonalizado}
+                onChange={onPlanoValorChange(setPlanoDanosEletricos)}
+                value={planoDanosEletricos}
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="plano_rc_familiar">
+            <Form.Label>RC Familiar</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                type="text"
+                name="plano_rc_familiar"
+                required
+                disabled={!isPacotePersonalizado}
+                onChange={onPlanoValorChange(setPlanoRcFamiliar)}
+                value={planoRcFamiliar}
+              />
+            </InputGroup>
           </Form.Group>
         </Card.Body>
       </Card>

@@ -6,13 +6,15 @@ import { Row, Col } from "react-bootstrap";
 import PedidosNav from "./PedidosNav";
 import PedidoDisplay from "./PedidoDisplay";
 
+import "./DesktopPedidosPage.scss";
+
 const DesktopPedidosPage = (props) => {
   return (
     <Row>
-      <Col md={4}>
+      <Col md={4} id="pedido-nav-container">
         <PedidosNav match={props.match} pedidos={props.pedidos} />
       </Col>
-      <Col>
+      <Col md={8} id="pedido-display-container">
         <Switch>
           <Route path={`${props.match.path}`} exact>
             <div>Selecione um pedido</div>
