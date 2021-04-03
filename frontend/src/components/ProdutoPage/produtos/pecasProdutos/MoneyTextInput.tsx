@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from "react";
+import React from "react";
 import { Form } from "react-bootstrap";
 
 import NumberFormat from "react-number-format";
