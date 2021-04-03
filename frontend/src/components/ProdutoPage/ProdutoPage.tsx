@@ -17,7 +17,7 @@ import { Consorcio } from "./produtos/Consorcio";
 import { PRODUTOS } from "../../constants/produtos";
 import { PEDIDO_FIELDS, FIELDS } from "../../constants/fields";
 import { createPedido } from "../../actions/pedido";
-import { getFileNameFromPath } from "../../utils/utils";
+import { getFileNameFromPath } from "../../utils/fileUtils";
 import PedidoAPI from "../../api/pedidoAPI";
 
 import "./ProdutoPage.scss";
