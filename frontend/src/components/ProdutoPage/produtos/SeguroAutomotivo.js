@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Card, Form } from "react-bootstrap";
+import { Card, Form, InputGroup } from "react-bootstrap";
 import InputMask from "react-input-mask";
 
 import { FIELDS, UFS_BRASIL } from "../../../constants/fields";
@@ -161,6 +161,75 @@ const SeguroAutomotivo = ({ nomeCompleto, cpf }) => {
   const [chassiLabel, setChassiLabel] = useState("Documento do Veículo");
   const onChassiFileChange = (e) => {
     setChassiLabel(getFileNameFromPath(e.target.value));
+  };
+  ///
+  ///
+  const pacotes = {
+    auto_padrao: {
+      planoFranquia: "reduzida",
+      planoColisao: "100_fipe",
+      planoDanosMateriais: "100000",
+      planoDanosCorporais: "150000",
+      planoDanosMorais: "10000",
+      planoCarroReserva: "basico_7_dias",
+      planoAssistencia: "200km",
+      planoVidros: "nao",
+      planoFarolRetrovisor: "nao",
+    },
+    moto_padrao: {
+      planoFranquia: "reduzida",
+      planoColisao: "100_fipe",
+      planoDanosMateriais: "20000",
+      planoDanosCorporais: "20000",
+      planoDanosMorais: "10000",
+      planoCarroReserva: "nao_contratar",
+      planoAssistencia: "200km",
+      planoVidros: "nao",
+      planoFarolRetrovisor: "nao",
+    },
+  };
+
+  const [pacote, setPacote] = useState("");
+  const [isPacotePersonalizado, setIsPacotePersonalizado] = useState(false);
+  const [planoFranquia, setPlanoFranquia] = useState("");
+  const [planoColisao, setPlanoColisao] = useState("");
+  const [planoDanosMateriais, setPlanoDanosMateriais] = useState("");
+  const [planoDanosCorporais, setPlanoDanosCorporais] = useState("");
+  const [planoDanosMorais, setPlanoDanosMorais] = useState("");
+  const [planoCarroReserva, setPlanoCarroReserva] = useState("");
+  const [planoAssistencia, setPlanoAssistencia] = useState("");
+  const [planoVidros, setPlanoVidros] = useState("");
+  const [planoFarolRetrovisor, setPlanoFarolRetrovisor] = useState("");
+
+  const onPlanoItemChange = (setStateFn) => {
+    return (e) => {
+      setStateFn(e.target.value);
+    };
+  };
+
+  const onPacoteChange = (e) => {
+    const nomePacote = e.target.value;
+    setPacote(nomePacote);
+
+    if (nomePacote === "personalizado") {
+      setIsPacotePersonalizado(true);
+      return;
+    }
+
+    setIsPacotePersonalizado(false);
+    [
+      [setPlanoFranquia, "planoFranquia"],
+      [setPlanoColisao, "planoColisao"],
+      [setPlanoDanosMateriais, "planoDanosMateriais"],
+      [setPlanoDanosCorporais, "planoDanosCorporais"],
+      [setPlanoDanosMorais, "planoDanosMorais"],
+      [setPlanoCarroReserva, "planoCarroReserva"],
+      [setPlanoAssistencia, "planoAssistencia"],
+      [setPlanoVidros, "planoVidros"],
+      [setPlanoFarolRetrovisor, "planoFarolRetrovisor"],
+    ].forEach(([setStateFn, pacoteAttr]) => {
+      setStateFn(pacotes[nomePacote][pacoteAttr]);
+    });
   };
   ///
   return (
@@ -938,6 +1007,217 @@ const SeguroAutomotivo = ({ nomeCompleto, cpf }) => {
               <option value="chave_codificada">Chave Codificada</option>
               <option value="sacar">Sacar</option>
               <option value="outro">Outro</option>
+            </Form.Control>
+          </Form.Group>
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header>Dados do serviço</Card.Header>
+        <Card.Body>
+          <Form.Group controlId="pacote">
+            <Form.Label>Pacote de Serviço</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote"
+              required
+              onChange={onPacoteChange}
+              value={pacote}
+            >
+              <option value="">(Selecione)</option>
+              <option value="auto_padrao">Auto - Cotação Padrão</option>
+              <option value="moto_padrao">Moto - Cotação Padrão</option>
+              <option value="personalizado">Personalizado</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="pacote_franquia">
+            <Form.Label>Veículo é financiado?</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote_franquia"
+              required
+              onChange={onPlanoItemChange(setPlanoFranquia)}
+              value={planoFranquia}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="reduzida">Reduzida</option>
+              <option value="obrigatoria">Obrigatória</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="pacote_colisao">
+            <Form.Label>Colisão/Incêndio/Roubo</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote_colisao"
+              required
+              onChange={onPlanoItemChange(setPlanoColisao)}
+              value={planoColisao}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="nao_contratada">Não contradada</option>
+              <option value="100_fipe">R$ (100% FIPE)</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="pacote_danos_materiais">
+            <Form.Label>Danos Materiais</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                as="select"
+                name="pacote_danos_materiais"
+                required
+                onChange={onPlanoItemChange(setPlanoDanosMateriais)}
+                value={planoDanosMateriais}
+                disabled={!isPacotePersonalizado}
+              >
+                <option value="">(Selecione)</option>
+                <option value="10000">10.000,00</option>
+                <option value="20000">20.000,00</option>
+                <option value="30000">30.000,00</option>
+                <option value="40000">40.000,00</option>
+                <option value="50000">50.000,00</option>
+                <option value="60000">60.000,00</option>
+                <option value="70000">70.000,00</option>
+                <option value="80000">80.000,00</option>
+                <option value="90000">90.000,00</option>
+                <option value="100000">100.000,00</option>
+                <option value="150000">150.000,00</option>
+                <option value="200000">200.000,00</option>
+                <option value="250000">250.000,00</option>
+                <option value="300000">300.000,00</option>
+                <option value="350000">350.000,00</option>
+                <option value="400000">400.000,00</option>
+                <option value="450000">450.000,00</option>
+                <option value="500000">500.000,00</option>
+              </Form.Control>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="pacote_danos_corporais">
+            <Form.Label>Danos Corporais</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                as="select"
+                name="pacote_danos_corporais"
+                required
+                onChange={onPlanoItemChange(setPlanoDanosCorporais)}
+                value={planoDanosCorporais}
+                disabled={!isPacotePersonalizado}
+              >
+                <option value="">(Selecione)</option>
+                <option value="10000">10.000,00</option>
+                <option value="20000">20.000,00</option>
+                <option value="30000">30.000,00</option>
+                <option value="40000">40.000,00</option>
+                <option value="50000">50.000,00</option>
+                <option value="60000">60.000,00</option>
+                <option value="70000">70.000,00</option>
+                <option value="80000">80.000,00</option>
+                <option value="90000">90.000,00</option>
+                <option value="100000">100.000,00</option>
+                <option value="150000">150.000,00</option>
+                <option value="200000">200.000,00</option>
+                <option value="250000">250.000,00</option>
+                <option value="300000">300.000,00</option>
+                <option value="350000">350.000,00</option>
+                <option value="400000">400.000,00</option>
+                <option value="450000">450.000,00</option>
+                <option value="500000">500.000,00</option>
+              </Form.Control>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="pacote_danos_morais">
+            <Form.Label>Danos Morais</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                as="select"
+                name="pacote_danos_morais"
+                required
+                onChange={onPlanoItemChange(setPlanoDanosMorais)}
+                value={planoDanosMorais}
+                disabled={!isPacotePersonalizado}
+              >
+                <option value="">(Selecione)</option>
+                <option value="10000">10.000,00</option>
+                <option value="20000">20.000,00</option>
+                <option value="30000">30.000,00</option>
+                <option value="40000">40.000,00</option>
+                <option value="50000">50.000,00</option>
+                <option value="60000">60.000,00</option>
+                <option value="70000">70.000,00</option>
+                <option value="80000">80.000,00</option>
+                <option value="90000">90.000,00</option>
+                <option value="100000">100.000,00</option>
+              </Form.Control>
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="pacote_carro_reserva">
+            <Form.Label>Carro Reserva</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote_carro_reserva"
+              required
+              onChange={onPlanoItemChange(setPlanoCarroReserva)}
+              value={planoCarroReserva}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="nao_contratar">Não contratar</option>
+              <option value="basico_7_dias">Básico 7 dias</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="pacote_assistencia_24_horas">
+            <Form.Label>Assistência 24 horas</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote_assistencia_24_horas"
+              required
+              onChange={onPlanoItemChange(setPlanoAssistencia)}
+              value={planoAssistencia}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="nao_contratar">Não contratar</option>
+              <option value="200km">200KM</option>
+              <option value="ilimitado">Max / Ilimitado</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="pacote_vidros">
+            <Form.Label>Vidros</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote_vidros"
+              required
+              onChange={onPlanoItemChange(setPlanoVidros)}
+              value={planoVidros}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="pacote_farol_retrovisor">
+            <Form.Label>Farol Retrovisor</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote_farol_retrovisor"
+              required
+              onChange={onPlanoItemChange(setPlanoFarolRetrovisor)}
+              value={planoFarolRetrovisor}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
             </Form.Control>
           </Form.Group>
         </Card.Body>

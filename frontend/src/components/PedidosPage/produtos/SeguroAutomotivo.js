@@ -1,9 +1,9 @@
 import React from "react";
-import { Card, Form, Col } from "react-bootstrap";
+import { Card, Form, Col, InputGroup } from "react-bootstrap";
 
 import { FileDownloadButton } from "../FileDownloadButton";
 
-const SeguroAutomotivo = (props) => {
+const SeguroAutomotivo = ({ usuario, data }) => {
   return (
     <>
       <Card>
@@ -15,13 +15,13 @@ const SeguroAutomotivo = (props) => {
               <Form.Check
                 type="radio"
                 label="Novo"
-                defaultChecked={props.data.novo_ou_renovacao === "novo"}
+                defaultChecked={data.novo_ou_renovacao === "novo"}
                 disabled
               />
               <Form.Check
                 type="radio"
                 label="Renovação"
-                defaultChecked={props.data.novo_ou_renovacao === "renovacao"}
+                defaultChecked={data.novo_ou_renovacao === "renovacao"}
                 disabled
               />
             </Form.Group>
@@ -31,8 +31,8 @@ const SeguroAutomotivo = (props) => {
               <Form.Label>Apólice atual</Form.Label>
               <br />
               <FileDownloadButton
-                usuario={props.usuario}
-                fileData={props.data.apolice_atual}
+                usuario={usuario}
+                fileData={data.apolice_atual}
               />
             </Form.Group>
           </Form.Row>
@@ -44,22 +44,34 @@ const SeguroAutomotivo = (props) => {
           <Form.Row>
             <Form.Group controlId="genero" as={Col} lg={4}>
               <Form.Label>Genero</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.genero} />
+              <Form.Control
+                plaintext
+                readOnly
+                value={
+                  {
+                    masculino: "Masculino",
+                    feminino: "Feminino",
+                  }[data.genero]
+                }
+              />
             </Form.Group>
             <Form.Group controlId="data_nascimento" as={Col} lg={4}>
               <Form.Label>Data Nascimento</Form.Label>
-              <Form.Control
-                readOnly
-                plaintext
-                value={props.data.data_nascimento}
-              />
+              <Form.Control readOnly plaintext value={data.data_nascimento} />
             </Form.Group>
             <Form.Group controlId="estado_civil" as={Col} lg={4}>
               <Form.Label>Estado Civil</Form.Label>
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.estado_civil}
+                value={
+                  {
+                    solteiro: "Solteiro(a)",
+                    casado: "Casado(a) ou União Estável",
+                    viuvo: "Viúvo(a)",
+                    separado: "Separado(a) ou Divorciado(a)",
+                  }[data.estado_civil]
+                }
               />
             </Form.Group>
           </Form.Row>
@@ -69,7 +81,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.data_primeira_habilitacao}
+                value={data.data_primeira_habilitacao}
               />
             </Form.Group>
           </Form.Row>
@@ -77,41 +89,37 @@ const SeguroAutomotivo = (props) => {
           <Form.Row>
             <Form.Group controlId="cep" as={Col} lg={4}>
               <Form.Label>CEP</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.cep} />
+              <Form.Control plaintext readOnly value={data.cep} />
             </Form.Group>
             <Form.Group controlId="uf" as={Col} lg={4}>
               <Form.Label>UF</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.uf} />
+              <Form.Control plaintext readOnly value={data.uf} />
             </Form.Group>
             <Form.Group controlId="cidade" as={Col} lg={4}>
               <Form.Label>Cidade</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.cidade} />
+              <Form.Control plaintext readOnly value={data.cidade} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="logradouro" as={Col}>
               <Form.Label>Logradouro</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.logradouro} />
+              <Form.Control plaintext readOnly value={data.logradouro} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="endereco_numero" as={Col} lg={3}>
               <Form.Label>Número</Form.Label>
-              <Form.Control
-                plaintext
-                readOnly
-                value={props.data.endereco_numero}
-              />
+              <Form.Control plaintext readOnly value={data.endereco_numero} />
             </Form.Group>
             <Form.Group controlId="complemento" as={Col} lg={9}>
               <Form.Label>Complemento</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.complemento} />
+              <Form.Control plaintext readOnly value={data.complemento} />
             </Form.Group>
           </Form.Row>
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Dados do proprietário do veículo</Card.Header>
+        <Card.Header>Dados do Proprietário do Veículo</Card.Header>
         <Card.Body>
           <Form.Row>
             <Form.Group controlId="nome_completo_proprietario" as={Col} lg={6}>
@@ -119,16 +127,12 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.nome_completo_proprietario}
+                value={data.nome_completo_proprietario}
               />
             </Form.Group>
             <Form.Group controlId="cpf_proprietario" as={Col} lg={6}>
               <Form.Label>CPF</Form.Label>
-              <Form.Control
-                readOnly
-                plaintext
-                value={props.data.cpf_proprietario}
-              />
+              <Form.Control readOnly plaintext value={data.cpf_proprietario} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -137,7 +141,12 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.genero_proprietario}
+                value={
+                  {
+                    masculino: "Masculino",
+                    feminino: "Feminino",
+                  }[data.genero_proprietario]
+                }
               />
             </Form.Group>
             <Form.Group
@@ -149,7 +158,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.data_nascimento_proprietario}
+                value={data.data_nascimento_proprietario}
               />
             </Form.Group>
             <Form.Group controlId="estado_civil_proprietario" as={Col} lg={4}>
@@ -157,7 +166,14 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.estado_civil_proprietario}
+                value={
+                  {
+                    solteiro: "Solteiro(a)",
+                    casado: "Casado(a) ou União Estável",
+                    viuvo: "Viúvo(a)",
+                    separado: "Separado(a) ou Divorciado(a)",
+                  }[data.estado_civil_proprietario]
+                }
               />
             </Form.Group>
           </Form.Row>
@@ -171,7 +187,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.data_primeira_habilitacao_proprietario}
+                value={data.data_primeira_habilitacao_proprietario}
               />
             </Form.Group>
             <Form.Group
@@ -183,7 +199,15 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.relacao_segurado_proprietario}
+                value={
+                  {
+                    proprio: "(Próprio)",
+                    conjuge: "Cônjuge",
+                    filho: "Filho(a)",
+                    outra_pf: "Outra PF",
+                    outra_pj: "Outra PJ",
+                  }[data.relacao_segurado_proprietario]
+                }
               />
             </Form.Group>
             <Form.Group
@@ -195,7 +219,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.numero_veiculos_proprietario}
+                value={data.numero_veiculos_proprietario}
               />
             </Form.Group>
           </Form.Row>
@@ -214,7 +238,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.nome_completo_condutor_principal}
+                value={data.nome_completo_condutor_principal}
               />
             </Form.Group>
             <Form.Group controlId="cpf_condutor_principal" as={Col} lg={6}>
@@ -222,7 +246,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.cpf_condutor_principal}
+                value={data.cpf_condutor_principal}
               />
             </Form.Group>
           </Form.Row>
@@ -232,7 +256,12 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.genero_condutor_principal}
+                value={
+                  {
+                    masculino: "Masculino",
+                    feminino: "Feminino",
+                  }[data.genero_condutor_principal]
+                }
               />
             </Form.Group>
             <Form.Group
@@ -244,7 +273,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.data_nascimento_condutor_principal}
+                value={data.data_nascimento_condutor_principal}
               />
             </Form.Group>
             <Form.Group
@@ -256,7 +285,14 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.estado_civil_condutor_principal}
+                value={
+                  {
+                    solteiro: "Solteiro(a)",
+                    casado: "Casado(a) ou União Estável",
+                    viuvo: "Viúvo(a)",
+                    separado: "Separado(a) ou Divorciado(a)",
+                  }[data.estado_civil_condutor_principal]
+                }
               />
             </Form.Group>
           </Form.Row>
@@ -270,7 +306,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.data_primeira_habilitacao_condutor_principal}
+                value={data.data_primeira_habilitacao_condutor_principal}
               />
             </Form.Group>
             <Form.Group
@@ -282,7 +318,15 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.relacao_segurado_condutor_principal}
+                value={
+                  {
+                    proprio: "(Próprio)",
+                    conjuge: "Cônjuge",
+                    filho: "Filho(a)",
+                    outra_pf: "Outra PF",
+                    outra_pj: "Outra PJ",
+                  }[data.relacao_segurado_condutor_principal]
+                }
               />
             </Form.Group>
             <Form.Group
@@ -294,7 +338,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.profissao_condutor_principal}
+                value={data.profissao_condutor_principal}
               />
             </Form.Group>
           </Form.Row>
@@ -306,15 +350,22 @@ const SeguroAutomotivo = (props) => {
           <Form.Row>
             <Form.Group controlId="tipo_de_uso" as={Col} lg={6}>
               <Form.Label>Tipo de Uso</Form.Label>
-              <Form.Control plaintext readOnly value={props.data.tipo_de_uso} />
-            </Form.Group>
-            <Form.Group controlId="construcao" as={Col} lg={6}>
-              <Form.Label>CEP Pernoite</Form.Label>
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.cep_pernoite}
+                value={
+                  {
+                    lazer: "Apenas Lazer",
+                    diaria: "Locomoção Diária",
+                    servico: "Prestação Serviço",
+                    transporte_aplicativo: "Transporte por Aplicativo",
+                  }[data.tipo_de_uso]
+                }
               />
+            </Form.Group>
+            <Form.Group controlId="construcao" as={Col} lg={6}>
+              <Form.Label>CEP Pernoite</Form.Label>
+              <Form.Control plaintext readOnly value={data.cep_pernoite} />
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -325,7 +376,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.roubo_furto_dois_anos}
+                value={{ sim: "Sim", nao: "Não" }[data.roubo_furto_dois_anos]}
               />
             </Form.Group>
             <Form.Group controlId="condutor_eventual_jovem" as={Col} lg={6}>
@@ -335,7 +386,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.condutor_eventual_jovem}
+                value={{ sim: "Sim", nao: "Não" }[data.condutor_eventual_jovem]}
               />
             </Form.Group>
           </Form.Row>
@@ -350,7 +401,15 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.tipo_residencia}
+                value={
+                  {
+                    casa: "Casa/Sobrado",
+                    casa_condominio: "Casa em Condomínio",
+                    apartamento: "Apartamento/Flat",
+                    rural: "Chácara/Fazenda/Sítio",
+                    outros: "Outros",
+                  }[data.tipo_residencia]
+                }
               />
             </Form.Group>
             <Form.Group controlId="local_pernoite" as={Col} lg={6}>
@@ -358,7 +417,16 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 plaintext
                 readOnly
-                value={props.data.local_pernoite}
+                value={
+                  {
+                    garagem_manual: "Garagem/Estacionamento com portão manual",
+                    garagem_automatica:
+                      "Garagem/Estacionamento com portão automático",
+                    garagem_paga: "Garagem/Estacionamento local pago",
+                    nao_garagem:
+                      "Não pernoita em garagem/estacionamento fechado",
+                  }[data.local_pernoite]
+                }
               />
             </Form.Group>
           </Form.Row>
@@ -368,19 +436,19 @@ const SeguroAutomotivo = (props) => {
             </Form.Label>
             <Form.Check
               type="checkbox"
-              defaultChecked={props.data.trabalho.includes("manha")}
+              defaultChecked={data.trabalho.includes("manha")}
               disabled
               label="Manhã"
             />
             <Form.Check
               type="checkbox"
-              defaultChecked={props.data.trabalho.includes("tarde")}
+              defaultChecked={data.trabalho.includes("tarde")}
               disabled
               label="Tarde"
             />
             <Form.Check
               type="checkbox"
-              defaultChecked={props.data.trabalho.includes("noite")}
+              defaultChecked={data.trabalho.includes("noite")}
               disabled
               label="Noite"
             />
@@ -392,19 +460,19 @@ const SeguroAutomotivo = (props) => {
             </Form.Label>
             <Form.Check
               type="checkbox"
-              defaultChecked={props.data.estudo.includes("manha")}
+              defaultChecked={data.estudo.includes("manha")}
               disabled
               label="Manhã"
             />
             <Form.Check
               type="checkbox"
-              defaultChecked={props.data.estudo.includes("tarde")}
+              defaultChecked={data.estudo.includes("tarde")}
               disabled
               label="Tarde"
             />
             <Form.Check
               type="checkbox"
-              defaultChecked={props.data.estudo.includes("noite")}
+              defaultChecked={data.estudo.includes("noite")}
               disabled
               label="Noite"
             />
@@ -412,15 +480,12 @@ const SeguroAutomotivo = (props) => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Dados do veículo</Card.Header>
+        <Card.Header>Dados do Veículo</Card.Header>
         <Card.Body>
           <Form.Group controlId="chassi">
             <Form.Label>Chassi</Form.Label>
             <br />
-            <FileDownloadButton
-              usuario={props.usuario}
-              fileData={props.data.chassi}
-            />
+            <FileDownloadButton usuario={usuario} fileData={data.chassi} />
           </Form.Group>
           <Form.Row>
             <Form.Group controlId="veiculo_financiado" as={Col} lg={6}>
@@ -428,7 +493,7 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.veiculo_financiado}
+                value={data.veiculo_financiado}
               />
             </Form.Group>
             <Form.Group controlId="dispositivo_antifurto" as={Col} lg={6}>
@@ -436,7 +501,193 @@ const SeguroAutomotivo = (props) => {
               <Form.Control
                 readOnly
                 plaintext
-                value={props.data.dispositivo_antifurto}
+                value={data.dispositivo_antifurto}
+              />
+            </Form.Group>
+          </Form.Row>
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header>Dados do serviço</Card.Header>
+        <Card.Body>
+          <Form.Row>
+            <Form.Group controlId="pacote" as={Col} lg={12}>
+              <Form.Label>Pacote de Serviço</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={
+                  {
+                    auto_padrao: "Auto - Cotação Padrão",
+                    moto_padrao: "Moto - Cotação Padrão",
+                    personalizado: "Personalizado",
+                  }[data.pacote]
+                }
+              />
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="pacote_franquia" as={Col} lg={6}>
+              <Form.Label>Veículo é financiado?</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={
+                  { reduzida: "Reduzida", obrigatoria: "Obrigatória" }[
+                    data.pacote_franquia
+                  ]
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="pacote_colisao" as={Col} lg={6}>
+              <Form.Label>Colisão/Incêndio/Roubo</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={
+                  {
+                    nao_contratada: "Não contradada",
+                    "100_fipe": "R$ (100% FIPE)",
+                  }[data.pacote_colisao]
+                }
+              />
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="pacote_danos_materiais" as={Col} lg={4}>
+              <Form.Label>Danos Materiais</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  readOnly
+                  value={
+                    {
+                      "10000": "10.000,00",
+                      "20000": "20.000,00",
+                      "30000": "30.000,00",
+                      "40000": "40.000,00",
+                      "50000": "50.000,00",
+                      "60000": "60.000,00",
+                      "70000": "70.000,00",
+                      "80000": "80.000,00",
+                      "90000": "90.000,00",
+                      "100000": "100.000,00",
+                      "150000": "150.000,00",
+                      "200000": "200.000,00",
+                      "250000": "250.000,00",
+                      "300000": "300.000,00",
+                      "350000": "350.000,00",
+                      "400000": "400.000,00",
+                      "450000": "450.000,00",
+                      "500000": "500.000,00",
+                    }[data.pacote_danos_materiais]
+                  }
+                />
+              </InputGroup>
+            </Form.Group>
+            <Form.Group controlId="pacote_danos_corporais" as={Col} lg={4}>
+              <Form.Label>Danos Corporais</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  readOnly
+                  value={
+                    {
+                      "10000": "10.000,00",
+                      "20000": "20.000,00",
+                      "30000": "30.000,00",
+                      "40000": "40.000,00",
+                      "50000": "50.000,00",
+                      "60000": "60.000,00",
+                      "70000": "70.000,00",
+                      "80000": "80.000,00",
+                      "90000": "90.000,00",
+                      "100000": "100.000,00",
+                      "150000": "150.000,00",
+                      "200000": "200.000,00",
+                      "250000": "250.000,00",
+                      "300000": "300.000,00",
+                      "350000": "350.000,00",
+                      "400000": "400.000,00",
+                      "450000": "450.000,00",
+                      "500000": "500.000,00",
+                    }[data.pacote_danos_corporais]
+                  }
+                />
+              </InputGroup>
+            </Form.Group>
+            <Form.Group controlId="pacote_danos_morais" as={Col} lg={4}>
+              <Form.Label>Danos Morais</Form.Label>
+              <InputGroup>
+                <InputGroup.Prepend>
+                  <InputGroup.Text>R$</InputGroup.Text>
+                </InputGroup.Prepend>
+                <Form.Control
+                  readOnly
+                  value={
+                    {
+                      "10000": "10.000,00",
+                      "20000": "20.000,00",
+                      "30000": "30.000,00",
+                      "40000": "40.000,00",
+                      "50000": "50.000,00",
+                      "60000": "60.000,00",
+                      "70000": "70.000,00",
+                      "80000": "80.000,00",
+                      "90000": "90.000,00",
+                      "100000": "100.000,00",
+                    }[data.pacote_danos_morais]
+                  }
+                />
+              </InputGroup>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="pacote_carro_reserva" as={Col} lg={3}>
+              <Form.Label>Carro Reserva</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={
+                  {
+                    nao_contratar: "Não contratar",
+                    basico_7_dias: "Básico 7 dias",
+                  }[data.pacote_carro_reserva]
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="pacote_assistencia_24_horas" as={Col} lg={3}>
+              <Form.Label>Assistência 24 horas</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={
+                  {
+                    nao_contratar: "Não contratar",
+                    "200km": "200KM",
+                    ilimitado: "Max / Ilimitado",
+                  }[data.pacote_assistencia_24_horas]
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="pacote_vidros" as={Col} lg={3}>
+              <Form.Label>Vidros</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={{ sim: "Sim", nao: "Não" }[data.pacote_vidros]}
+              />
+            </Form.Group>
+            <Form.Group controlId="pacote_farol_retrovisor" as={Col} lg={3}>
+              <Form.Label>Farol Retrovisor</Form.Label>
+              <Form.Control
+                readOnly
+                plaintext
+                value={{ sim: "Sim", nao: "Não" }[data.pacote_farol_retrovisor]}
               />
             </Form.Group>
           </Form.Row>
