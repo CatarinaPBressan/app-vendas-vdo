@@ -4,7 +4,10 @@ import { Form, Card, InputGroup } from "react-bootstrap";
 import InputMask from "react-input-mask";
 
 import { FIELDS, UFS_BRASIL } from "../../../constants/fields";
-import { getFileNameFromPath } from "../../../utils/utils";
+import { getFileNameFromPath } from "../../../utils/fileUtils";
+import { PtBrNumberFormat } from "../../../utils/numberUtils";
+
+import { MoneyTextInput } from "./pecasProdutos/MoneyTextInput";
 
 const SeguroResidencial = () => {
   const [isRenovacao, setIsRenovacao] = useState(false);
@@ -54,29 +57,17 @@ const SeguroResidencial = () => {
   const [planoDanosEletricos, setPlanoDanosEletricos] = useState("");
   const [planoRcFamiliar, setPlanoRcFamiliar] = useState("");
   const onPlanoValorChange = (setStateFn) => {
-    return (e) => {
-      const valor = e.target.value;
-      if (valor === "" || valor === undefined || valor === null) {
-        setStateFn("");
-        return;
-      }
-
-      const ultimoDigito = valor[valor.length - 1];
-      if (
-        Number.isInteger(parseInt(ultimoDigito)) ||
-        [".", ","].includes(ultimoDigito)
-      ) {
-        setStateFn(valor);
-      }
+    return ({ formattedValue }) => {
+      setStateFn(formattedValue);
     };
   };
 
   const atualizarDadosPacote = (nomePacote, valorImovel) => {
-    if (!nomePacote || nomePacote === "personalizado") {
+    if (nomePacote === "personalizado") {
       return;
     }
 
-    const dadosPacote = pacotes[nomePacote];
+    const dadosPacote = pacotes[nomePacote] || {};
     [
       [setPlanoIncendio, "planoIncendio"],
       [setPlanoVendaval, "planoVendaval"],
@@ -89,38 +80,15 @@ const SeguroResidencial = () => {
       if (valorPacote instanceof Function) {
         valorPacote = valorPacote(valorImovel) || 0;
       }
-      const x = new Intl.NumberFormat("pt-br", {
-        style: "currency",
-        currency: "BRL",
-      })
-        .format(valorPacote)
-        // Espaço especial
-        .replace("R$ ", "");
-      setStateFn(x);
+
+      setStateFn(PtBrNumberFormat.format(valorPacote));
     });
   };
 
   const [valorImovel, setValorImovel] = useState(0);
-  const [valorImovelDisplay, setValorImovelDisplay] = useState("");
-  const onValorImovelChange = (e) => {
-    const valor = e.target.value;
-    if (valor === "" || valor === undefined || valor === null) {
-      setValorImovel(0);
-      setValorImovelDisplay("");
-      atualizarDadosPacote(pacote, 0);
-      return;
-    }
-    const ultimoDigito = valor[valor.length - 1];
-    if (Number.isInteger(parseInt(ultimoDigito))) {
-      const [parteInt, parteDec] = valor.replaceAll(".", "").split(",");
-      let valorFinal = parseInt(parteInt);
-      if (parteDec) {
-        valorFinal += parseFloat(`0.${parteDec}`);
-      }
-      setValorImovel(valorFinal);
-      atualizarDadosPacote(pacote, valorFinal);
-    }
-    setValorImovelDisplay(valor);
+  const onValorImovelChange = ({ decimalFloatValue }) => {
+    setValorImovel(decimalFloatValue);
+    atualizarDadosPacote(pacote, decimalFloatValue);
   };
 
   const onPacoteChange = (e) => {
@@ -132,9 +100,6 @@ const SeguroResidencial = () => {
       return;
     }
     setIsPacotePersonalizado(false);
-    if (!nomePacote) {
-      return;
-    }
     atualizarDadosPacote(nomePacote, valorImovel);
   };
 
@@ -226,7 +191,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="renda_mensal" required />
+              <MoneyTextInput name="renda_mensal" required />
             </InputGroup>
           </Form.Group>
           <Form.Group controlId="valor_em_risco">
@@ -235,11 +200,9 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control
-                type="text"
+              <MoneyTextInput
                 name="valor_em_risco"
                 required
-                value={valorImovelDisplay}
                 onChange={onValorImovelChange}
               />
             </InputGroup>
@@ -399,8 +362,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control
-                type="text"
+              <MoneyTextInput
                 name="plano_incendio"
                 required
                 disabled={!isPacotePersonalizado}
@@ -415,7 +377,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control
+              <MoneyTextInput
                 type="text"
                 name="plano_vendaval"
                 required
@@ -431,7 +393,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control
+              <MoneyTextInput
                 type="text"
                 name="plano_roubo"
                 required
@@ -447,7 +409,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control
+              <MoneyTextInput
                 type="text"
                 name="plano_danos_eletricos"
                 required
@@ -463,7 +425,7 @@ const SeguroResidencial = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control
+              <MoneyTextInput
                 type="text"
                 name="plano_rc_familiar"
                 required

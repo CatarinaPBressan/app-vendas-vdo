@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { Form, Button, Col } from "react-bootstrap";
 
 import { uploadPedidoArquivo } from "../../actions/pedido";
-import { getFileNameFromPath } from "../../utils/utils";
+import { getFileNameFromPath } from "../../utils/fileUtils";
 
 const _UploadCotacaoButton = ({ pedido, usuario, uploadPedidoArquivo }) => {
   const [isUploadingCotacao, setIsUploadingCotacao] = useState(false);

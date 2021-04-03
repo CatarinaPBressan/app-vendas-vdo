@@ -4,7 +4,7 @@ import { Card, Form } from "react-bootstrap";
 import InputMask from "react-input-mask";
 
 import { FIELDS, UFS_BRASIL } from "../../../constants/fields";
-import { getFileNameFromPath } from "../../../utils/utils";
+import { getFileNameFromPath } from "../../../utils/fileUtils";
 
 const SeguroAutomotivo = ({ nomeCompleto, cpf }) => {
   ///
