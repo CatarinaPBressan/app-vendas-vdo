@@ -9,7 +9,7 @@ const CartaoDeCredito = () => {
   return (
     <>
       <Card>
-        <Card.Header>Cartão de Crédito - Endereço</Card.Header>
+        <Card.Header>Endereço</Card.Header>
         <Card.Body>
           <Form.Group controlId="cep">
             <Form.Label>CEP</Form.Label>
@@ -57,7 +57,7 @@ const CartaoDeCredito = () => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Cartão de Crédito - Dados Adicionais</Card.Header>
+        <Card.Header>Dados Adicionais</Card.Header>
         <Card.Body>
           <Form.Group controlId="estado_civil">
             <Form.Label>Estado Civil</Form.Label>
