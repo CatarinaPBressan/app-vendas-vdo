@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 
 import NumberFormat from "react-number-format";
 
-import { PtBrNumberFormat } from "../../../../utils/numberUtils";
+import { PtBrDecimalFormat } from "../../../../utils/numberUtils";
 
 const MAX = 10000000000; // Dez bilhões
 
@@ -33,10 +33,10 @@ export const MoneyTextInput: React.FC<MoneyTextInputProps> = ({
       allowNegative={false}
       format={(value: any): string => {
         if (!Number(value)) {
-          return PtBrNumberFormat.format(0);
+          return PtBrDecimalFormat.format(0);
         }
 
-        return PtBrNumberFormat.format(value / 100);
+        return PtBrDecimalFormat.format(value / 100);
       }}
       fixedDecimalScale
       inputMode="numeric"

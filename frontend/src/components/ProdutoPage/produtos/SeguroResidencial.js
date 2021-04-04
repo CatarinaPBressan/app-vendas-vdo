@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { Form, Card, InputGroup } from "react-bootstrap";
 import InputMask from "react-input-mask";
 
+import { MoneyTextInput } from "./pecasProdutos/MoneyTextInput";
+
 import { FIELDS, UFS_BRASIL } from "../../../constants/fields";
 import { getFileNameFromPath } from "../../../utils/fileUtils";
-import { PtBrNumberFormat } from "../../../utils/numberUtils";
-
-import { MoneyTextInput } from "./pecasProdutos/MoneyTextInput";
+import { PtBrDecimalFormat } from "../../../utils/numberUtils";
 
 const SeguroResidencial = () => {
   const [isRenovacao, setIsRenovacao] = useState(false);
@@ -81,7 +81,7 @@ const SeguroResidencial = () => {
         valorPacote = valorPacote(valorImovel) || 0;
       }
 
-      setStateFn(PtBrNumberFormat.format(valorPacote));
+      setStateFn(PtBrDecimalFormat.format(valorPacote));
     });
   };
 

@@ -6,7 +6,7 @@ export const Consorcio = ({ data }) => {
   return (
     <>
       <Card>
-        <Card.Header>Consórcio - Produto</Card.Header>
+        <Card.Header>Produto</Card.Header>
         <Card.Body>
           <Form.Row>
             <Form.Group controlId="produto" as={Col}>
@@ -37,7 +37,7 @@ export const Consorcio = ({ data }) => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Consórcio - Dados Adicionais do Cliente</Card.Header>
+        <Card.Header>Dados Adicionais do Cliente</Card.Header>
         <Card.Body>
           <Form.Row>
             <Form.Group controlId="telefone_residencial" as={Col} lg={4}>
@@ -122,7 +122,7 @@ export const Consorcio = ({ data }) => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Consorcio - Endereço Residencial</Card.Header>
+        <Card.Header>Endereço Residencial</Card.Header>
         <Card.Body>
           <Form.Row>
             <Form.Group controlId="cep" as={Col} lg={4}>

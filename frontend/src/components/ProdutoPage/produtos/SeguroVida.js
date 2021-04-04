@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { Form, Card, InputGroup } from "react-bootstrap";
 import InputMask from "react-input-mask";
 
+import { MoneyTextInput } from "./pecasProdutos/MoneyTextInput";
+
 import { FIELDS, UFS_BRASIL } from "../../../constants/fields";
+import { PtBrDecimalFormat } from "../../../utils/numberUtils";
 
 const SeguroVida = () => {
   const [selectedRegime, setSelectedRegime] = useState("");
@@ -30,10 +33,94 @@ const SeguroVida = () => {
     disabled: !possuiEnderecoComercial,
   };
 
+  //
+  const pacotes = {
+    morte_inv_1: {
+      planoCapital: 6000,
+      planoAssistenciaFuneral: "individual",
+      planoDoencas: "nao_contratada",
+      planoCapitalDoencas: "0",
+    },
+    morte_inv_2: {
+      planoCapital: (rendaMensal) => rendaMensal * 18,
+      planoAssistenciaFuneral: "familiar",
+      planoDoencas: "nao_contratada",
+      planoCapitalDoencas: "0",
+    },
+    morte_morte_ac_d_inv: {
+      planoCapital: (rendaMensal) => rendaMensal * 36,
+      planoAssistenciaFuneral: "individual",
+      planoDoencas: "nao_contratada",
+      planoCapitalDoencas: "0",
+    },
+    morte_morte_ac_d_inv_d: {
+      planoCapital: (rendaMensal) => rendaMensal * 27,
+      planoAssistenciaFuneral: "familiar",
+      planoDoencas: "17_tipos",
+      planoCapitalDoencas: "30000",
+    },
+  };
+
+  const [pacote, setPacote] = useState("");
+  const [isPacotePersonalizado, setIsPacotePersonalizado] = useState(false);
+  const [planoCapital, setPlanoCapital] = useState(0);
+  const [planoAssistenciaFuneral, setPlanoAssistenciaFuneral] = useState("");
+  const [planoDoencas, setPlanoDoencas] = useState("");
+  const [planoCapitalDoencas, setPlanoCapitalDoencas] = useState("");
+  const onPlanoItemChange = (setStateFn) => {
+    return (e) => {
+      setStateFn(e.target.value);
+    };
+  };
+
+  const atualizarDadosPacote = (nomePacote, rendaMensal) => {
+    if (nomePacote === "personalizado") {
+      return;
+    }
+
+    const dadosPacote = pacotes[nomePacote] || {};
+    [
+      [setPlanoCapital, "planoCapital"],
+      [setPlanoAssistenciaFuneral, "planoAssistenciaFuneral"],
+      [setPlanoDoencas, "planoDoencas"],
+      [setPlanoCapitalDoencas, "planoCapitalDoencas"],
+    ].forEach(([setStateFn, pacoteAttr]) => {
+      let valorPacote = dadosPacote[pacoteAttr] || "";
+
+      if (valorPacote instanceof Function) {
+        valorPacote = valorPacote(rendaMensal) || 0;
+      }
+
+      if (typeof valorPacote === "number") {
+        setStateFn(PtBrDecimalFormat.format(valorPacote));
+      } else {
+        setStateFn(valorPacote);
+      }
+    });
+  };
+
+  const [rendaMensal, setRendaMensal] = useState(0);
+  const onRendaMensalChange = ({ decimalFloatValue }) => {
+    setRendaMensal(decimalFloatValue);
+    atualizarDadosPacote(pacote, decimalFloatValue);
+  };
+
+  const onPacoteChange = (e) => {
+    const nomePacote = e.target.value;
+    setPacote(nomePacote);
+
+    if (nomePacote === "personalizado") {
+      setIsPacotePersonalizado(true);
+      return;
+    }
+    setIsPacotePersonalizado(false);
+    atualizarDadosPacote(nomePacote, rendaMensal);
+  };
+
   return (
     <>
       <Card>
-        <Card.Header>Seguro de Vida Individual - Dados do Segurado</Card.Header>
+        <Card.Header>Dados do Segurado</Card.Header>
         <Card.Body>
           <Form.Group controlId="genero">
             <Form.Label>Genero</Form.Label>
@@ -126,7 +213,11 @@ const SeguroVida = () => {
               <InputGroup.Prepend>
                 <InputGroup.Text>R$</InputGroup.Text>
               </InputGroup.Prepend>
-              <Form.Control type="text" name="renda_mensal" required />
+              <MoneyTextInput
+                required
+                name="renda_mensal"
+                onChange={onRendaMensalChange}
+              />
             </InputGroup>
           </Form.Group>
           <hr />
@@ -156,7 +247,7 @@ const SeguroVida = () => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>Seguro de Vida Individual - Dados do Cônjugue</Card.Header>
+        <Card.Header>Dados do Cônjugue</Card.Header>
         <Card.Body>
           <Form.Group>
             <Form.Label>Deseja inserir cônjugue como dependente?</Form.Label>
@@ -261,9 +352,7 @@ const SeguroVida = () => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>
-          Seguro de Vida Individual - Endereço Residencial
-        </Card.Header>
+        <Card.Header>Endereço Residencial</Card.Header>
         <Card.Body>
           <Form.Group controlId="cep">
             <Form.Label>CEP</Form.Label>
@@ -311,9 +400,7 @@ const SeguroVida = () => {
         </Card.Body>
       </Card>
       <Card>
-        <Card.Header>
-          Seguro de Vida Individual - Endereço Comercial
-        </Card.Header>
+        <Card.Header>Endereço Comercial</Card.Header>
         <Card.Body>
           <Form.Group>
             <Form.Label>Possui endereço comercial?</Form.Label>
@@ -406,6 +493,132 @@ const SeguroVida = () => {
               required={possuiEnderecoComercial}
               disabled={!possuiEnderecoComercial}
             />
+          </Form.Group>
+        </Card.Body>
+      </Card>
+      <Card>
+        <Card.Header>Dados do Serviço</Card.Header>
+        <Card.Body>
+          <Form.Group controlId="pacote">
+            <Form.Label>Pacote de Serviço</Form.Label>
+            <Form.Control
+              as="select"
+              name="pacote"
+              required
+              onChange={onPacoteChange}
+              value={pacote}
+            >
+              <option value="">(Selecione)</option>
+              <option value="morte_inv_1">
+                1 - Morte + Invalidez por acidente
+              </option>
+              <option value="morte_inv_2">
+                2 - Morte + Invalidez por acidente
+              </option>
+              <option value="morte_morte_ac_d_inv">
+                3 - Morte + Morte Acidental (Em Dólar) + Invalidez por Acidente
+              </option>
+              <option value="morte_morte_ac_d_inv_d">
+                4 - Morte + Morte Acidental (Em Dólar) + Invalidez por Acidente
+                (Em Dólar)
+              </option>
+              <option value="personalizado">Personalizado</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="plano_capital">
+            <Form.Label>Capital</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <MoneyTextInput
+                required
+                name="plano_capital"
+                value={planoCapital}
+                onChange={({ formattedValue }) => {
+                  setPlanoCapital(formattedValue);
+                }}
+                disabled={!isPacotePersonalizado}
+              />
+            </InputGroup>
+          </Form.Group>
+          <Form.Group controlId="plano_assistencia_funeral">
+            <Form.Label>Assistencia Funeral</Form.Label>
+            <Form.Control
+              as="select"
+              name="plano_assistencia_funeral"
+              required
+              value={planoAssistenciaFuneral}
+              onChange={onPlanoItemChange(setPlanoAssistenciaFuneral)}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="nao_contratada">Não Contratada</option>
+              <option value="individual">Individual R$ 10.000,00</option>
+              <option value="familiar">Familiar R$ 10.000,00</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="plano_doencas">
+            <Form.Label>Doenças Graves</Form.Label>
+            <Form.Control
+              as="select"
+              name="plano_doencas"
+              required
+              value={planoDoencas}
+              onChange={onPlanoItemChange(setPlanoDoencas)}
+              disabled={!isPacotePersonalizado}
+            >
+              <option value="">(Selecione)</option>
+              <option value="nao_contratada">Não Contratada</option>
+              <option value="10_tipos">10 Tipos</option>
+              <option value="17_tipos">17 Tipos</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="plano_capital_doencas">
+            <Form.Label>Capital de Doenças Graves</Form.Label>
+            <InputGroup>
+              <InputGroup.Prepend>
+                <InputGroup.Text>R$</InputGroup.Text>
+              </InputGroup.Prepend>
+              <Form.Control
+                as="select"
+                name="plano_capital_doencas"
+                required
+                value={planoCapitalDoencas}
+                onChange={onPlanoItemChange(setPlanoCapitalDoencas)}
+                disabled={!isPacotePersonalizado}
+              >
+                {!planoDoencas ? (
+                  <option value="">(Selecione Plano)</option>
+                ) : planoDoencas === "nao_contratada" ? (
+                  <option value="0">N/A</option>
+                ) : (
+                  <>
+                    <option value="">(Selecione)</option>
+                    <option value="10000">10.000,00</option>
+                    <option value="20000">20.000,00</option>
+                    <option value="30000">30.000,00</option>
+                    <option value="40000">40.000,00</option>
+                    <option value="50000">50.000,00</option>
+                    <option value="60000">60.000,00</option>
+                    <option value="70000">70.000,00</option>
+                    <option value="80000">80.000,00</option>
+                    <option value="90000">90.000,00</option>
+                    <option value="100000">100.000,00</option>
+                    <option value="110000">110.000,00</option>
+                    <option value="120000">120.000,00</option>
+                    <option value="130000">130.000,00</option>
+                    <option value="140000">140.000,00</option>
+                    <option value="150000">150.000,00</option>
+                    <option value="160000">160.000,00</option>
+                    <option value="170000">170.000,00</option>
+                    <option value="180000">180.000,00</option>
+                    <option value="190000">190.000,00</option>
+                    <option value="200000">200.000,00</option>
+                  </>
+                )}
+              </Form.Control>
+            </InputGroup>
           </Form.Group>
         </Card.Body>
       </Card>
