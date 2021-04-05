@@ -275,9 +275,9 @@ const SeguroVida = ({ data }) => {
                     morte_inv_1: "1 - Morte + Invalidez por acidente",
                     morte_inv_2: "2 - Morte + Invalidez por acidente",
                     morte_morte_ac_d_inv:
-                      "3 - Morte + Morte Acidental (Em Dólar) + Invalidez por Acidente",
+                      "3 - Morte + Morte Acidental (Em Dobro) + Invalidez por Acidente",
                     morte_morte_ac_d_inv_d:
-                      "4 - Morte + Morte Acidental (Em Dólar) + Invalidez por Acidente (Em Dólar)",
+                      "4 - Morte + Morte Acidental (Em Dobro) + Invalidez por Acidente (Em Dobro)",
                     personalizado: "Personalizado",
                   }[data.pacote]
                 }
