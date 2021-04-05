@@ -1030,7 +1030,7 @@ const SeguroAutomotivo = ({ nomeCompleto, cpf }) => {
             </Form.Control>
           </Form.Group>
           <Form.Group controlId="pacote_franquia">
-            <Form.Label>Veículo é financiado?</Form.Label>
+            <Form.Label>Tipo de Franquia</Form.Label>
             <Form.Control
               as="select"
               name="pacote_franquia"

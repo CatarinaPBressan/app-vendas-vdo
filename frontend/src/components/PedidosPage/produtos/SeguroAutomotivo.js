@@ -528,7 +528,7 @@ const SeguroAutomotivo = ({ usuario, data }) => {
           </Form.Row>
           <Form.Row>
             <Form.Group controlId="pacote_franquia" as={Col} lg={6}>
-              <Form.Label>Veículo é financiado?</Form.Label>
+              <Form.Label>Tipo de Franquia</Form.Label>
               <Form.Control
                 readOnly
                 plaintext
