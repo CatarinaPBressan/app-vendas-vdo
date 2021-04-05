@@ -516,11 +516,11 @@ const SeguroVida = () => {
                 2 - Morte + Invalidez por acidente
               </option>
               <option value="morte_morte_ac_d_inv">
-                3 - Morte + Morte Acidental (Em Dólar) + Invalidez por Acidente
+                3 - Morte + Morte Acidental (Em Dobro) + Invalidez por Acidente
               </option>
               <option value="morte_morte_ac_d_inv_d">
-                4 - Morte + Morte Acidental (Em Dólar) + Invalidez por Acidente
-                (Em Dólar)
+                4 - Morte + Morte Acidental (Em Dobro) + Invalidez por Acidente
+                (Em Dobro)
               </option>
               <option value="personalizado">Personalizado</option>
             </Form.Control>
