@@ -36,7 +36,7 @@ const SeguroVida = () => {
   //
   const pacotes = {
     morte_inv_1: {
-      planoCapital: 6000,
+      planoCapital: 60000,
       planoAssistenciaFuneral: "individual",
       planoDoencas: "nao_contratada",
       planoCapitalDoencas: "0",
