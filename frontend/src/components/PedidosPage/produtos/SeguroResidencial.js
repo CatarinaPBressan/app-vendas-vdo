@@ -57,15 +57,32 @@ const SeguroResidencial = ({ data, usuario }) => {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group controlId="estado_civil" as={Col} lg={2}>
+            <Form.Group controlId="data_nascimento" as={Col} lg={4}>
+              <Form.Label>Data Nascimento</Form.Label>
+              <Form.Control readOnly plaintext value={data.data_nascimento} />
+            </Form.Group>
+            <Form.Group controlId="estado_civil" as={Col} lg={4}>
               <Form.Label>Estado Civil</Form.Label>
-              <Form.Control readOnly plaintext value={data.estado_civil} />
+              <Form.Control
+                readOnly
+                plaintext
+                value={
+                  {
+                    solteiro: "Solteiro(a)",
+                    casado: "Casado(a) ou União Estável",
+                    viuvo: "Viúvo(a)",
+                    separado: "Separado(a) ou Divorciado(a)",
+                  }[data.estado_civil]
+                }
+              />
             </Form.Group>
             <Form.Group controlId="profissao" as={Col} lg={4}>
               <Form.Label>Profissão</Form.Label>
               <Form.Control readOnly plaintext value={data.profissao} />
             </Form.Group>
-            <Form.Group controlId="renda_mensal" as={Col} lg={3}>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group controlId="renda_mensal" as={Col} lg={4}>
               <Form.Label>Renda</Form.Label>
               <InputGroup>
                 <InputGroup.Prepend>
@@ -74,7 +91,7 @@ const SeguroResidencial = ({ data, usuario }) => {
                 <Form.Control readOnly value={data.renda_mensal} />
               </InputGroup>
             </Form.Group>
-            <Form.Group controlId="valor_em_risco" as={Col} lg={3}>
+            <Form.Group controlId="valor_em_risco" as={Col} lg={4}>
               <Form.Label>Valor em Risco</Form.Label>
               <InputGroup>
                 <InputGroup.Prepend>
@@ -83,9 +100,7 @@ const SeguroResidencial = ({ data, usuario }) => {
                 <Form.Control readOnly value={data.valor_em_risco} />
               </InputGroup>
             </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group controlId="exposta_politicamente" as={Col} lg={12}>
+            <Form.Group controlId="exposta_politicamente" as={Col} lg={4}>
               <Form.Label>Pessoa exposta politicamente?</Form.Label>
               <Form.Control
                 readOnly
