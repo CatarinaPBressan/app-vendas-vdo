@@ -31,7 +31,7 @@ class Franquia(db.Model, BaseTable):
 
 class Usuario(db.Model, BaseTable, UserMixin):
     username = db.Column(db.String(255), index=True, unique=True)
-    cpf = db.Column(db.String(14), unique=True)  # 123.567.901-34
+    cpf = db.Column(db.String(14), unique=True)
     password = db.Column(db.String(128))
     nome = db.Column(db.String(255))
 
@@ -39,6 +39,11 @@ class Usuario(db.Model, BaseTable, UserMixin):
     franquia = db.relationship("Franquia")
 
     permissoes = db.relationship("Permissao", secondary=usuario_permissao)
+
+    telefone = db.Column(db.String(15))
+    estado = db.Column(db.String(2))
+    cidade = db.Column(db.String())
+    email = db.Column(db.String())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
