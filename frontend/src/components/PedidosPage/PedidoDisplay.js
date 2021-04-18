@@ -88,10 +88,20 @@ const PedidoDisplay = ({
         <FontAwesomeIcon icon="chevron-left" />
         <span className="label">Voltar</span>
       </Button>
-
       {usuario.permissoes.includes("backoffice") && (
         <Card className="pedido-actions-card">
           <Card.Header>
+            <Button
+              className="pedido-copiar-link-btn"
+              title="Copiar Link do Pedido"
+              variant="link"
+              size="sm"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+              }}
+            >
+              <FontAwesomeIcon icon="link" className="pedido-link-icone" />
+            </Button>
             <b>Pedido:</b> {pedido.eid}
           </Card.Header>
           <Card.Body>
@@ -102,7 +112,6 @@ const PedidoDisplay = ({
           </Card.Body>
         </Card>
       )}
-
       <Card>
         <Card.Header>Dados do Vendedor</Card.Header>
         <Card.Body>
@@ -118,7 +127,6 @@ const PedidoDisplay = ({
           </Form.Row>
         </Card.Body>
       </Card>
-
       <Card>
         <Card.Header>Dados básicos</Card.Header>
         <Card.Body>
@@ -148,7 +156,6 @@ const PedidoDisplay = ({
           </Form.Row>
         </Card.Body>
       </Card>
-
       {pedido.produto ? (
         <>
           <ProdutoDisplay data={pedido.produto} usuario={usuario} />
@@ -178,7 +185,6 @@ const PedidoDisplay = ({
       ) : (
         <div>Carregando dados</div>
       )}
-
       <Card>
         <Card.Header>Observações</Card.Header>
         <Card.Body>
@@ -192,7 +198,6 @@ const PedidoDisplay = ({
           </Form.Group>
         </Card.Body>
       </Card>
-
       {pedido.logs && pedido.logs.length ? (
         <PedidoLogCard
           pedido={pedido}
