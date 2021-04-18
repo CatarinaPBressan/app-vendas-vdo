@@ -3,8 +3,6 @@
   width: 100%;
   overflow-y: auto;
 
-
-
   .back-button {
     margin-top: 10px;
     &:last-child {
@@ -34,5 +32,10 @@
   .input-group > .form-control[readonly] {
     // Esse estilo altera o BG dos input groups read only para melhorar a legibilidade.
     background-color: inherit;
+  }
+
+  .pedido-copiar-link-btn {
+    margin-right: 10px;
+    padding: 0px;
   }
 }
