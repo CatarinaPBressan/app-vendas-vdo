@@ -43,10 +43,14 @@ column_type_formatters_detail_base = {
 class AdminLoginForm(Form):
     _render_kws = {"class": "form-control"}
     username = fields.StringField(
-        validators=[validators.DataRequired()], label="Usuário", render_kw=_render_kws,
+        validators=[validators.DataRequired()],
+        label="Usuário",
+        render_kw=_render_kws,
     )
     password = fields.PasswordField(
-        validators=[validators.DataRequired()], label="Senha", render_kw=_render_kws,
+        validators=[validators.DataRequired()],
+        label="Senha",
+        render_kw=_render_kws,
     )
 
     def get_user(self):
@@ -128,6 +132,10 @@ class UsuarioModelView(_BaseModelView):
         "criado_em",
         "atualizado_em",
         "permissoes",
+        "estado",
+        "cidade",
+        "email",
+        "telefone",
     ]
     column_list = _view_columns
     column_details_list = _view_columns
@@ -137,7 +145,18 @@ class UsuarioModelView(_BaseModelView):
 
     form_extra_fields = {"password_new": fields.PasswordField("Senha")}
 
-    form_columns = ["username", "password_new", "cpf", "nome", "permissoes", "franquia"]
+    form_columns = [
+        "username",
+        "password_new",
+        "cpf",
+        "nome",
+        "permissoes",
+        "franquia",
+        "estado",
+        "cidade",
+        "email",
+        "telefone",
+    ]
 
     def on_model_change(self, form, model, is_created):
         password_new = form.password_new.data
