@@ -171,6 +171,21 @@ const SeguroResidencial = () => {
             </InputMask>
           </Form.Group>
           <hr />
+          <Form.Group controlId="data_nascimento">
+            <Form.Label>Data Nascimento</Form.Label>
+            <InputMask mask={FIELDS.data.mask}>
+              {() => (
+                <Form.Control
+                  type="text"
+                  placeholder={FIELDS.data.placeholder}
+                  pattern={FIELDS.data.pattern}
+                  inputMode="numeric"
+                  name="data_nascimento"
+                  required
+                />
+              )}
+            </InputMask>
+          </Form.Group>
           <Form.Group controlId="estado_civil">
             <Form.Label>Estado Civil</Form.Label>
             <Form.Control as="select" name="estado_civil" required>
