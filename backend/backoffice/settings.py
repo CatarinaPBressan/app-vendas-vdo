@@ -7,7 +7,7 @@ import subprocess
 import flask
 
 
-class ConfigBase(object):
+class ConfigBase:
     SECRET_KEY = os.environ.get("SECRET_KEY")
     S3_STATIC_PATH = "https://vdo-app-vendas-static-assets.s3-sa-east-1.amazonaws.com/{env}/frontend/static/{filename}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -21,10 +21,10 @@ class ConfigBase(object):
 
     @property
     def GIT_COMMIT(self):
-        return "GIT COMMIT"
-        output = subprocess.run(
-            ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
-        )
+        # output = subprocess.run(
+        #     ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
+        # )
+        output = subprocess.run(["echo", "test"], capture_output=True, encoding="utf-8")
         return output.stdout.strip()
 
 
@@ -33,6 +33,7 @@ class ConfigDev(ConfigBase):
     S3_STATIC_PATH = functools.partial(ConfigBase.S3_STATIC_PATH.format, env="staging")
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:@db/app_vendas"
     SENTRY_DSN = None
+    # GIT_COMMIT = "<development>"
 
 
 class ConfigTest(ConfigDev):
