@@ -21,8 +21,11 @@ class ConfigBase(object):
 
     @property
     def GIT_COMMIT(self):
-        output = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True)
-        return output.stdout.decode()[:-1]
+        return "GIT COMMIT"
+        output = subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, encoding="utf-8"
+        )
+        return output.stdout.strip()
 
 
 class ConfigDev(ConfigBase):
