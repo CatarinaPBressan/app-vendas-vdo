@@ -19,6 +19,11 @@ class ConfigBase(object):
     PUSHER_SECRET = os.environ.get("PUSHER_SECRET")
     PUSHER_CLUSTER = os.environ.get("PUSHER_CLUSTER")
 
+    @property
+    def GIT_COMMIT(self):
+        output = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True)
+        return output.stdout.decode()[:-1]
+
 
 class ConfigDev(ConfigBase):
     SECRET_KEY = "super-secret"
@@ -51,17 +56,10 @@ def init_app(app: flask.Flask, extra_config: dict = None) -> None:
         raise ValueError("FLASK_ENV not found in config.")
 
     config = {
-        "development": ConfigDev,
-        "staging": ConfigStaging,
-        "test": ConfigTest,
-    }.get(flask_env, ConfigBase)
+        "development": ConfigDev(),
+        "staging": ConfigStaging(),
+        "test": ConfigTest(),
+    }.get(flask_env, ConfigBase())
 
     app.config.from_object(config)
-    configuracao_runtime = {"GIT_COMMIT": _obter_commit_atual()}
-
-    app.config.update(**{**extra_config, **configuracao_runtime})
-
-
-def _obter_commit_atual() -> str:
-    output = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True)
-    return output.stdout.decode("utf-8")[:-1]
+    app.config.update(extra_config)
