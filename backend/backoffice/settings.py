@@ -57,10 +57,9 @@ def init_app(app: flask.Flask, extra_config: dict = None) -> None:
     }.get(flask_env, ConfigBase)
 
     app.config.from_object(config)
-    app.config.update(extra_config)
-
     configuracao_runtime = {"GIT_COMMIT": _obter_commit_atual()}
-    app.config.update(configuracao_runtime)
+
+    app.config.update(**{**extra_config, **configuracao_runtime})
 
 
 def _obter_commit_atual() -> str:
