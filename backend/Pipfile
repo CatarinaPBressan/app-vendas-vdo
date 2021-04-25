@@ -30,6 +30,7 @@ sqlalchemy-utils = "*"
 flask-login = "*"
 psycopg2-binary = "*"
 transitions = "*"
+werkzeug = "<2.0.0"
 
 [requires]
 python_version = "3.8"

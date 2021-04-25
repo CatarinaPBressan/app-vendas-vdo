@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
   python3-dev \
   vim \
   postgresql-client \
-  libpq-dev
+  libpq-dev \
+  git
 
 RUN pip3 install pipenv
 

@@ -27,6 +27,7 @@ def health_check():
                 if [r for r in base.db.engine.execute("SELECT 1")][0][0]
                 else "Not OK"
             ),
+            "commit_hash": flask.current_app.config["GIT_COMMIT"],
         }
     )
 

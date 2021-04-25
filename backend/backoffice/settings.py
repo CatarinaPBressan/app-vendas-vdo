@@ -1,5 +1,10 @@
+from __future__ import annotations
+
 import os
 import functools
+import subprocess
+
+import flask
 
 
 class ConfigBase(object):
@@ -36,7 +41,7 @@ class ConfigStaging(ConfigBase):
     S3_STATIC_PATH = functools.partial(ConfigBase.S3_STATIC_PATH.format, env="staging")
 
 
-def init_app(app, extra_config=None):
+def init_app(app: flask.Flask, extra_config: dict = None) -> None:
     if extra_config is None:
         extra_config = {}
 
@@ -53,3 +58,11 @@ def init_app(app, extra_config=None):
 
     app.config.from_object(config)
     app.config.update(extra_config)
+
+    configuracao_runtime = {"GIT_COMMIT": _obter_commit_atual()}
+    app.config.update(configuracao_runtime)
+
+
+def _obter_commit_atual() -> str:
+    output = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True)
+    return output.stdout.decode("utf-8")[:-1]
