@@ -36,7 +36,7 @@ Build Backend:
   stage: build
   script:
     - cd backend
-    - docker build -t backend:${CI_COMMIT_SHORT_SHA} -t backend:latest -f Dockerfile.
+    - docker build -t backend:${CI_COMMIT_SHORT_SHA} -t backend:latest -f Dockerfile .
 
 Build Frontend:
   stage: build
