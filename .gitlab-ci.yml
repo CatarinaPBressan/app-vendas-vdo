@@ -27,43 +27,37 @@ services:
   - docker:19.03.1-dind
 
 stages:
-  - empty
+  - build
+  - test
+  - deploy_staging
+  - deploy_production
 
-Empty CI:
-  stage: empty
+Build Backend:
+  stage: build
   script:
-    - echo "Please restore the CI. See issue 41"
-#   - build
-#   - test
-#   - deploy_staging
-#   - deploy_production
+    - cd backend
+    - make
 
-# Build Backend:
-#   stage: build
-#   script:
-#     - cd backend
-#     - make
+Build Frontend:
+  stage: build
+  script:
+    - cd frontend
+    - docker build -t frontend:${CI_COMMIT_SHORT_SHA} -t frontend:latest -f Dockerfile .
 
-# Build Frontend:
-#   stage: build
-#   script:
-#     - cd frontend
-#     - docker build -t frontend:${CI_COMMIT_SHORT_SHA} -t frontend:latest -f Dockerfile .
+Test Backend:
+  stage: test
+  except:
+    - master
+  script:
+    - cd backend
+    - make test
 
-# Test Backend:
-#   stage: test
-#   except:
-#     - master
-#   script:
-#     - cd backend
-#     - make test
-
-# Test Frontend:
-#   stage: test
-#   except:
-#     - master
-#   script:
-#     - docker run -e CI=true frontend yarn test
+Test Frontend:
+  stage: test
+  except:
+    - master
+  script:
+    - docker run -e CI=true frontend yarn test
 
 # Deploy Staging:
 #   stage: deploy_staging
