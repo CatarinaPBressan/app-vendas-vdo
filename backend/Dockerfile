@@ -1,4 +1,4 @@
-FROM python:3.8-buster
+FROM python:3.9-buster
 
 RUN groupadd -g 1000 app_vendas
 RUN useradd -g 1000 app_vendas
